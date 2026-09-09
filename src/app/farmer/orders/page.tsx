@@ -135,7 +135,7 @@ export default function FarmerOrdersPage() {
 
       {/* Filter Tabs & Search Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1 overflow-x-auto pb-1 max-w-full">
+        <div className="flex items-center gap-1 overflow-x-auto pb-1 max-w-full w-full sm:w-auto scrollbar-none min-w-0">
           {["ALL", "CONFIRMED", "PROCESSING", "ASSIGNED_FOR_DELIVERY", "IN_TRANSIT", "DELIVERED"].map(
             (status) => (
               <button
@@ -306,10 +306,10 @@ export default function FarmerOrdersPage() {
                     </span>
                   </div>
 
-                  <div>
+                  <div className="w-full sm:w-auto">
                     {order.orderStatus === "DELIVERED" ? (
-                      <div className="flex items-center gap-1.5 text-emerald-700 font-bold text-xs bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
-                        <CheckCircle2 className="h-4 w-4" />
+                      <div className="flex items-center gap-1.5 text-emerald-700 font-bold text-xs bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 justify-center sm:justify-start">
+                        <CheckCircle2 className="h-4 w-4 shrink-0" />
                         <span>Order Fulfilled &amp; Payment Released</span>
                       </div>
                     ) : nextStatus ? (
@@ -317,7 +317,7 @@ export default function FarmerOrdersPage() {
                         size="sm"
                         disabled={isUpdating}
                         onClick={() => handleAdvanceStatus(order._id, order.orderStatus)}
-                        className="h-8 text-xs font-semibold bg-emerald-700 hover:bg-emerald-800"
+                        className="w-full sm:w-auto h-8 text-xs font-semibold bg-emerald-700 hover:bg-emerald-800"
                       >
                         {isUpdating ? (
                           <Clock className="h-3.5 w-3.5 animate-spin mr-1.5" />

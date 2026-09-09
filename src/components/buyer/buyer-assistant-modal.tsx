@@ -82,10 +82,11 @@ export function BuyerAssistantModal() {
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        className="bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white font-semibold text-xs rounded-xl shadow-xs flex items-center gap-1.5"
+        className="bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white font-semibold text-xs rounded-xl shadow-xs flex items-center gap-1.5 shrink-0 px-2.5 sm:px-3 py-1.5"
       >
         <Sparkles className="h-3.5 w-3.5 text-amber-300 animate-pulse" />
-        <span>AI Procurement Scout</span>
+        <span className="hidden sm:inline">AI Procurement Scout</span>
+        <span className="sm:hidden">AI Scout</span>
       </Button>
 
       {isOpen && (

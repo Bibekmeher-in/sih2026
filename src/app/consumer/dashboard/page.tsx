@@ -84,15 +84,15 @@ export default async function ConsumerDashboardPage() {
             straight into grower bank accounts with zero middleman deductions.
           </p>
 
-          <div className="pt-2 flex flex-wrap gap-3">
-            <Link href="/marketplace">
-              <Button className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs sm:text-sm gap-2">
+          <div className="pt-2 flex flex-col sm:flex-row flex-wrap gap-2.5 sm:gap-3">
+            <Link href="/marketplace" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs sm:text-sm gap-2">
                 <Store className="h-4 w-4" />
                 <span>Explore Today&apos;s Harvest</span>
               </Button>
             </Link>
-            <Link href="/consumer/orders">
-              <Button className="bg-white hover:bg-slate-100 text-slate-900 font-bold border border-slate-200 rounded-xl text-xs sm:text-sm shadow-xs transition-colors gap-2">
+            <Link href="/consumer/orders" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-900 font-bold border border-slate-200 rounded-xl text-xs sm:text-sm shadow-xs transition-colors gap-2">
                 <PackageCheck className="h-4 w-4 text-emerald-700" />
                 <span>View Past Deliveries</span>
               </Button>

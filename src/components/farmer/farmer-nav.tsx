@@ -77,14 +77,14 @@ export function FarmerNav() {
   ];
 
   return (
-    <aside className="w-full lg:w-64 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 p-4 shrink-0">
+    <aside className="w-full lg:w-64 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 p-2.5 sm:p-4 shrink-0 min-w-0">
       <div className="mb-4 hidden lg:block">
         <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3">
           {t("nav.farmerPortal", "Farmer Operations")}
         </span>
       </div>
 
-      <nav className="flex flex-row lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
+      <nav className="flex flex-row lg:flex-col gap-1 overflow-x-auto pb-1 lg:pb-0 scrollbar-none min-w-0 w-full">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =

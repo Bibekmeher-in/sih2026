@@ -22,6 +22,8 @@ export default async function ConsumerOrderDetailPage({
     notFound();
   }
 
+  const serializedOrder = JSON.parse(JSON.stringify(order));
+
   return (
     <div className="agri-container space-y-6 max-w-4xl">
       <div className="flex items-center gap-2">
@@ -34,7 +36,7 @@ export default async function ConsumerOrderDetailPage({
         </Link>
       </div>
 
-      <OrderTrackerClient initialOrder={order} />
+      <OrderTrackerClient initialOrder={serializedOrder} />
     </div>
   );
 }

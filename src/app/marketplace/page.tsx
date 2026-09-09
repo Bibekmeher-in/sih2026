@@ -12,6 +12,7 @@ import {
   Package,
   ChevronLeft,
   ChevronRight,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -370,6 +371,77 @@ function MarketplaceContent() {
           </section>
         </div>
       </main>
+
+      {/* Mobile Filter Slide-Over Drawer */}
+      {mobileFiltersOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex justify-end">
+          <div
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileFiltersOpen(false)}
+          />
+          <div className="relative w-full max-w-xs bg-white h-full shadow-2xl p-5 overflow-y-auto flex flex-col justify-between z-10">
+            <div>
+              <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200">
+                <div className="flex items-center gap-2">
+                  <SlidersHorizontal className="h-5 w-5 text-emerald-700" />
+                  <span className="font-bold text-slate-900">Filters & Search</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Bulk Mode Toggle inside drawer */}
+              <div className="mb-4 p-3 bg-amber-50 rounded-xl border border-amber-200 flex items-center justify-between">
+                <div>
+                  <div className="text-xs font-bold text-amber-900">Bulk Commercial Mode</div>
+                  <div className="text-[11px] text-amber-700">&gt;500kg wholesale lots</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBulkBuyerMode(!bulkBuyerMode);
+                    setPage(1);
+                  }}
+                  className={`px-3 py-1 text-xs font-bold rounded-lg border transition-colors ${
+                    bulkBuyerMode
+                      ? "bg-amber-700 text-white border-amber-700"
+                      : "bg-white text-slate-700 border-slate-300"
+                  }`}
+                >
+                  {bulkBuyerMode ? "Active" : "Enable"}
+                </button>
+              </div>
+
+              <MarketplaceFilters
+                filters={filters}
+                onChange={(newFilters) => {
+                  setFilters(newFilters);
+                  setPage(1);
+                }}
+                onReset={() => {
+                  handleReset();
+                  setMobileFiltersOpen(false);
+                }}
+                categories={categories}
+              />
+            </div>
+
+            <div className="pt-4 border-t border-slate-200 mt-6 sticky bottom-0 bg-white">
+              <Button
+                className="w-full"
+                onClick={() => setMobileFiltersOpen(false)}
+              >
+                Apply Filters ({products.length} Results)
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Cart Drawer */}
       <CartDrawer />

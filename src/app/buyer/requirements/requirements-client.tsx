@@ -133,7 +133,7 @@ export function RequirementsClient({
 
         <Button
           onClick={() => setShowForm(!showForm)}
-          className="bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs gap-1.5 self-start sm:self-auto"
+          className="bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs gap-1.5 w-full sm:w-auto"
         >
           <Plus className="h-4 w-4" />
           <span>{showForm ? "Close Form" : "Post New Requirement (RFQ)"}</span>
@@ -271,7 +271,7 @@ export function RequirementsClient({
 
             <div className="space-y-1">
               <label className="font-semibold text-slate-700">Destination District &amp; State</label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <input
                   type="text"
                   required
@@ -389,13 +389,13 @@ export function RequirementsClient({
               {/* Collapsible Matched Suppliers Section */}
               {isExpanded && (
                 <div className="border-t border-slate-100 bg-slate-50/50 p-5 space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                     <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-                      <Sparkles className="h-4 w-4 text-emerald-600" />
-                      <span>Deterministic Supplier Compatibility Matches (Ranked by Algorithm)</span>
+                      <Sparkles className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <span>Deterministic Matches (Ranked by Algorithm)</span>
                     </div>
                     <span className="text-[11px] text-slate-500">
-                      Scoring Factors: Volume (40%), Price (30%), Proximity (20%), Rating (10%)
+                      Volume (40%), Price (30%), Distance (20%), Rating (10%)
                     </span>
                   </div>
 

@@ -125,8 +125,8 @@ export default async function ConsumerOrdersPage() {
                       </div>
                     </div>
 
-                    <Link href={`/consumer/orders/${o._id}`}>
-                      <Button size="sm" className="bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs gap-1.5">
+                    <Link href={`/consumer/orders/${o._id}`} className="w-full sm:w-auto">
+                      <Button size="sm" className="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs gap-1.5">
                         <Truck className="h-3.5 w-3.5" />
                         <span>Track &amp; View Details</span>
                         <ArrowRight className="h-3.5 w-3.5" />

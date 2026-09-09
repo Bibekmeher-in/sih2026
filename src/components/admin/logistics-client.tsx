@@ -225,87 +225,87 @@ export default function AdminLogisticsClient({
   return (
     <div className="space-y-6">
       {/* 4 Telemetry KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate">
               Active Dispatches
             </span>
-            <div className="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
               <Truck className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 mt-2">
+          <div className="text-xl sm:text-2xl font-black text-slate-900 mt-2 truncate">
             {stats.activeDeliveriesCount}
-            <span className="text-xs font-normal text-slate-500 ml-1.5">in cold-chain transit</span>
+            <span className="text-xs font-normal text-slate-500 ml-1.5 hidden sm:inline">in transit</span>
           </div>
-          <div className="flex items-center gap-1.5 mt-2 text-xs text-amber-700 font-semibold">
-            <Clock className="h-3.5 w-3.5" />
-            <span>{stats.pendingDeliveriesCount} pending assignment</span>
+          <div className="flex items-center gap-1.5 mt-2 text-[11px] sm:text-xs text-amber-700 font-semibold truncate">
+            <Clock className="h-3.5 w-3.5 shrink-0" />
+            <span>{stats.pendingDeliveriesCount} pending</span>
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate">
               Fleet Utilization
             </span>
-            <div className="h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
               <ShieldCheck className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-blue-700 mt-2">
+          <div className="text-xl sm:text-2xl font-black text-blue-700 mt-2 truncate">
             {stats.fleetUtilizationPercent}%
           </div>
-          <div className="text-xs text-slate-500 mt-1">
-            {stats.activeVehiclesCount} of {stats.totalVehiclesCount} commercial vehicles deployed
+          <div className="text-[11px] sm:text-xs text-slate-500 mt-1 truncate">
+            {stats.activeVehiclesCount} of {stats.totalVehiclesCount} deployed
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Distance Saved (MVP)
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate">
+              Distance Saved
             </span>
-            <div className="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
               <TrendingDown className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-emerald-700 mt-2">
+          <div className="text-xl sm:text-2xl font-black text-purple-700 mt-2 truncate">
             {comparison.savings.distanceSavedKm} km
-            <span className="text-xs font-bold text-emerald-600 ml-1.5">
+            <span className="text-xs font-bold text-purple-600 ml-1">
               (-{comparison.savings.percentageDistanceSaved}%)
             </span>
           </div>
-          <div className="text-xs text-slate-500 mt-1">
-            Nearest-Neighbor farm consolidation
+          <div className="text-[11px] sm:text-xs text-slate-500 mt-1 truncate">
+            Nearest-Neighbor optimization
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Fuel &amp; Carbon Savings
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate">
+              Fuel &amp; Carbon
             </span>
-            <div className="h-8 w-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
               <Fuel className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 mt-2">
+          <div className="text-xl sm:text-2xl font-black text-slate-900 mt-2 truncate">
             {formatCurrency(comparison.savings.costSavedInr)}
           </div>
-          <div className="flex items-center gap-1 mt-1 text-xs text-emerald-700 font-semibold">
-            <Leaf className="h-3 w-3" />
-            <span>{comparison.savings.co2EmissionsSavedKg} kg CO₂ avoided</span>
+          <div className="flex items-center gap-1 mt-1 text-[11px] sm:text-xs text-emerald-700 font-semibold truncate">
+            <Leaf className="h-3 w-3 shrink-0" />
+            <span>{comparison.savings.co2EmissionsSavedKg} kg CO₂</span>
           </div>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-slate-200 bg-white rounded-xl px-4 py-2 gap-2 shadow-xs">
+      <div className="flex overflow-x-auto scrollbar-none border-b border-slate-200 bg-white rounded-xl px-2 sm:px-4 py-2 gap-2 shadow-xs">
         <button
           onClick={() => setActiveTab("OPTIMIZER")}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+          className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap ${
             activeTab === "OPTIMIZER"
               ? "bg-slate-900 text-white shadow-xs"
               : "text-slate-600 hover:bg-slate-100"
@@ -317,7 +317,7 @@ export default function AdminLogisticsClient({
 
         <button
           onClick={() => setActiveTab("DELIVERIES")}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+          className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap ${
             activeTab === "DELIVERIES"
               ? "bg-slate-900 text-white shadow-xs"
               : "text-slate-600 hover:bg-slate-100"
@@ -329,7 +329,7 @@ export default function AdminLogisticsClient({
 
         <button
           onClick={() => setActiveTab("VEHICLES")}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+          className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap ${
             activeTab === "VEHICLES"
               ? "bg-slate-900 text-white shadow-xs"
               : "text-slate-600 hover:bg-slate-100"
@@ -600,7 +600,7 @@ export default function AdminLogisticsClient({
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
+              <table className="w-full text-left text-xs border-collapse min-w-[750px]">
                 <thead>
                   <tr className="border-b border-slate-200 bg-slate-50/70 text-slate-600 font-bold uppercase tracking-wider text-[10px]">
                     <th className="p-3">Tracking #</th>
@@ -707,7 +707,7 @@ export default function AdminLogisticsClient({
 
             {/* Vehicles Table */}
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
+              <table className="w-full text-left text-xs border-collapse min-w-[650px]">
                 <thead>
                   <tr className="border-b border-slate-200 bg-slate-50/70 text-slate-600 font-bold uppercase tracking-wider text-[10px]">
                     <th className="p-3">Reg. Number</th>

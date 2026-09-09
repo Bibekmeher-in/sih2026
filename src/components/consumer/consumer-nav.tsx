@@ -26,6 +26,11 @@ export function ConsumerNav() {
       icon: LayoutDashboard,
     },
     {
+      href: "/marketplace",
+      label: t("portalNav.marketplace", "Marketplace"),
+      icon: Store,
+    },
+    {
       href: "/consumer/cart",
       label: t("portalNav.cart", "Farm Cart"),
       icon: ShoppingCart,
@@ -33,36 +38,36 @@ export function ConsumerNav() {
     },
     {
       href: "/consumer/orders",
-      label: t("portalNav.myOrders", "My Orders & Tracking"),
+      label: t("portalNav.myOrders", "Orders & Tracking"),
       icon: PackageCheck,
     },
   ];
 
   return (
-    <nav className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
+    <nav className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none w-full">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive =
           pathname === item.href ||
-          (item.href !== "/consumer/dashboard" && pathname.startsWith(item.href));
+          (item.href !== "/consumer/dashboard" && item.href !== "/marketplace" && pathname.startsWith(item.href));
 
         return (
           <Link
             key={item.href}
             href={item.href}
             className={cn(
-              "flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-semibold transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 sm:gap-2 rounded-xl px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0",
               isActive
                 ? "bg-emerald-700 text-white shadow-xs"
                 : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-800"
             )}
           >
-            <Icon className="h-4 w-4 shrink-0" />
+            <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
             <span>{item.label}</span>
             {item.isCart && itemCount > 0 && (
               <span
                 className={cn(
-                  "ml-1 rounded-full px-1.5 py-0.2 text-[10px] font-bold",
+                  "ml-0.5 sm:ml-1 rounded-full px-1.5 py-0.2 text-[10px] font-bold",
                   isActive ? "bg-white text-emerald-800" : "bg-emerald-600 text-white"
                 )}
               >
@@ -72,17 +77,6 @@ export function ConsumerNav() {
           </Link>
         );
       })}
-
-      <div className="h-4 w-px bg-slate-200 mx-1 hidden sm:block" />
-
-      <Link
-        href="/marketplace"
-        className="hidden sm:flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 border border-emerald-200 transition-colors"
-      >
-        <Store className="h-3.5 w-3.5" />
-        <span>{t("portalNav.marketplace", "Marketplace")}</span>
-        <ArrowUpRight className="h-3 w-3 text-slate-400" />
-      </Link>
     </nav>
   );
 }

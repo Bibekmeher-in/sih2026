@@ -154,21 +154,21 @@ export function AdminDashboardClient({ initialData }: { initialData: DashboardDa
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2.5 shrink-0">
-          <Link href="/admin/impact">
-            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-xs flex items-center gap-1.5">
+        <div className="flex flex-wrap gap-2 sm:gap-2.5 w-full md:w-auto">
+          <Link href="/admin/impact" className="flex-1 sm:flex-initial">
+            <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-xs flex items-center justify-center gap-1.5">
               <Activity className="h-4 w-4" />
               <span>Impact Engine</span>
             </Button>
           </Link>
-          <Link href="/admin/analytics">
-            <Button variant="outline" className="border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/30 font-semibold text-xs rounded-xl flex items-center gap-1.5">
+          <Link href="/admin/analytics" className="flex-1 sm:flex-initial">
+            <Button variant="outline" className="w-full border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/30 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5">
               <TrendingUp className="h-4 w-4" />
               <span>Analytics</span>
             </Button>
           </Link>
-          <Link href="/admin/ai">
-            <Button variant="outline" className="border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/30 font-semibold text-xs rounded-xl flex items-center gap-1.5">
+          <Link href="/admin/ai" className="flex-1 sm:flex-initial">
+            <Button variant="outline" className="w-full border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/30 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5">
               <Sparkles className="h-4 w-4 text-amber-300" />
               <span>AI Telemetry</span>
             </Button>
@@ -338,29 +338,29 @@ export function AdminDashboardClient({ initialData }: { initialData: DashboardDa
       </div>
 
       {/* 8 KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {kpiCards.map((c) => {
           const Icon = c.icon;
           return (
             <Link
               key={c.label}
               href={c.href}
-              className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:border-slate-300 hover:shadow-md transition-all group"
+              className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-5 shadow-xs hover:border-slate-300 hover:shadow-md transition-all group"
             >
-              <div className="flex items-start justify-between">
-                <div>
-                  <span className="text-xs font-semibold text-slate-500 block mb-1">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <span className="text-[11px] sm:text-xs font-semibold text-slate-500 block mb-1 truncate">
                     {c.label}
                   </span>
-                  <div className="text-2xl font-black text-slate-900 tracking-tight">
+                  <div className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight truncate">
                     {c.value}
                   </div>
-                  <span className="text-[11px] text-slate-400 mt-1 block">
+                  <span className="text-[10px] sm:text-[11px] text-slate-400 mt-1 block truncate">
                     {c.subtext}
                   </span>
                 </div>
-                <div className={`p-3 rounded-xl ${c.bg} ${c.color} shrink-0 group-hover:scale-110 transition-transform`}>
-                  <Icon className="h-5 w-5" />
+                <div className={`p-2 sm:p-3 rounded-xl ${c.bg} ${c.color} shrink-0 group-hover:scale-110 transition-transform`}>
+                  <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
               </div>
             </Link>

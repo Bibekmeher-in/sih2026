@@ -55,21 +55,21 @@ export default async function BuyerDashboardPage() {
             over traditional APMC middleman commissions.
           </p>
 
-          <div className="pt-2 flex flex-wrap gap-3">
-            <Link href="/buyer/requirements">
-              <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs sm:text-sm gap-2 shadow-xs">
+          <div className="pt-2 flex flex-col sm:flex-row flex-wrap gap-2.5 sm:gap-3">
+            <Link href="/buyer/requirements" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs sm:text-sm gap-2 shadow-xs">
                 <Plus className="h-4 w-4" />
                 <span>Post Bulk Requirement (RFQ)</span>
               </Button>
             </Link>
-            <Link href="/buyer/suppliers">
-              <Button className="bg-white hover:bg-slate-100 text-slate-900 font-bold border border-slate-200 rounded-xl text-xs sm:text-sm shadow-xs transition-colors gap-2">
+            <Link href="/buyer/suppliers" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-900 font-bold border border-slate-200 rounded-xl text-xs sm:text-sm shadow-xs transition-colors gap-2">
                 <Users className="h-4 w-4 text-emerald-700" />
                 <span>Discover Verified FPOs</span>
               </Button>
             </Link>
-            <Link href="/buyer/marketplace">
-              <Button className="bg-white hover:bg-slate-100 text-slate-900 font-bold border border-slate-200 rounded-xl text-xs sm:text-sm shadow-xs transition-colors gap-2">
+            <Link href="/buyer/marketplace" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-900 font-bold border border-slate-200 rounded-xl text-xs sm:text-sm shadow-xs transition-colors gap-2">
                 <Store className="h-4 w-4 text-emerald-700" />
                 <span>Wholesale Lots Catalog</span>
               </Button>

@@ -87,9 +87,10 @@ export function OrderTrackerClient({ initialOrder }: OrderTrackerProps) {
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [reviewError, setReviewError] = useState("");
 
-  const canCancel = ["PENDING", "CONFIRMED"].includes(order.orderStatus);
-  const isDelivered = order.orderStatus === "DELIVERED";
-  const isCancelled = order.orderStatus === "CANCELLED";
+  const currentStatus = order?.orderStatus || "PENDING";
+  const canCancel = ["PENDING", "CONFIRMED"].includes(currentStatus);
+  const isDelivered = currentStatus === "DELIVERED";
+  const isCancelled = currentStatus === "CANCELLED";
 
   // Visual Stepper stages: Order confirmed -> Preparing -> Pickup -> In transit -> Delivered
   const stages = [
@@ -120,7 +121,7 @@ export function OrderTrackerClient({ initialOrder }: OrderTrackerProps) {
     }
   };
 
-  const currentStageIndex = getStageIndex(order.orderStatus);
+  const currentStageIndex = getStageIndex(currentStatus);
 
   const handleCancelOrder = async () => {
     setIsCancelling(true);
@@ -199,7 +200,7 @@ export function OrderTrackerClient({ initialOrder }: OrderTrackerProps) {
               variant={isDelivered ? "default" : isCancelled ? "destructive" : "secondary"}
               className="text-[10px] font-bold uppercase"
             >
-              {order.orderStatus.replace(/_/g, " ")}
+              {currentStatus.replace(/_/g, " ")}
             </Badge>
           </div>
           <p className="text-xs text-slate-500">

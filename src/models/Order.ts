@@ -60,51 +60,57 @@ export interface IOrderDocument extends Document {
   updatedAt: Date;
 }
 
-const OrderItemSchema = new Schema<IOrderItem>({
-  product: {
-    type: Schema.Types.ObjectId,
-    ref: "Product",
-    required: true,
+const OrderItemSchema = new Schema<IOrderItem>(
+  {
+    product: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+    productName: {
+      type: String,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: [0.1, "Quantity must be greater than 0"],
+    },
+    unit: {
+      type: String,
+      enum: ["kg", "quintal", "ton", "crate"],
+      default: "kg",
+      required: true,
+    },
+    unitPrice: {
+      type: Number,
+      required: true,
+      min: [0, "Unit price cannot be negative"],
+    },
+    totalItemPrice: {
+      type: Number,
+      required: true,
+      min: [0, "Total item price cannot be negative"],
+    },
   },
-  productName: {
-    type: String,
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-    min: [0.1, "Quantity must be greater than 0"],
-  },
-  unit: {
-    type: String,
-    enum: ["kg", "quintal", "ton", "crate"],
-    default: "kg",
-    required: true,
-  },
-  unitPrice: {
-    type: Number,
-    required: true,
-    min: [0, "Unit price cannot be negative"],
-  },
-  totalItemPrice: {
-    type: Number,
-    required: true,
-    min: [0, "Total item price cannot be negative"],
-  },
-});
+  { _id: false }
+);
 
-const OrderAddressSchema = new Schema<IOrderAddress>({
-  recipientName: { type: String, required: true },
-  recipientPhone: { type: String, required: true },
-  addressLine: { type: String, required: true },
-  district: { type: String, required: true },
-  state: { type: String, required: true },
-  pincode: { type: String, required: true },
-  coordinates: {
-    latitude: { type: Number, default: 19.076 }, // Default Mumbai lat
-    longitude: { type: Number, default: 72.8777 },
+const OrderAddressSchema = new Schema<IOrderAddress>(
+  {
+    recipientName: { type: String, required: true },
+    recipientPhone: { type: String, required: true },
+    addressLine: { type: String, required: true },
+    district: { type: String, required: true },
+    state: { type: String, required: true },
+    pincode: { type: String, required: true },
+    coordinates: {
+      latitude: { type: Number, default: 19.076 }, // Default Mumbai lat
+      longitude: { type: Number, default: 72.8777 },
+    },
   },
-});
+  { _id: false }
+);
 
 const OrderSchema = new Schema<IOrderDocument>(
   {

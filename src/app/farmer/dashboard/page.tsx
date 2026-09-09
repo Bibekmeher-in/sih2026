@@ -163,93 +163,93 @@ export default function FarmerDashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <Button asChild size="sm" variant="outline">
-            <Link href="/farmer/pricing" className="flex items-center gap-1.5 text-xs">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button asChild size="sm" variant="outline" className="flex-1 sm:flex-initial">
+            <Link href="/farmer/pricing" className="flex items-center justify-center gap-1.5 text-xs">
               <Sparkles className="h-3.5 w-3.5 text-amber-600" />
               <span>AI Price Advisor</span>
             </Link>
           </Button>
 
-          <Button asChild size="sm">
-            <Link href="/farmer/products/new" className="flex items-center gap-1.5 text-xs">
+          <Button asChild size="sm" className="flex-1 sm:flex-initial">
+            <Link href="/farmer/products/new" className="flex items-center justify-center gap-1.5 text-xs">
               <PlusCircle className="h-3.5 w-3.5" />
-              <span>List New Produce</span>
+              <span>List Produce</span>
             </Link>
           </Button>
         </div>
       </div>
 
       {/* 5 KPI Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         {/* Total Earnings */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs hover:shadow-xs transition-all">
+        <div className="rounded-2xl border border-slate-200 bg-white p-3.5 sm:p-5 shadow-2xs hover:shadow-xs transition-all">
           <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>Total Earnings</span>
-            <div className="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
               <IndianRupee className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-slate-900 mt-2">
+          <div className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2 truncate">
             {formatCurrency(s.totalEarnings)}
           </div>
-          <div className="flex items-center gap-1 mt-1 text-[11px] text-emerald-700 font-bold">
-            <TrendingUp className="h-3 w-3" />
+          <div className="flex items-center gap-1 mt-1 text-[11px] text-emerald-700 font-bold truncate">
+            <TrendingUp className="h-3 w-3 shrink-0" />
             <span>+28.4% direct vs APMC</span>
           </div>
         </div>
 
         {/* Total Sales Count */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs hover:shadow-xs transition-all">
+        <div className="rounded-2xl border border-slate-200 bg-white p-3.5 sm:p-5 shadow-2xs hover:shadow-xs transition-all">
           <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>Total Sales</span>
-            <div className="h-8 w-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
               <ShoppingBag className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-slate-900 mt-2">
+          <div className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
             {s.totalSalesCount}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1 font-medium">Orders fulfilled</p>
+          <p className="text-[11px] text-slate-500 mt-1 font-medium">Completed farm-gate orders</p>
         </div>
 
         {/* Active Orders */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs hover:shadow-xs transition-all">
+        <div className="rounded-2xl border border-slate-200 bg-white p-3.5 sm:p-5 shadow-2xs hover:shadow-xs transition-all">
           <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>Active Orders</span>
-            <div className="h-8 w-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
               <Package className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-amber-700 mt-2">
+          <div className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
             {s.activeOrdersCount}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1 font-medium">Pending dispatch</p>
+          <p className="text-[11px] text-slate-500 mt-1 font-medium">Need sorting &amp; dispatch</p>
         </div>
 
         {/* Available Stock */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs hover:shadow-xs transition-all">
+        <div className="rounded-2xl border border-slate-200 bg-white p-3.5 sm:p-5 shadow-2xs hover:shadow-xs transition-all">
           <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
-            <span>Available Inventory</span>
-            <div className="h-8 w-8 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center">
+            <span>Inventory</span>
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center">
               <Layers className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-slate-900 mt-2">
+          <div className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2 truncate">
             {s.availableInventoryKg.toLocaleString("en-IN")} <span className="text-xs font-bold text-slate-500">kg</span>
           </div>
-          <p className="text-[11px] text-slate-500 mt-1 font-medium">Ready for farm-gate dispatch</p>
+          <p className="text-[11px] text-slate-500 mt-1 font-medium">Ready for dispatch</p>
         </div>
 
         {/* Pending Deliveries */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs hover:shadow-xs transition-all">
+        <div className="rounded-2xl border border-slate-200 bg-white p-3.5 sm:p-5 shadow-2xs hover:shadow-xs transition-all col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
-            <span>In-Transit Logistics</span>
-            <div className="h-8 w-8 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center">
+            <span>In-Transit</span>
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center">
               <Truck className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-slate-900 mt-2">
+          <div className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
             {s.pendingDeliveriesCount}
           </div>
           <p className="text-[11px] text-slate-500 mt-1 font-medium">Vehicles en route</p>

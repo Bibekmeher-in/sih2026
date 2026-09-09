@@ -114,21 +114,21 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-slate-50/70 flex flex-col justify-center items-center px-4 py-12">
       <div className="w-full max-w-xl">
         {/* Register Card */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-xs relative">
-          <div className="absolute top-4 right-4">
-            <LanguageSwitcher />
-          </div>
-
-          <div className="text-center mb-6">
-            <Link href="/" className="inline-flex items-center gap-2 mb-2 group">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-700 text-white shadow-xs group-hover:scale-105 transition-transform">
-                <Sprout className="h-5 w-5" />
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-8 shadow-xs relative">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <Link href="/" className="inline-flex items-center gap-2 group">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-700 text-white shadow-xs group-hover:scale-105 transition-transform">
+                <Sprout className="h-4 w-4" />
               </div>
-              <span className="text-xl font-bold tracking-tight text-slate-900">
+              <span className="text-lg font-bold tracking-tight text-slate-900">
                 Kisan<span className="text-emerald-700">Direct</span>
               </span>
             </Link>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 mt-2">
+            <LanguageSwitcher compact />
+          </div>
+
+          <div className="text-center mb-6">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
               {t("auth.registerTitle", "Create Your Account")}
             </h1>
             <p className="text-xs text-slate-500 mt-1">

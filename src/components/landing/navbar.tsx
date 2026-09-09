@@ -58,8 +58,8 @@ export function Navbar() {
           </Link>
         </nav>
 
-        {/* Portal Shortcuts, Cart & Status */}
-        <div className="hidden sm:flex items-center gap-2.5">
+        {/* Desktop Portal Shortcuts, Cart & Status (Large screens) */}
+        <div className="hidden lg:flex items-center gap-2.5">
           {/* Language Switcher */}
           <LanguageSwitcher />
 
@@ -90,13 +90,13 @@ export function Navbar() {
           </Button>
         </div>
 
-        {/* Mobile menu and cart button */}
-        <div className="flex sm:hidden items-center gap-2">
+        {/* Mobile & Tablet controls (<1024px) */}
+        <div className="flex lg:hidden items-center gap-1.5 sm:gap-2">
           <LanguageSwitcher compact />
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            className="relative p-2 text-slate-700 hover:text-emerald-700 rounded-lg"
+            className="relative p-2 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg border border-slate-200"
             aria-label="Open Cart"
           >
             <ShoppingCart className="h-5 w-5" />
@@ -108,23 +108,23 @@ export function Navbar() {
           </button>
           <button
             type="button"
-            className="p-2 text-slate-600 hover:text-slate-900 focus:outline-none"
+            className="p-2 text-slate-700 hover:text-slate-900 focus:outline-none rounded-lg border border-slate-200 bg-white"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile dropdown */}
+      {/* Mobile / Tablet dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-slate-200 bg-white px-4 py-4 space-y-3">
+        <div className="lg:hidden border-b border-slate-200 bg-white/95 backdrop-blur px-4 py-4 space-y-3 shadow-xl">
           <div className="flex flex-col space-y-2 text-sm font-medium text-slate-700">
             <Link
               href="/marketplace"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-1.5 rounded font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 flex items-center justify-between"
+              className="px-3 py-2 rounded-lg font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 flex items-center justify-between"
             >
               <span>{t("common.exploreMarketplace")}</span>
               <ArrowRight className="h-4 w-4" />
@@ -132,48 +132,56 @@ export function Navbar() {
             <Link
               href="/#problem"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-1.5 rounded hover:bg-slate-50"
+              className="px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               {t("nav.problem")}
             </Link>
             <a
               href="#how-it-works"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-1.5 rounded hover:bg-slate-50"
+              className="px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               {t("nav.howItWorks")}
             </a>
             <a
               href="#farmers"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-1.5 rounded hover:bg-slate-50"
+              className="px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               {t("nav.forFarmers")}
             </a>
             <a
               href="#buyers"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-1.5 rounded hover:bg-slate-50"
+              className="px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               {t("nav.forBuyers")}
             </a>
             <a
               href="#ai"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-1.5 rounded hover:bg-slate-50"
+              className="px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               {t("nav.aiEngine")}
             </a>
             <a
               href="#logistics"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-1.5 rounded hover:bg-slate-50"
+              className="px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               {t("nav.logistics")}
             </a>
           </div>
           <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
-            <Button size="sm" asChild className="w-full">
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="outline" size="sm" asChild className="w-full">
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>{t("common.signIn")}</Link>
+              </Button>
+              <Button size="sm" asChild className="w-full">
+                <Link href="/register" onClick={() => setMobileMenuOpen(false)}>{t("common.register")}</Link>
+              </Button>
+            </div>
+            <Button size="sm" variant="secondary" asChild className="w-full">
               <a href="#portal-selection" onClick={() => setMobileMenuOpen(false)}>
                 {t("landing.ctaPortals")}
               </a>

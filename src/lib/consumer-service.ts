@@ -93,14 +93,30 @@ export async function getConsumerOrders(userId: string) {
           sellerName: seller?.name || (o.sellerType === "FPO" ? "FPO Collective" : "Certified Grower"),
           sellerType: o.sellerType,
           sellerPhone: seller?.phone || "",
-          items: o.items || [],
+          items: (o.items || []).map((i) => ({
+            product: i.product?.toString() || "",
+            productName: i.productName,
+            quantity: i.quantity,
+            unit: i.unit,
+            unitPrice: i.unitPrice,
+            totalItemPrice: i.totalItemPrice,
+          })),
           subtotal: o.subtotal,
           deliveryFee: o.deliveryFee,
           total: o.total,
           paymentStatus: o.paymentStatus,
           paymentMethod: o.paymentMethod,
           orderStatus: o.orderStatus,
-          deliveryAddress: o.deliveryAddress,
+          deliveryAddress: o.deliveryAddress
+            ? {
+                recipientName: o.deliveryAddress.recipientName || "",
+                recipientPhone: o.deliveryAddress.recipientPhone || "",
+                addressLine: o.deliveryAddress.addressLine || "",
+                district: o.deliveryAddress.district || "",
+                state: o.deliveryAddress.state || "",
+                pincode: o.deliveryAddress.pincode || "",
+              }
+            : undefined,
           createdAt: o.createdAt ? new Date(o.createdAt).toISOString() : new Date().toISOString(),
         };
       });
@@ -213,8 +229,30 @@ export async function getConsumerOrderById(userId: string, orderId: string) {
       total: order.total,
       paymentStatus: order.paymentStatus,
       paymentMethod: order.paymentMethod,
-      orderStatus: order.orderStatus,
-      deliveryAddress: order.deliveryAddress,
+      orderStatus: order.orderStatus || "PENDING",
+      deliveryAddress: order.deliveryAddress
+        ? {
+            recipientName: order.deliveryAddress.recipientName || "",
+            recipientPhone: order.deliveryAddress.recipientPhone || "",
+            addressLine: order.deliveryAddress.addressLine || "",
+            district: order.deliveryAddress.district || "",
+            state: order.deliveryAddress.state || "",
+            pincode: order.deliveryAddress.pincode || "",
+            coordinates: order.deliveryAddress.coordinates
+              ? {
+                  latitude: order.deliveryAddress.coordinates.latitude,
+                  longitude: order.deliveryAddress.coordinates.longitude,
+                }
+              : undefined,
+          }
+        : {
+            recipientName: "",
+            recipientPhone: "",
+            addressLine: "",
+            district: "",
+            state: "",
+            pincode: "",
+          },
       trackingInfo,
       createdAt: order.createdAt ? new Date(order.createdAt).toISOString() : new Date().toISOString(),
     };
