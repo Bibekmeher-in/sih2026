@@ -176,7 +176,7 @@ export function MarketplacePreviewSection() {
                       </div>
                     </div>
                     <div className="p-2 rounded bg-emerald-50/80 border border-emerald-200">
-                      <div className="text-[11px] text-emerald-700 font-semibold">KisanDirect Price</div>
+                      <div className="text-[11px] text-emerald-700 font-semibold">KISANOVA Price</div>
                       <div className="text-base font-bold text-emerald-800">
                         ₹{crop.kisanPrice}/kg
                       </div>

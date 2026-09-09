@@ -37,8 +37,8 @@ export function ProductCard({ product }: ProductCardProps) {
   const extraPercentage =
     product.mandiBenchmarkPrice > 0
       ? Math.round(
-          ((product.price - product.mandiBenchmarkPrice) / product.mandiBenchmarkPrice) * 100
-        )
+        ((product.price - product.mandiBenchmarkPrice) / product.mandiBenchmarkPrice) * 100
+      )
       : 0;
 
   const isFPO = product.sellerType === "FPO";
@@ -64,11 +64,10 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Seller Type Badge */}
           <div className="absolute top-2.5 left-2.5">
             <span
-              className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs ${
-                isFPO
+              className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs ${isFPO
                   ? "bg-amber-100/90 text-amber-900 border border-amber-200"
                   : "bg-emerald-100/90 text-emerald-900 border border-emerald-200"
-              }`}
+                }`}
             >
               {isFPO ? <Building2 className="h-3 w-3" /> : <Tractor className="h-3 w-3" />}
               <span>{isFPO ? "FPO Aggregate" : "Individual Farmer"}</span>
@@ -125,7 +124,7 @@ export function ProductCard({ product }: ProductCardProps) {
               </div>
             </div>
             <div className="p-1.5 rounded bg-emerald-50 border border-emerald-200">
-              <div className="text-[10px] text-emerald-700 font-bold">KisanDirect Price</div>
+              <div className="text-[10px] text-emerald-700 font-bold">KISANOVA Price</div>
               <div className="text-sm font-bold text-emerald-800">
                 ₹{product.price}/{product.unit}
               </div>
@@ -148,9 +147,8 @@ export function ProductCard({ product }: ProductCardProps) {
         <Button
           onClick={handleQuickAdd}
           size="sm"
-          className={`w-full font-semibold transition-all ${
-            addedAnimation ? "bg-emerald-600 text-white" : ""
-          }`}
+          className={`w-full font-semibold transition-all ${addedAnimation ? "bg-emerald-600 text-white" : ""
+            }`}
         >
           {addedAnimation ? (
             <span className="flex items-center justify-center gap-1.5">

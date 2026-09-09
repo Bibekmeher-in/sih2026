@@ -20,7 +20,7 @@ export async function GET() {
     status: "ok",
     database: dbStatus === "connected" ? "connected" : "disconnected",
     timestamp: new Date().toISOString(),
-    service: "KisanDirect Core Engine",
+    service: "KISANOVA Core Engine",
     version: "1.0.0",
   });
 }

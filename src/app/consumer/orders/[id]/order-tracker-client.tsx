@@ -255,11 +255,10 @@ export function OrderTrackerClient({ initialOrder }: OrderTrackerProps) {
                 return (
                   <div key={stage.key} className="flex md:flex-col items-center gap-3 md:text-center">
                     <div
-                      className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 transition-all ${
-                        isPassed
+                      className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 transition-all ${isPassed
                           ? "bg-emerald-700 text-white shadow-xs"
                           : "bg-slate-100 text-slate-400 border border-slate-200"
-                      } ${isCurrent ? "ring-4 ring-emerald-100" : ""}`}
+                        } ${isCurrent ? "ring-4 ring-emerald-100" : ""}`}
                     >
                       {isPassed ? <CheckCircle2 className="h-4 w-4" /> : idx + 1}
                     </div>
@@ -544,7 +543,7 @@ export function OrderTrackerClient({ initialOrder }: OrderTrackerProps) {
             </div>
 
             <p className="text-slate-600">
-              Are you sure you want to cancel order <strong>{order.orderNumber}</strong>? Since the produce has not yet been dispatched, your payment will be credited back via KisanDirect Escrow refund.
+              Are you sure you want to cancel order <strong>{order.orderNumber}</strong>? Since the produce has not yet been dispatched, your payment will be credited back via KISANOVA Escrow refund.
             </p>
 
             <div className="space-y-1">

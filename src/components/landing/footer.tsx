@@ -19,7 +19,7 @@ export function Footer() {
                 <Sprout className="h-5 w-5" />
               </div>
               <span className="text-xl font-bold tracking-tight text-slate-900">
-                Kisan<span className="text-emerald-700">Direct</span>
+                Kisan<span className="text-emerald-700">ova</span>
               </span>
             </div>
             <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-sm">
@@ -67,7 +67,7 @@ export function Footer() {
           {/* Col 4: Platform Architecture */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">
-              {t("common.appName", "KisanDirect")}
+              {t("common.appName", "KISANOVA")}
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
@@ -118,7 +118,7 @@ export function Footer() {
         {/* Bottom copyright row */}
         <div className="mt-12 pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
-            © {new Date().getFullYear()} KisanDirect. Direct Agricultural Trade Network.
+            © {new Date().getFullYear()} KISANOVA. Direct Agricultural Trade Network.
           </div>
           <div className="flex items-center gap-1 text-slate-400">
             <span>Built with precision for Indian agriculture</span>

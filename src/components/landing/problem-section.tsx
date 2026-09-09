@@ -91,7 +91,7 @@ export function ProblemSection() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center md:text-left">
               <span className="text-xs uppercase font-bold tracking-wider text-emerald-800">
-                The KisanDirect Solution
+                The KISANOVA Solution
               </span>
               <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
                 {t(
@@ -102,7 +102,7 @@ export function ProblemSection() {
               <p className="text-sm text-slate-600 max-w-2xl">
                 {t(
                   "landingSections.solutionBannerDesc",
-                  "By bypassing predatory commission agents and providing AI-backed price benchmarks, KisanDirect transfers value back to the food producers and end buyers."
+                  "By bypassing predatory commission agents and providing AI-backed price benchmarks, KISANOVA transfers value back to the food producers and end buyers."
                 )}
               </p>
             </div>

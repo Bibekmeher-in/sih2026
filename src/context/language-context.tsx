@@ -17,7 +17,7 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-const STORAGE_KEY = "kisandirect_lang";
+const STORAGE_KEY = "KISANOVA_lang";
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<LanguageCode>("en");
@@ -63,7 +63,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const t = useCallback(
     (path: string, fallback?: string): string => {
       const keys = path.split(".");
-      
+
       // Look up in current language
       let current: unknown = translations[language];
       for (const k of keys) {

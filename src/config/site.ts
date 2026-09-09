@@ -1,9 +1,9 @@
 export const siteConfig = {
-  name: "KisanDirect",
-  shortName: "KisanDirect",
+  name: "Kisanova",
+  shortName: "Kisanova",
   description:
     "India's premier direct agricultural trade network connecting farmers and FPOs directly with consumers and bulk buyers.",
-  url: "https://kisandirect.gov.in",
+  url: "https://kisanova.in",
   navItems: [
     { label: "About Problem", href: "#problem" },
     { label: "How It Works", href: "#how-it-works" },
@@ -21,8 +21,8 @@ export const siteConfig = {
     { id: "admin", label: "Admin Console", path: "/admin", description: "Fleet logistics, price benchmarks, dispute resolution" },
   ],
   contacts: {
-    supportEmail: "support@kisandirect.in",
-    helpline: "1800-KISAN-DIR",
+    supportEmail: "support@kisanova.in",
+    helpline: "1800-KISANOVA",
   },
 };
 

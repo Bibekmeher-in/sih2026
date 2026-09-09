@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-process.env.MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/kisandirect";
+process.env.MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/KISANOVA";
 const MONGODB_URI = process.env.MONGODB_URI;
 
 async function main() {

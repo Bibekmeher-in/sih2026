@@ -68,7 +68,7 @@ export async function GET() {
         summary: {
           totalForecasts,
           totalPriceRecommendations,
-          activeAiModel: isApiKeyConfigured ? "Google Gemini 2.5 Flash" : "KisanDirect Agritech Heuristic Fallback",
+          activeAiModel: isApiKeyConfigured ? "Google Gemini 2.5 Flash" : "KISANOVA Agritech Heuristic Fallback",
           promptGuardStatus: "ACTIVE (Max 8,000 Chars)",
           apiHealth: isApiKeyConfigured ? "OPERATIONAL" : "RUNNING_FALLBACK_MODE",
         },

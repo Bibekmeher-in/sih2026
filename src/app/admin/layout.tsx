@@ -32,7 +32,7 @@ export default async function AdminLayout({
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight truncate">
-                    KisanDirect
+                    Kisanova
                   </span>
                   <Badge variant="destructive" className="text-[9px] sm:text-[10px] font-bold uppercase py-0 px-1.5 flex items-center gap-1 shrink-0">
                     <ShieldAlert className="h-3 w-3" />

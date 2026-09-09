@@ -1,4 +1,4 @@
-# 🌾 KisanDirect — Direct Farmer-to-Consumer & B2B Agri-Trade Platform
+# 🌾 KISANOVA — Direct Farmer-to-Consumer & B2B Agri-Trade Platform
 
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.3.4-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
@@ -40,8 +40,8 @@ In the traditional Indian agricultural supply chain:
 - **Price Information Asymmetry:** Farmers lack localized forecasting tools and are forced to sell at distressed prices during bumper harvest gluts.
 - **Payment Insecurity:** Delayed settlements (30–90 days) by private traders force growers into high-interest debt cycles.
 
-### The KisanDirect Solution
-**KisanDirect** bridges this gap through a unified national agritech digital infrastructure:
+### The KISANOVA Solution
+**KISANOVA** bridges this gap through a unified national agritech digital infrastructure:
 1. **Direct Farm-Gate Marketplace:** Eliminates commissions by enabling farmers and FPOs to list directly for institutional buyers (hotels, processors, exporters) and retail households.
 2. **Cold-Chain Logistics Pooling:** Groups farm pickups using greedy nearest-neighbor clustering, saving up to **30%–42% in transit distances and carbon emissions**.
 3. **AI Price Advisory & Demand Forecasting:** Grounded in live market data and Agmarknet mandi benchmarks using Google Gemini to guide harvest timing and lot pricing.
@@ -51,7 +51,7 @@ In the traditional Indian agricultural supply chain:
 
 ## 📊 Key Value Metrics & Impact
 
-| Metric | Traditional APMC Chain | KisanDirect Platform | Measured Benefit |
+| Metric | Traditional APMC Chain | KISANOVA Platform | Measured Benefit |
 | :--- | :--- | :--- | :--- |
 | **Farmer Share of Consumer Rupee** | 25% – 35% | **70% – 82%** | **+28% to +45% Net Income** |
 | **B2B Procurement Savings** | 0% (High markup) | **18% – 25% cheaper** | Lower raw material cost |
@@ -95,11 +95,11 @@ In the traditional Indian agricultural supply chain:
 
 ## 👥 User Roles & Portals
 
-KisanDirect provides purpose-built, role-based workflows for each actor in the agricultural ecosystem:
+KISANOVA provides purpose-built, role-based workflows for each actor in the agricultural ecosystem:
 
 ```
                             ┌───────────────────┐
-                            │    KisanDirect    │
+                            │    KISANOVA    │
                             │   Unified Portal  │
                             └─────────┬─────────┘
                                       │
@@ -149,14 +149,14 @@ KisanDirect provides purpose-built, role-based workflows for each actor in the a
 
 ## 🔄 End-to-End System Workflow
 
-Here is how a complete transaction flows through KisanDirect from farm listing to consumer plate:
+Here is how a complete transaction flows through KISANOVA from farm listing to consumer plate:
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Farmer as 🌱 Farmer / FPO
     actor Buyer as 💼 Buyer / Consumer
-    participant Platform as 🌾 KisanDirect Platform
+    participant Platform as 🌾 KISANOVA Platform
     participant AI as 🤖 Gemini AI Engine
     participant Logistics as 🚚 Cold-Chain Carrier
     participant Escrow as 🏦 Bank Escrow Ledger
@@ -192,7 +192,7 @@ $$\text{Score} = (w_1 \cdot \text{Volume Match}) + (w_2 \cdot \text{Price Compat
 - **Seller Quality & Rating (10%):** Historical fulfillment rate and verified producer status.
 
 ### 2. Nearest-Neighbor Cold-Chain Logistics Optimizer
-Traditional farm pickups involve independent, uncoordinated trucks creating empty backhauls (*deadheading*). KisanDirect uses **Greedy Nearest-Neighbor Spatial Clustering**:
+Traditional farm pickups involve independent, uncoordinated trucks creating empty backhauls (*deadheading*). KISANOVA uses **Greedy Nearest-Neighbor Spatial Clustering**:
 1. Groups pickup waypoints within a 45 km radius into unified carrier dispatches.
 2. Identifies the central APMC / Processing Hub as the terminal destination.
 3. Computes the optimal pickup sequence:
@@ -202,7 +202,7 @@ Traditional farm pickups involve independent, uncoordinated trucks creating empt
 ### 3. Gemini AI Pricing & Demand Copilot
 - **Grounded Price Advisory:** Integrates Google Gemini with live regional mandi modal data to give farmers clear advice:
   - *Current Mandi Modal Price*
-  - *Recommended KisanDirect Listing Price*
+  - *Recommended KISANOVA Listing Price*
   - *Estimated Net Gain vs Commission Agent*
 - **Natural Language Procurement Scout:** Enables buyers to type queries like *"Find 500kg Grade A onions under 25 rs in Nashik"* and converts them into structured MongoDB queries with zero hallucinated inventory.
 
@@ -344,7 +344,7 @@ All demonstration accounts use the unified password:
 
 ## 📋 SIH 20-Step Live Demonstration Checklist
 
-Follow this curated sequence to demonstrate the complete KisanDirect workflow during hackathon presentations:
+Follow this curated sequence to demonstrate the complete KISANOVA workflow during hackathon presentations:
 
 ### Phase 1: Farmer Produce Onboarding (Steps 1–4)
 - [x] **Step 1:** Log in as **Farmer** (`farmer@example.com`).

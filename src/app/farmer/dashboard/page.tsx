@@ -307,7 +307,7 @@ export default function FarmerDashboardPage() {
                 <Area
                   type="monotone"
                   dataKey="directRevenue"
-                  name="KisanDirect Revenue (Direct)"
+                  name="KISANOVA Revenue (Direct)"
                   stroke="#047857"
                   strokeWidth={2.5}
                   fillOpacity={1}
@@ -430,15 +430,15 @@ export default function FarmerDashboardPage() {
                           order.orderStatus === "DELIVERED"
                             ? "secondary"
                             : order.orderStatus === "CONFIRMED"
-                            ? "default"
-                            : "outline"
+                              ? "default"
+                              : "outline"
                         }
                         className={
                           order.orderStatus === "DELIVERED"
                             ? "bg-emerald-100 text-emerald-800"
                             : order.orderStatus === "IN_TRANSIT"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-amber-100 text-amber-800"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-amber-100 text-amber-800"
                         }
                       >
                         {order.orderStatus.replace(/_/g, " ")}

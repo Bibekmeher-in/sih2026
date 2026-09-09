@@ -32,7 +32,7 @@ export function FarmerBenefitsSection() {
     {
       icon: CalendarCheck,
       title: "Farm-Gate Aggregated Pickup",
-      desc: "KisanDirect logistics pick up produce right from your farm or village collection center, saving transport hassle.",
+      desc: "KISANOVA logistics pick up produce right from your farm or village collection center, saving transport hassle.",
     },
     {
       icon: TrendingUp,
@@ -56,7 +56,7 @@ export function FarmerBenefitsSection() {
             <p className="text-slate-600 leading-relaxed">
               {t(
                 "landingSections.farmerBenefitsSubtitle",
-                "Every year, Indian farmers lose hard-earned profits to asymmetric mandi rates and high transit deductions. KisanDirect returns power to growers with transparent digital pricing and guaranteed logistics."
+                "Every year, Indian farmers lose hard-earned profits to asymmetric mandi rates and high transit deductions. KISANOVA returns power to growers with transparent digital pricing and guaranteed logistics."
               )}
             </p>
 
@@ -77,7 +77,7 @@ export function FarmerBenefitsSection() {
                   <div className="text-[11px] text-red-600 font-medium mt-0.5">-25% deductions</div>
                 </div>
                 <div className="p-3 bg-white rounded-lg border border-emerald-300 shadow-xs">
-                  <div className="text-xs text-emerald-700 font-semibold">KisanDirect Net</div>
+                  <div className="text-xs text-emerald-700 font-semibold">KISANOVA Net</div>
                   <div className="text-lg font-bold text-emerald-800">₹1,950 / Qtl</div>
                   <div className="text-[11px] text-emerald-600 font-semibold mt-0.5">+39% in pocket</div>
                 </div>

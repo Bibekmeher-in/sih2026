@@ -31,7 +31,7 @@ export default async function FarmerLayout({
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="text-sm sm:text-base font-bold text-slate-900 leading-none truncate">
-                    Kisan<span className="text-emerald-700">Direct</span>
+                    Kisan<span className="text-emerald-700">ova</span>
                   </span>
                   <Badge variant="outline" className="text-[9px] sm:text-[10px] py-0 border-emerald-300 text-emerald-800 bg-emerald-50 shrink-0">
                     Farmer

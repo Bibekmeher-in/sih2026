@@ -5,7 +5,7 @@ import { getFarmerAiHubData } from "@/lib/ai-forecast-pricing";
 import FarmerAiInsightsClient from "@/components/farmer/ai-insights-client";
 
 export const metadata: Metadata = {
-  title: "AI Agronomic & Price Intelligence | KisanDirect",
+  title: "AI Agronomic & Price Intelligence | KISANOVA",
   description: "AI-driven demand forecasts, econometric price recommendations, and dedicated agricultural advisory copilot.",
 };
 

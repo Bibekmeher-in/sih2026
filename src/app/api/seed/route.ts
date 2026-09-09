@@ -34,7 +34,7 @@ export async function POST() {
     const summary = await seedCompleteDatabase();
     return NextResponse.json({
       success: true,
-      message: "Successfully seeded complete KisanDirect agritech database",
+      message: "Successfully seeded complete KISANOVA agritech database",
       counts: summary,
       demoAccounts: DEMO_ACCOUNTS.map((a) => ({
         role: a.role,
@@ -61,7 +61,7 @@ export async function POST() {
 
 export async function GET() {
   return NextResponse.json({
-    description: "KisanDirect Multi-Collection Seed Registry",
+    description: "KISANOVA Multi-Collection Seed Registry",
     standardPassword: DEMO_PASSWORD,
     collectionsSupported: [
       "User",

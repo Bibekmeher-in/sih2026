@@ -13,7 +13,7 @@ import {
 import AdminLogisticsClient from "@/components/admin/logistics-client";
 
 export const metadata: Metadata = {
-  title: "Vehicle Fleet Management | KisanDirect Admin",
+  title: "Vehicle Fleet Management | KISANOVA Admin",
   description: "Commercial Reefer Fleets, Driver Telemetry & Payload Capacity Oversight",
 };
 

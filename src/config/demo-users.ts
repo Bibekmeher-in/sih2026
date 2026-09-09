@@ -75,7 +75,7 @@ export const DEMO_ACCOUNTS: DemoAccountInfo[] = [
     description: "Household consumer purchasing farm-fresh direct produce.",
   },
   {
-    name: "KisanDirect Administrator",
+    name: "KISANOVA Administrator",
     email: "admin@example.com",
     password: DEMO_PASSWORD,
     role: USER_ROLES.ADMIN,

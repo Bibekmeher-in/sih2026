@@ -46,7 +46,7 @@ export function LogisticsSection() {
             <p className="text-slate-600 leading-relaxed">
               {t(
                 "landingSections.logisticsSubtitle",
-                "India's agricultural logistics suffer from fragmented unorganized trucking and idle mileage. KisanDirect combines rural collection hubs with dynamic route scheduling to drastically cut freight costs and eliminate transit spoilage."
+                "India's agricultural logistics suffer from fragmented unorganized trucking and idle mileage. KISANOVA combines rural collection hubs with dynamic route scheduling to drastically cut freight costs and eliminate transit spoilage."
               )}
             </p>
 

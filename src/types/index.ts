@@ -1,5 +1,5 @@
 /**
- * KisanDirect — Global Type Definitions & Role Constants
+ * KISANOVA — Global Type Definitions & Role Constants
  */
 
 export const USER_ROLES = {

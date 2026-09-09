@@ -4,7 +4,7 @@ import { USER_ROLES } from "@/types";
 import { AdminUsersClient } from "@/components/admin/users-client";
 
 export const metadata: Metadata = {
-  title: "FPO Clusters | KisanDirect Admin",
+  title: "FPO Clusters | KISANOVA Admin",
   description: "Farmer Producer Organizations & Aggregation Center Management",
 };
 

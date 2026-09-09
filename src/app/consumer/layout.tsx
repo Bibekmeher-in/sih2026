@@ -31,7 +31,7 @@ export default async function ConsumerLayout({
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight truncate">
-                    KisanDirect
+                    Kisanova
                   </span>
                   <Badge variant="outline" className="text-[9px] sm:text-[10px] font-bold text-emerald-700 border-emerald-300 uppercase py-0 px-1 hidden sm:inline-flex shrink-0">
                     Consumer

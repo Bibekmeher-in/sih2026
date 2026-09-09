@@ -164,7 +164,7 @@ export default function FarmerEarningsPage() {
               You Have Earned <span className="text-emerald-300">+{formatCurrency(data.mandiComparison.netGain)}</span> More Than APMC
             </h2>
             <p className="text-xs text-emerald-100">
-              By selling directly through KisanDirect, you avoided typical 8.5% APMC agent commissions, 4% loading deductions, and 15% wholesale buyer discounts.
+              By selling directly through KISANOVA, you avoided typical 8.5% APMC agent commissions, 4% loading deductions, and 15% wholesale buyer discounts.
             </p>
           </div>
 
@@ -229,7 +229,7 @@ export default function FarmerEarningsPage() {
               <Area
                 type="monotone"
                 dataKey="directRevenue"
-                name="KisanDirect Direct Sales"
+                name="KISANOVA Direct Sales"
                 stroke="#047857"
                 strokeWidth={3}
                 fillOpacity={1}

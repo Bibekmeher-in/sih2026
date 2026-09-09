@@ -13,7 +13,7 @@
 
 import mongoose from "mongoose";
 
-const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/kisandirect";
+const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/KISANOVA";
 const BASE_URL = "http://localhost:3000";
 
 async function runPhase7Tests() {

@@ -109,13 +109,13 @@ export async function getConsumerOrders(userId: string) {
           orderStatus: o.orderStatus,
           deliveryAddress: o.deliveryAddress
             ? {
-                recipientName: o.deliveryAddress.recipientName || "",
-                recipientPhone: o.deliveryAddress.recipientPhone || "",
-                addressLine: o.deliveryAddress.addressLine || "",
-                district: o.deliveryAddress.district || "",
-                state: o.deliveryAddress.state || "",
-                pincode: o.deliveryAddress.pincode || "",
-              }
+              recipientName: o.deliveryAddress.recipientName || "",
+              recipientPhone: o.deliveryAddress.recipientPhone || "",
+              addressLine: o.deliveryAddress.addressLine || "",
+              district: o.deliveryAddress.district || "",
+              state: o.deliveryAddress.state || "",
+              pincode: o.deliveryAddress.pincode || "",
+            }
             : undefined,
           createdAt: o.createdAt ? new Date(o.createdAt).toISOString() : new Date().toISOString(),
         };
@@ -181,16 +181,16 @@ export async function getConsumerOrderById(userId: string, orderId: string) {
       if (delivery) {
         const vehicle = delivery.vehicle && typeof delivery.vehicle === "object"
           ? (delivery.vehicle as {
-              registrationNumber?: string;
-              modelName?: string;
-              driverName?: string;
-              driverPhone?: string;
-            })
+            registrationNumber?: string;
+            modelName?: string;
+            driverName?: string;
+            driverPhone?: string;
+          })
           : null;
 
         trackingInfo = {
           trackingNumber: delivery.deliveryTrackingNumber || `KD-TRK-${order.orderNumber.replace(/[^0-9]/g, "").slice(-4)}`,
-          carrier: "KisanDirect Agri-Logistics Fleet",
+          carrier: "KISANOVA Agri-Logistics Fleet",
           vehicleNumber: vehicle?.registrationNumber || "",
           driverName: vehicle?.driverName || delivery.driverName || "",
           driverPhone: vehicle?.driverPhone || delivery.driverPhone || "",
@@ -198,8 +198,8 @@ export async function getConsumerOrderById(userId: string, orderId: string) {
           eta: delivery.actualDeliveryTime
             ? new Date(delivery.actualDeliveryTime).toLocaleString("en-IN")
             : order.orderStatus === "DELIVERED"
-            ? "Delivered"
-            : "Estimated within 24 hours",
+              ? "Delivered"
+              : "Estimated within 24 hours",
           coldChainTempCelsius: delivery.temperatureCelsius ?? undefined,
           currentLocation: delivery.currentLocation
             ? `${delivery.currentLocation.latitude.toFixed(3)}, ${delivery.currentLocation.longitude.toFixed(3)}`
@@ -232,27 +232,27 @@ export async function getConsumerOrderById(userId: string, orderId: string) {
       orderStatus: order.orderStatus || "PENDING",
       deliveryAddress: order.deliveryAddress
         ? {
-            recipientName: order.deliveryAddress.recipientName || "",
-            recipientPhone: order.deliveryAddress.recipientPhone || "",
-            addressLine: order.deliveryAddress.addressLine || "",
-            district: order.deliveryAddress.district || "",
-            state: order.deliveryAddress.state || "",
-            pincode: order.deliveryAddress.pincode || "",
-            coordinates: order.deliveryAddress.coordinates
-              ? {
-                  latitude: order.deliveryAddress.coordinates.latitude,
-                  longitude: order.deliveryAddress.coordinates.longitude,
-                }
-              : undefined,
-          }
+          recipientName: order.deliveryAddress.recipientName || "",
+          recipientPhone: order.deliveryAddress.recipientPhone || "",
+          addressLine: order.deliveryAddress.addressLine || "",
+          district: order.deliveryAddress.district || "",
+          state: order.deliveryAddress.state || "",
+          pincode: order.deliveryAddress.pincode || "",
+          coordinates: order.deliveryAddress.coordinates
+            ? {
+              latitude: order.deliveryAddress.coordinates.latitude,
+              longitude: order.deliveryAddress.coordinates.longitude,
+            }
+            : undefined,
+        }
         : {
-            recipientName: "",
-            recipientPhone: "",
-            addressLine: "",
-            district: "",
-            state: "",
-            pincode: "",
-          },
+          recipientName: "",
+          recipientPhone: "",
+          addressLine: "",
+          district: "",
+          state: "",
+          pincode: "",
+        },
       trackingInfo,
       createdAt: order.createdAt ? new Date(order.createdAt).toISOString() : new Date().toISOString(),
     };

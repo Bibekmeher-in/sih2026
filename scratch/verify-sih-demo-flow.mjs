@@ -317,11 +317,11 @@ async function main() {
   });
 
   // 18. Login as admin
-  await runStep(18, "Login as Admin (KisanDirect Administrator)", async () => {
+  await runStep(18, "Login as Admin (KISANOVA Administrator)", async () => {
     const auth = await loginAs("admin@example.com", "Kisan@1234");
     if (!auth.success) throw new Error("Admin login failed");
     adminCookies = auth.cookieString;
-    return `Authenticated as KisanDirect Administrator (ADMIN)`;
+    return `Authenticated as KISANOVA Administrator (ADMIN)`;
   });
 
   // 19. Show marketplace analytics

@@ -4,7 +4,7 @@ import { USER_ROLES } from "@/types";
 import { AdminUsersClient } from "@/components/admin/users-client";
 
 export const metadata: Metadata = {
-  title: "Farmers Directory | KisanDirect Admin",
+  title: "Farmers Directory | KISANOVA Admin",
   description: "Direct Agricultural Producer Directory & Verification Management",
 };
 

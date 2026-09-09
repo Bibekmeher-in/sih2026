@@ -73,7 +73,7 @@ export default async function ConsumerDashboardPage() {
           </h1>
 
           <p className="text-emerald-100/80 text-xs sm:text-sm leading-relaxed">
-            By shopping directly on KisanDirect, you have saved approximately{" "}
+            By shopping directly on KISANOVA, you have saved approximately{" "}
             <span className="font-bold text-emerald-300">
               {formatCurrency(stats.totalSavings)}
             </span>{" "}
@@ -320,8 +320,8 @@ export default async function ConsumerDashboardPage() {
                           o.orderStatus === "DELIVERED"
                             ? "default"
                             : o.orderStatus === "CANCELLED"
-                            ? "destructive"
-                            : "secondary"
+                              ? "destructive"
+                              : "secondary"
                         }
                         className="text-[10px] font-bold"
                       >

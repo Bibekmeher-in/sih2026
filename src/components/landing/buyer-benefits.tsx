@@ -44,7 +44,7 @@ export function BuyerBenefitsSection() {
           <p className="mt-4 text-base sm:text-lg text-slate-600">
             {t(
               "landingSections.buyerBenefitsSubtitle",
-              "Whether you are procuring 25 metric tons of tomatoes for food processing or 5 kg of fresh vegetables for your family, KisanDirect delivers pure farm-gate quality."
+              "Whether you are procuring 25 metric tons of tomatoes for food processing or 5 kg of fresh vegetables for your family, KISANOVA delivers pure farm-gate quality."
             )}
           </p>
         </div>

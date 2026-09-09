@@ -237,7 +237,7 @@ export function AdminDashboardClient({ initialData }: { initialData: DashboardDa
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-blue-700">The Solution</span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800">KisanDirect Tech</span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800">KISANOVA Tech</span>
               </div>
               <h3 className="text-sm font-black text-slate-900 mb-2">
                 Direct Marketplace + Logistics + AI

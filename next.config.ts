@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 /**
- * KisanDirect — Next.js Production Configuration
+ * KISANOVA — Next.js Production Configuration
  *
  * Security headers applied to all routes.
  * CSP is deliberately permissive on script-src due to Next.js inline hydration

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-await mongoose.connect('mongodb://127.0.0.1:27017/kisandirect');
+await mongoose.connect('mongodb://127.0.0.1:27017/KISANOVA');
 const db = mongoose.connection.db;
 
 // Find all products where category is not an ObjectId

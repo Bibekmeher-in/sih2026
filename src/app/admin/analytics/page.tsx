@@ -4,7 +4,7 @@ import { USER_ROLES } from "@/types";
 import { AdminAnalyticsClient } from "@/components/admin/analytics-client";
 
 export const metadata: Metadata = {
-  title: "Platform Analytics & Business Intelligence | KisanDirect Admin",
+  title: "Platform Analytics & Business Intelligence | KISANOVA Admin",
   description: "Executive Agritech Econometrics, Monthly GMV, Category Demand & Delivery SLAs",
 };
 

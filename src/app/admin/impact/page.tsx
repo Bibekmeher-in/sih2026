@@ -5,7 +5,7 @@ import { getAgriculturalImpactData } from "@/lib/impact-service";
 import { ImpactDashboardClient } from "@/components/impact/impact-dashboard-client";
 
 export const metadata: Metadata = {
-  title: "Agricultural Impact Console | KisanDirect Admin",
+  title: "Agricultural Impact Console | KISANOVA Admin",
   description: "SIH Problem Statement Metrics, Value Chain Disintermediation & Econometric Spread Oversight",
 };
 

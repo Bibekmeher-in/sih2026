@@ -8,8 +8,8 @@ export interface CommodityImpactItem {
   unit: string;
   traditionalRetailPrice: number;
   traditionalFarmerRealization: number;
-  kisanDirectConsumerPrice: number;
-  kisanDirectFarmerRealization: number;
+  KISANOVAConsumerPrice: number;
+  KISANOVAFarmerRealization: number;
   farmerRealizationGain: number;
   farmerGainPercentage: number;
   consumerSaving: number;
@@ -62,8 +62,8 @@ export const COMMODITY_BENCHMARK_MATRIX: CommodityImpactItem[] = [
     unit: "kg",
     traditionalRetailPrice: 35.0,
     traditionalFarmerRealization: 18.0,
-    kisanDirectConsumerPrice: 29.0,
-    kisanDirectFarmerRealization: 24.0,
+    KISANOVAConsumerPrice: 29.0,
+    KISANOVAFarmerRealization: 24.0,
     farmerRealizationGain: 6.0,
     farmerGainPercentage: 33.3,
     consumerSaving: 6.0,
@@ -75,8 +75,8 @@ export const COMMODITY_BENCHMARK_MATRIX: CommodityImpactItem[] = [
     unit: "kg",
     traditionalRetailPrice: 38.0,
     traditionalFarmerRealization: 20.0,
-    kisanDirectConsumerPrice: 32.0,
-    kisanDirectFarmerRealization: 26.0,
+    KISANOVAConsumerPrice: 32.0,
+    KISANOVAFarmerRealization: 26.0,
     farmerRealizationGain: 6.0,
     farmerGainPercentage: 30.0,
     consumerSaving: 6.0,
@@ -88,8 +88,8 @@ export const COMMODITY_BENCHMARK_MATRIX: CommodityImpactItem[] = [
     unit: "kg",
     traditionalRetailPrice: 28.0,
     traditionalFarmerRealization: 14.0,
-    kisanDirectConsumerPrice: 23.0,
-    kisanDirectFarmerRealization: 19.0,
+    KISANOVAConsumerPrice: 23.0,
+    KISANOVAFarmerRealization: 19.0,
     farmerRealizationGain: 5.0,
     farmerGainPercentage: 35.7,
     consumerSaving: 5.0,
@@ -101,8 +101,8 @@ export const COMMODITY_BENCHMARK_MATRIX: CommodityImpactItem[] = [
     unit: "kg",
     traditionalRetailPrice: 44.0,
     traditionalFarmerRealization: 26.0,
-    kisanDirectConsumerPrice: 38.0,
-    kisanDirectFarmerRealization: 32.0,
+    KISANOVAConsumerPrice: 38.0,
+    KISANOVAFarmerRealization: 32.0,
     farmerRealizationGain: 6.0,
     farmerGainPercentage: 23.1,
     consumerSaving: 6.0,
@@ -114,8 +114,8 @@ export const COMMODITY_BENCHMARK_MATRIX: CommodityImpactItem[] = [
     unit: "kg",
     traditionalRetailPrice: 140.0,
     traditionalFarmerRealization: 90.0,
-    kisanDirectConsumerPrice: 122.0,
-    kisanDirectFarmerRealization: 108.0,
+    KISANOVAConsumerPrice: 122.0,
+    KISANOVAFarmerRealization: 108.0,
     farmerRealizationGain: 18.0,
     farmerGainPercentage: 20.0,
     consumerSaving: 18.0,
@@ -141,7 +141,7 @@ export async function getAgriculturalImpactData(): Promise<AgriculturalImpactRep
 
   // Econometric multiplier derivations:
   // In the traditional agricultural value chain, farmers receive ~51% of consumer price.
-  // On KisanDirect, farmers receive ~82% of transaction value.
+  // On KISANOVA, farmers receive ~82% of transaction value.
   const farmerRealizationImprovementPercent = 31.4;
   const averageSellingPriceInr = 28.5;
   const historicalMandiBenchmarkInr = 21.7;
@@ -202,7 +202,7 @@ export async function getAgriculturalImpactData(): Promise<AgriculturalImpactRep
     monthlyImpactTrends,
     disclosure: {
       notice:
-        "Important Disclosure: Price realizations, consumer savings, and intermediary margin figures are derived from econometric analysis of live KisanDirect farm-gate transactions benchmarked against official Agmarknet APMC modal spot rates. These represent comparative structural estimates and are not official Ministry of Agriculture statistical releases.",
+        "Important Disclosure: Price realizations, consumer savings, and intermediary margin figures are derived from econometric analysis of live KISANOVA farm-gate transactions benchmarked against official Agmarknet APMC modal spot rates. These represent comparative structural estimates and are not official Ministry of Agriculture statistical releases.",
       methodology:
         "Econometric Spread Analysis: Compares farm-gate transaction price with Agmarknet APMC modal mandi benchmark price and urban consumer retail CPI surveys.",
       isEconometricSimulation: true,

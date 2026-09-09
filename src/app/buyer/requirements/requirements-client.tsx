@@ -117,7 +117,7 @@ export function RequirementsClient({
   };
 
   const handleSendPurchaseOrder = (supplierName: string) => {
-    setOrderSentMessage(`Purchase Order successfully drafted and transmitted to ${supplierName} under KisanDirect Escrow terms!`);
+    setOrderSentMessage(`Purchase Order successfully drafted and transmitted to ${supplierName} under KISANOVA Escrow terms!`);
     setTimeout(() => setOrderSentMessage(null), 5000);
   };
 
@@ -362,9 +362,8 @@ export function RequirementsClient({
                     </span>
                     <Badge
                       variant={matchCount > 0 ? "default" : "secondary"}
-                      className={`text-[10px] font-bold ${
-                        matchCount > 0 ? "bg-emerald-700 text-white" : ""
-                      }`}
+                      className={`text-[10px] font-bold ${matchCount > 0 ? "bg-emerald-700 text-white" : ""
+                        }`}
                     >
                       {matchCount} Deterministic Match{matchCount !== 1 ? "es" : ""}
                     </Badge>

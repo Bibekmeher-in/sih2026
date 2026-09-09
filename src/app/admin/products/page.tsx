@@ -4,7 +4,7 @@ import { USER_ROLES } from "@/types";
 import { AdminProductsClient } from "@/components/admin/products-client";
 
 export const metadata: Metadata = {
-  title: "Produce Catalog Moderation | KisanDirect Admin",
+  title: "Produce Catalog Moderation | KISANOVA Admin",
   description: "Live Farm Lot Inspection & Marketplace Moderation Console",
 };
 

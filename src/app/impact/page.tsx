@@ -5,7 +5,7 @@ import { getAgriculturalImpactData } from "@/lib/impact-service";
 import { ImpactDashboardClient } from "@/components/impact/impact-dashboard-client";
 
 export const metadata: Metadata = {
-  title: "Agricultural Impact & Socioeconomic Realization | KisanDirect",
+  title: "Agricultural Impact & Socioeconomic Realization | KISANOVA",
   description: "SIH Problem Statement Validation: Higher farmer realizations, lower consumer food prices, and reduced logistics waste.",
 };
 

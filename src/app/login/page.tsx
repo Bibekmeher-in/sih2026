@@ -120,7 +120,7 @@ function LoginForm() {
               <Sprout className="h-4 w-4" />
             </div>
             <span className="text-lg font-bold tracking-tight text-slate-900">
-              Kisan<span className="text-emerald-700">Direct</span>
+              Kisan<span className="text-emerald-700">ova</span>
             </span>
           </Link>
           <LanguageSwitcher compact />

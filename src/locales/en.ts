@@ -1,6 +1,6 @@
 export const en = {
   common: {
-    appName: "KisanDirect",
+    appName: "Kisanova",
     tagline: "Direct Agriculture Trade Network",
     loading: "Loading...",
     save: "Save",
@@ -61,8 +61,8 @@ export const en = {
     heroTitleHighlight: "Earn Better.",
     heroTitlePart2: "Buy Smarter.",
     heroSubtitle:
-      "KisanDirect bridges the gap between Indian farmers, FPOs, bulk institutional buyers, and urban consumers. Eliminating middlemen commission while powering dynamic pricing, route-optimized logistics, and AI demand forecasting.",
-    ctaJoin: "Join KisanDirect",
+      "Kisanova bridges the gap between Indian farmers, FPOs, bulk institutional buyers, and urban consumers. Eliminating middlemen commission while powering dynamic pricing, route-optimized logistics, and AI demand forecasting.",
+    ctaJoin: "Join Kisanova",
     ctaSignIn: "Sign In to Portal",
     ctaExplore: "Browse Produce Marketplace",
     ctaPortals: "Access Portals",
@@ -84,7 +84,7 @@ export const en = {
     problemTitle: "The Agricultural Intermediary Crisis",
     problemDesc:
       "Traditional mandi supply chains strip up to 60% of produce value through sequential brokers, unregulated commission agents, and fragmented logistics.",
-    howTitle: "How KisanDirect Works",
+    howTitle: "How Kisanova Works",
     howStep1Title: "1. Direct Farm Listing",
     howStep1Desc: "Farmers list verified produce lots directly with harvest dates and quality grades.",
     howStep2Title: "2. Transparent Discovery",
@@ -136,7 +136,7 @@ export const en = {
     addProduct: "Add Produce Listing",
     myOrders: "Procurement Orders",
     aiInsights: "AI Price & Demand Insights",
-    mandiComparison: "Mandi vs KisanDirect Realization",
+    mandiComparison: "Mandi vs Kisanova Realization",
   },
   buyer: {
     dashboardTitle: "Procurement Command Center",
@@ -169,9 +169,9 @@ export const en = {
     impactEngine: "Impact Engine",
   },
   auth: {
-    signInTitle: "Sign In to KisanDirect",
+    signInTitle: "Sign In to Kisanova",
     signInSubtitle: "Select your role or enter credentials to access your portal",
-    registerTitle: "Join KisanDirect Platform",
+    registerTitle: "Join Kisanova Platform",
     registerSubtitle: "Register as a Farmer, FPO, Bulk Buyer, or Consumer",
     email: "Email Address",
     password: "Password",
@@ -193,22 +193,22 @@ export const en = {
       "Despite feeding over 1.4 billion people, farmers face distress prices while consumers and bulk buyers pay inflated retail costs due to structural bottlenecks.",
     solutionBanner: "Direct Farm-Gate Matching + Intelligent Logistics",
     solutionBannerDesc:
-      "By bypassing predatory commission agents and providing AI-backed price benchmarks, KisanDirect transfers value back to food producers and end buyers.",
-    howTitle: "How KisanDirect Works",
+      "By bypassing predatory commission agents and providing AI-backed price benchmarks, Kisanova transfers value back to food producers and end buyers.",
+    howTitle: "How Kisanova Works",
     howSubtitle:
       "A transparent, four-stage digital highway connecting Indian agriculture directly to urban and commercial consumption centers.",
     farmerBenefitsTitle: "Direct Power to Indian Farmers & FPOs",
     farmerBenefitsSubtitle:
-      "Every year, Indian farmers lose hard-earned profits to asymmetric mandi rates and high transit deductions. KisanDirect returns power to growers with transparent digital pricing and guaranteed logistics.",
+      "Every year, Indian farmers lose hard-earned profits to asymmetric mandi rates and high transit deductions. Kisanova returns power to growers with transparent digital pricing and guaranteed logistics.",
     buyerBenefitsTitle: "Procurement Built for Commercial Buyers",
     buyerBenefitsSubtitle:
-      "Whether you are procuring 25 metric tons of tomatoes for food processing or fresh produce for retail chains, KisanDirect delivers pure farm-gate quality with guaranteed traceability.",
+      "Whether you are procuring 25 metric tons of tomatoes for food processing or fresh produce for retail chains, Kisanova delivers pure farm-gate quality with guaranteed traceability.",
     aiEngineTitle: "Google Gemini AI Engine & Decision Intelligence",
     aiEngineSubtitle:
       "We separate business-critical calculations from AI explanations. Mathematical order totals and routes are deterministic; Gemini provides deep market insight and clear explanations.",
     logisticsTitle: "Clustered Farm-to-Fork Route Logistics",
     logisticsSubtitle:
-      "India's agricultural logistics suffer from fragmented unorganized trucking and idle mileage. KisanDirect combines rural collection hubs with dynamic route scheduling to drastically cut freight costs.",
+      "India's agricultural logistics suffer from fragmented unorganized trucking and idle mileage. Kisanova combines rural collection hubs with dynamic route scheduling to drastically cut freight costs.",
     ctaTitle: "Transforming Indian Agriculture, One Harvest at a Time",
     ctaSubtitle:
       "Join thousands of farmers, FPOs, wholesale buyers, and families experiencing direct, transparent, and fair agricultural trade.",

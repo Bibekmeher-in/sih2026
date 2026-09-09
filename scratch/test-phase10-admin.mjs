@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-process.env.MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/kisandirect";
+process.env.MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/KISANOVA";
 const MONGODB_URI = process.env.MONGODB_URI;
 
 async function runPhase10AdminTests() {
@@ -19,7 +19,7 @@ async function runPhase10AdminTests() {
     console.log("⚠️ No admin found. Seeding a dedicated test administrator...");
     const insertAdmin = await db.collection("users").insertOne({
       name: "Super Admin",
-      email: "admin.super@kisandirect.in",
+      email: "admin.super@KISANOVA.in",
       passwordHash: "$2a$10$hashedpasswordforexampletest",
       role: "ADMIN",
       phone: "+919800000000",

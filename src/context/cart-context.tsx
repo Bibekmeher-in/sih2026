@@ -58,7 +58,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Hydrate cart from localStorage strictly after client mount to prevent SSR mismatch
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("kisandirect_cart");
+      const saved = localStorage.getItem("KISANOVA_cart");
       if (saved) {
         setItems(JSON.parse(saved));
       }
@@ -72,7 +72,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!isMounted) return;
     try {
-      localStorage.setItem("kisandirect_cart", JSON.stringify(items));
+      localStorage.setItem("KISANOVA_cart", JSON.stringify(items));
     } catch {
       // Ignore localStorage errors
     }

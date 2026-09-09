@@ -91,8 +91,8 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
   const extraPercentage =
     product.mandiBenchmarkPrice > 0
       ? Math.round(
-          ((product.price - product.mandiBenchmarkPrice) / product.mandiBenchmarkPrice) * 100
-        )
+        ((product.price - product.mandiBenchmarkPrice) / product.mandiBenchmarkPrice) * 100
+      )
       : 0;
 
   return (
@@ -300,9 +300,8 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
                 <Button
                   onClick={handleAddToCart}
                   size="lg"
-                  className={`w-full font-bold text-base h-12 shadow-sm transition-all ${
-                    addedAnimation ? "bg-emerald-600" : ""
-                  }`}
+                  className={`w-full font-bold text-base h-12 shadow-sm transition-all ${addedAnimation ? "bg-emerald-600" : ""
+                    }`}
                 >
                   {addedAnimation ? (
                     <span className="flex items-center gap-2">
@@ -329,7 +328,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
             <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-2 text-xs text-slate-600">
               <h4 className="font-bold text-slate-900 flex items-center gap-1.5 text-sm">
                 <ShieldCheck className="h-4 w-4 text-emerald-600" />
-                <span>KisanDirect Quality Guarantee</span>
+                <span>KISANOVA Quality Guarantee</span>
               </h4>
               <p className="leading-relaxed">
                 Produce is graded according to Ministry of Agriculture AGMARK standards. Inspected

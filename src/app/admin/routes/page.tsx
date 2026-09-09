@@ -13,7 +13,7 @@ import {
 import AdminLogisticsClient from "@/components/admin/logistics-client";
 
 export const metadata: Metadata = {
-  title: "Route Optimization Console | KisanDirect Admin",
+  title: "Route Optimization Console | KISANOVA Admin",
   description: "Nearest-Neighbor Greedy Heuristic & 2-Opt Multi-Farm Collection Planning",
 };
 

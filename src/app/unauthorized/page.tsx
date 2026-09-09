@@ -49,7 +49,7 @@ function UnauthorizedContent() {
         </h1>
 
         <p className="mt-3 text-sm text-slate-600 leading-relaxed">
-          You do not have permission to view this section of KisanDirect. This module requires the{" "}
+          You do not have permission to view this section of KISANOVA. This module requires the{" "}
           <strong className="text-slate-900 font-semibold">{requiredRole}</strong> role, but your account is currently signed in as{" "}
           <span className="font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-xs">
             {currentRole}
@@ -78,7 +78,7 @@ function UnauthorizedContent() {
       <div className="mt-6">
         <Link href="/" className="text-xs text-slate-500 hover:text-slate-800 inline-flex items-center gap-1">
           <Home className="h-3.5 w-3.5" />
-          <span>Return to KisanDirect Home</span>
+          <span>Return to KISANOVA Home</span>
         </Link>
       </div>
     </div>

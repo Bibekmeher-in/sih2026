@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 /**
- * KisanDirect — Centralized Server-Side Google Gemini AI Service
+ * KISANOVA — Centralized Server-Side Google Gemini AI Service
  *
  * CRITICAL ARCHITECTURAL RULES:
  * 1. Never import or invoke this module from client components.
@@ -33,7 +33,7 @@ function isDummyKey(key?: string): boolean {
 export function sanitizeAndTruncatePrompt(prompt: string, maxLen = MAX_PROMPT_CHARS): string {
   if (!prompt || typeof prompt !== "string") return "";
   let clean = prompt.trim();
-  const notice = "\n...[Content truncated by KisanDirect PromptGuard]";
+  const notice = "\n...[Content truncated by KISANOVA PromptGuard]";
   if (clean.length > maxLen) {
     const sliceLen = Math.max(0, maxLen - notice.length);
     clean = clean.slice(0, sliceLen) + notice;
@@ -123,7 +123,7 @@ export async function generateFarmerInsights(
     .join("\n");
 
   const prompt = `
-You are an expert agricultural economist and agritech advisor for KisanDirect in India.
+You are an expert agricultural economist and agritech advisor for KISANOVA in India.
 Analyze the following farmer's live holdings in ${context.location.district}, ${context.location.state}:
 
 Grower: ${context.farmerName}
@@ -164,7 +164,7 @@ Provide structured operational guidance in 4 short bullet points:
     sellingRecommendation: `Offer direct pricing between ₹${primaryApmc + 4} and ₹${primaryPrice}/kg to secure institutional recurring purchase contracts while bypassing 6-8% Mandi commission.`,
     shortExplanation: `Deterministic agritech model: By disintermediating traditional supply chains in ${context.location.district}, you retain a ~24% premium over modal APMC rates while buyers save on retail distributor margins.`,
     isAiGenerated: false,
-    modelUsed: "KisanDirect Agritech Baseline Heuristic",
+    modelUsed: "KISANOVA Agritech Baseline Heuristic",
     generatedAt: new Date().toISOString(),
   };
 }
@@ -193,9 +193,9 @@ Explain to an Indian farmer why the recommended price corridor for ${productName
   }
 
   return {
-    explanation: `Current APMC modal spot price for ${productName} in ${location.district} is ₹${apmcModalPrice}/kg. Direct buyers on KisanDirect are actively willing to pay ₹${recommendedMin}-₹${recommendedMax}/kg for farm-gate sorted produce because it bypasses APMC middleman commissions and transit handling loss.`,
+    explanation: `Current APMC modal spot price for ${productName} in ${location.district} is ₹${apmcModalPrice}/kg. Direct buyers on KISANOVA are actively willing to pay ₹${recommendedMin}-₹${recommendedMax}/kg for farm-gate sorted produce because it bypasses APMC middleman commissions and transit handling loss.`,
     factorsSummary: `APMC Modal: ₹${apmcModalPrice}/kg • Quality Premium: +15% • Transport Buffer: +₹3/kg • Zero APMC Cess`,
-    modelUsed: "KisanDirect Pricing Intelligence Engine",
+    modelUsed: "KISANOVA Pricing Intelligence Engine",
     isAi: false,
   };
 }
@@ -238,7 +238,7 @@ Briefly explain the agricultural demand trend (${trendDirection}, predicted ${pr
       weatherCondition: "Normal regional temperature",
       historicalAverageKg: Math.round(predictedDemandKg * 0.85),
     },
-    modelUsed: "KisanDirect Forecast Heuristic",
+    modelUsed: "KISANOVA Forecast Heuristic",
   };
 }
 
@@ -261,7 +261,7 @@ Active Orders: ${farmerContext.openOrdersCount || 0}
 `;
 
   const prompt = `
-You are the dedicated KisanDirect Farmer Copilot.
+You are the dedicated KISANOVA Farmer Copilot.
 You are assisting ONLY the farmer described in this context:
 ${contextSnippet}
 
@@ -316,7 +316,7 @@ Guidelines:
   }
 
   return {
-    answer: `Namaste ${farmerContext.farmerName}. For your produce in ${farmerContext.location.district}, maintaining consistent farm-gate sorting and pricing at 15-20% over APMC rates is generating the highest buyer interest on KisanDirect. Keep inventory quantities updated to avoid stockouts.`,
+    answer: `Namaste ${farmerContext.farmerName}. For your produce in ${farmerContext.location.district}, maintaining consistent farm-gate sorting and pricing at 15-20% over APMC rates is generating the highest buyer interest on KISANOVA. Keep inventory quantities updated to avoid stockouts.`,
     suggestedActions: ["Check active orders", "Update inventory"],
     isAiGenerated: false,
   };
@@ -355,7 +355,7 @@ export async function answerBuyerAssistant(
       summary: `I searched our live farm-gate marketplace for "${safeQuery}", but there is currently no active inventory matching your exact specifications. You can submit a Reverse Auction RFQ under Bulk Requirements to invite matching growers to quote.`,
       matchingOptions: [],
       isAiGenerated: false,
-      modelUsed: "KisanDirect Marketplace Search",
+      modelUsed: "KISANOVA Marketplace Search",
     };
   }
 
@@ -368,7 +368,7 @@ export async function answerBuyerAssistant(
     .join("\n");
 
   const prompt = `
-You are the KisanDirect Buyer Procurement Copilot.
+You are the KISANOVA Buyer Procurement Copilot.
 The buyer asked: "${safeQuery}"
 
 Here are the VERIFIED real product lots currently in MongoDB:
@@ -397,6 +397,6 @@ Instructions:
     summary: `Found ${matchingProducts.length} verified supplier lots matching your query. Top match: ${topMatch.name} from ${topMatch.farmerName} (${topMatch.location}) with ${topMatch.availableQuantity} ${topMatch.unit} available at ₹${topMatch.price}/${topMatch.unit} (${topMatch.qualityGrade}).`,
     matchingOptions: matchingProducts,
     isAiGenerated: false,
-    modelUsed: "KisanDirect Verified Search Grounding",
+    modelUsed: "KISANOVA Verified Search Grounding",
   };
 }

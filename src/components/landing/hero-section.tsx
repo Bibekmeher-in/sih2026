@@ -46,7 +46,7 @@ export function HeroSection() {
           <p className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
             {t(
               "landing.heroSubtitle",
-              "KisanDirect bridges the gap between Indian farmers, FPOs, bulk institutional buyers, and urban consumers. Eliminating middlemen commission while powering dynamic pricing, route-optimized logistics, and AI demand forecasting."
+              "KISANOVA bridges the gap between Indian farmers, FPOs, bulk institutional buyers, and urban consumers. Eliminating middlemen commission while powering dynamic pricing, route-optimized logistics, and AI demand forecasting."
             )}
           </p>
 
@@ -54,7 +54,7 @@ export function HeroSection() {
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <Button size="lg" className="w-full sm:w-auto px-8 shadow-md" asChild>
               <Link href="/register" className="flex items-center justify-center gap-2">
-                <span>{t("landing.ctaJoin", "Join KisanDirect")}</span>
+                <span>{t("landing.ctaJoin", "Join KISANOVA")}</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>

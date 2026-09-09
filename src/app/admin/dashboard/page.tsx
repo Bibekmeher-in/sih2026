@@ -5,7 +5,7 @@ import { getAdminDashboardData } from "@/lib/admin-service";
 import { AdminDashboardClient } from "@/components/admin/dashboard-client";
 
 export const metadata: Metadata = {
-  title: "Admin Executive Overview | KisanDirect",
+  title: "Admin Executive Overview | KISANOVA",
   description: "National Agritech Oversight, Moderation & Logistics Command Console",
 };
 

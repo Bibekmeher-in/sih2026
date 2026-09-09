@@ -156,7 +156,7 @@ export default function ConsumerCheckoutPage() {
           <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 text-[11px] text-emerald-800 text-left flex items-start gap-2">
             <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
             <span>
-              Your order is confirmed and live in the database. The farmer will receive payment via KisanDirect Escrow upon delivery confirmation.
+              Your order is confirmed and live in the database. The farmer will receive payment via KISANOVA Escrow upon delivery confirmation.
             </span>
           </div>
 
@@ -199,7 +199,7 @@ export default function ConsumerCheckoutPage() {
         <ShieldCheck className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
         <div className="space-y-0.5">
           <span className="font-bold uppercase tracking-wider text-[10px] text-emerald-700">
-            KisanDirect Escrow Protection
+            KISANOVA Escrow Protection
           </span>
           <p className="text-emerald-800 leading-relaxed">
             Your payment is held securely in escrow. The farmer receives funds only after you confirm doorstep delivery. This protects both buyers and growers.
@@ -310,11 +310,10 @@ export default function ConsumerCheckoutPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label
                 onClick={() => setPaymentMethod("UPI")}
-                className={`rounded-xl border p-3.5 flex items-start gap-3 cursor-pointer transition-all ${
-                  paymentMethod === "UPI"
+                className={`rounded-xl border p-3.5 flex items-start gap-3 cursor-pointer transition-all ${paymentMethod === "UPI"
                     ? "border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600"
                     : "border-slate-200 hover:border-slate-300"
-                }`}
+                  }`}
               >
                 <QrCode className="h-5 w-5 text-emerald-700 shrink-0 mt-0.5" />
                 <div className="text-xs space-y-0.5">
@@ -327,11 +326,10 @@ export default function ConsumerCheckoutPage() {
 
               <label
                 onClick={() => setPaymentMethod("CASH_ON_DELIVERY")}
-                className={`rounded-xl border p-3.5 flex items-start gap-3 cursor-pointer transition-all ${
-                  paymentMethod === "CASH_ON_DELIVERY"
+                className={`rounded-xl border p-3.5 flex items-start gap-3 cursor-pointer transition-all ${paymentMethod === "CASH_ON_DELIVERY"
                     ? "border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600"
                     : "border-slate-200 hover:border-slate-300"
-                }`}
+                  }`}
               >
                 <Banknote className="h-5 w-5 text-emerald-700 shrink-0 mt-0.5" />
                 <div className="text-xs space-y-0.5">
@@ -344,11 +342,10 @@ export default function ConsumerCheckoutPage() {
 
               <label
                 onClick={() => setPaymentMethod("NET_BANKING")}
-                className={`rounded-xl border p-3.5 flex items-start gap-3 cursor-pointer transition-all ${
-                  paymentMethod === "NET_BANKING"
+                className={`rounded-xl border p-3.5 flex items-start gap-3 cursor-pointer transition-all ${paymentMethod === "NET_BANKING"
                     ? "border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600"
                     : "border-slate-200 hover:border-slate-300"
-                }`}
+                  }`}
               >
                 <Building className="h-5 w-5 text-emerald-700 shrink-0 mt-0.5" />
                 <div className="text-xs space-y-0.5">
@@ -361,11 +358,10 @@ export default function ConsumerCheckoutPage() {
 
               <label
                 onClick={() => setPaymentMethod("DIRECT_BANK_TRANSFER")}
-                className={`rounded-xl border p-3.5 flex items-start gap-3 cursor-pointer transition-all ${
-                  paymentMethod === "DIRECT_BANK_TRANSFER"
+                className={`rounded-xl border p-3.5 flex items-start gap-3 cursor-pointer transition-all ${paymentMethod === "DIRECT_BANK_TRANSFER"
                     ? "border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600"
                     : "border-slate-200 hover:border-slate-300"
-                }`}
+                  }`}
               >
                 <CreditCard className="h-5 w-5 text-emerald-700 shrink-0 mt-0.5" />
                 <div className="text-xs space-y-0.5">

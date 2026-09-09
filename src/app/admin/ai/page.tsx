@@ -4,7 +4,7 @@ import { USER_ROLES } from "@/types";
 import { AdminAiClient } from "@/components/admin/ai-client";
 
 export const metadata: Metadata = {
-  title: "AI Agritech Telemetry & Intelligence | KisanDirect Admin",
+  title: "AI Agritech Telemetry & Intelligence | KISANOVA Admin",
   description: "Demand Forecasts, Econometric Price Corridors & Gemini Engine Reliability",
 };
 

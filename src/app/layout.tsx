@@ -16,13 +16,13 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "KisanDirect — India's Direct Farm-to-Fork & FPO Trade Network",
-    template: "%s | KisanDirect",
+    default: "Kisanova — India's Direct Farm-to-Fork & FPO Trade Network",
+    template: "%s | Kisanova",
   },
   description:
     "Empowering Indian farmers and FPOs by eliminating intermediaries, providing AI-assisted price discovery, automated route logistics, and direct bulk and consumer access.",
   keywords: [
-    "KisanDirect",
+    "Kisanova",
     "Smart India Hackathon",
     "Farm to fork",
     "FPO marketplace",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     "AI mandi price prediction",
     "Farmer earnings",
   ],
-  authors: [{ name: "KisanDirect Engineering Team" }],
+  authors: [{ name: "Kisanova Engineering Team" }],
   icons: {
     icon: "/favicon.ico",
   },

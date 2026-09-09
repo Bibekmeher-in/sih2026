@@ -11,7 +11,7 @@
 import mongoose from "mongoose";
 
 const BASE_URL = "http://localhost:3000";
-const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/kisandirect";
+const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/KISANOVA";
 
 async function runPhase8Tests() {
   console.log("===============================================================================");

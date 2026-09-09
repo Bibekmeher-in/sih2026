@@ -32,7 +32,7 @@ export default async function BuyerLayout({
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight truncate">
-                    KisanDirect
+                    Kisanova
                   </span>
                   <Badge variant="outline" className="text-[9px] sm:text-[10px] font-bold text-slate-800 border-slate-300 uppercase py-0 px-1 hidden sm:inline-flex shrink-0">
                     B2B Wholesale

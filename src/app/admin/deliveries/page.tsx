@@ -13,7 +13,7 @@ import {
 import AdminLogisticsClient from "@/components/admin/logistics-client";
 
 export const metadata: Metadata = {
-  title: "Delivery Dispatches | KisanDirect Admin",
+  title: "Delivery Dispatches | KISANOVA Admin",
   description: "Live Freight Transit, Reefer Temperature & Delivery Dispatch Operations",
 };
 

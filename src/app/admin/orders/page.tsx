@@ -4,7 +4,7 @@ import { USER_ROLES } from "@/types";
 import { AdminOrdersClient } from "@/components/admin/orders-client";
 
 export const metadata: Metadata = {
-  title: "Order Fulfillment Ledger | KisanDirect Admin",
+  title: "Order Fulfillment Ledger | KISANOVA Admin",
   description: "End-to-End Order Processing & Settlement Oversight",
 };
 

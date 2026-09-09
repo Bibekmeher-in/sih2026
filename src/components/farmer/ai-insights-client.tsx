@@ -83,7 +83,7 @@ export default function FarmerAiInsightsClient({ initialData }: AiInsightsClient
   >([
     {
       sender: "assistant",
-      text: `Namaste ${farmerContext.farmerName}! I am your KisanDirect AI Copilot. I can advise you on harvest selling strategies, price corridors vs APMC Mandi, and inventory dispatch schedules for ${farmerContext.location.district}. How can I assist you today?`,
+      text: `Namaste ${farmerContext.farmerName}! I am your KISANOVA AI Copilot. I can advise you on harvest selling strategies, price corridors vs APMC Mandi, and inventory dispatch schedules for ${farmerContext.location.district}. How can I assist you today?`,
       actions: [
         "What should I sell more of?",
         "Why is tomato demand increasing?",
@@ -405,7 +405,7 @@ export default function FarmerAiInsightsClient({ initialData }: AiInsightsClient
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900">
-                KisanDirect Farmer Copilot (AI Assistant)
+                KISANOVA Farmer Copilot (AI Assistant)
               </h3>
               <p className="text-xs text-slate-500">
                 Ask operational questions scoped strictly to your listings and sales in {farmerContext.location.district}
@@ -425,16 +425,15 @@ export default function FarmerAiInsightsClient({ initialData }: AiInsightsClient
               className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
             >
               <div
-                className={`max-w-[85%] rounded-2xl p-3.5 text-xs leading-relaxed ${
-                  msg.sender === "user"
+                className={`max-w-[85%] rounded-2xl p-3.5 text-xs leading-relaxed ${msg.sender === "user"
                     ? "bg-slate-900 text-white rounded-br-none"
                     : "bg-white border border-slate-200 text-slate-800 rounded-bl-none shadow-xs"
-                }`}
+                  }`}
               >
                 {msg.sender === "assistant" && (
                   <div className="flex items-center gap-1.5 mb-1 text-[10px] text-emerald-700 font-bold">
                     <Sparkles className="h-3 w-3" />
-                    <span>KisanDirect Copilot</span>
+                    <span>KISANOVA Copilot</span>
                     {msg.isAi && (
                       <Badge className="bg-emerald-100 text-emerald-800 border-none font-bold text-[9px] px-1 py-0">
                         Gemini
@@ -444,9 +443,8 @@ export default function FarmerAiInsightsClient({ initialData }: AiInsightsClient
                 )}
                 <p className="whitespace-pre-line">{msg.text}</p>
                 <div
-                  className={`text-[9px] mt-1 text-right ${
-                    msg.sender === "user" ? "text-slate-400" : "text-slate-400"
-                  }`}
+                  className={`text-[9px] mt-1 text-right ${msg.sender === "user" ? "text-slate-400" : "text-slate-400"
+                    }`}
                 >
                   {msg.time}
                 </div>

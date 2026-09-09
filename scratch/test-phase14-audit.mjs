@@ -10,7 +10,7 @@ import { readFileSync, existsSync, readdirSync, statSync } from "fs";
 import path from "path";
 
 const BASE_URL = "http://localhost:3000";
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/kisandirect";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/KISANOVA";
 
 export const testResults = [];
 

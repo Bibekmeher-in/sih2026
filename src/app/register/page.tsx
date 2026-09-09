@@ -121,7 +121,7 @@ export default function RegisterPage() {
                 <Sprout className="h-4 w-4" />
               </div>
               <span className="text-lg font-bold tracking-tight text-slate-900">
-                Kisan<span className="text-emerald-700">Direct</span>
+                Kisan<span className="text-emerald-700">ova</span>
               </span>
             </Link>
             <LanguageSwitcher compact />
@@ -173,18 +173,16 @@ export default function RegisterPage() {
                       key={role.id}
                       type="button"
                       onClick={() => setSelectedRole(role.id)}
-                      className={`p-3 rounded-xl border text-left transition-all flex items-start gap-3 ${
-                        isSelected
+                      className={`p-3 rounded-xl border text-left transition-all flex items-start gap-3 ${isSelected
                           ? "border-emerald-600 bg-emerald-50/50 shadow-xs ring-1 ring-emerald-600"
                           : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
-                          isSelected
+                        className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${isSelected
                             ? "bg-emerald-700 text-white"
                             : "bg-slate-100 text-slate-600"
-                        }`}
+                          }`}
                       >
                         <Icon className="h-4 w-4" />
                       </div>
@@ -350,7 +348,7 @@ export default function RegisterPage() {
                 </span>
               ) : (
                 <span className="flex items-center justify-center gap-1.5">
-                  <span>{t("auth.registerButton", "Register for KisanDirect")}</span>
+                  <span>{t("auth.registerButton", "Register for KISANOVA")}</span>
                   <ArrowRight className="h-4 w-4" />
                 </span>
               )}

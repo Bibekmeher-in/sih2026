@@ -56,7 +56,7 @@ export function ImpactDashboardClient({
             Agricultural Impact &amp; Socioeconomic Realization Engine
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-3xl mt-1.5 leading-relaxed">
-            Demonstrating how KisanDirect disintermediates traditional 6-tier APMC Mandi supply chains to deliver higher farm-gate income, lower household consumer food prices, and lower logistics spoilage.
+            Demonstrating how KISANOVA disintermediates traditional 6-tier APMC Mandi supply chains to deliver higher farm-gate income, lower household consumer food prices, and lower logistics spoilage.
           </p>
         </div>
 
@@ -95,11 +95,10 @@ export function ImpactDashboardClient({
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
-              activeTab === tab.id
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${activeTab === tab.id
                 ? "bg-slate-900 text-white shadow-xs"
                 : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            }`}
+              }`}
           >
             {tab.label}
           </button>
@@ -222,7 +221,7 @@ export function ImpactDashboardClient({
               <div>
                 <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                   <Scale className="h-5 w-5 text-emerald-700" />
-                  <span>The Economic Reality: Traditional Value Chain vs. KisanDirect</span>
+                  <span>The Economic Reality: Traditional Value Chain vs. KISANOVA</span>
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
                   Side-by-side transparent price breakdown demonstrating where the consumer rupee actually goes
@@ -235,11 +234,10 @@ export function ImpactDashboardClient({
                   <button
                     key={comm.commodity}
                     onClick={() => setSelectedCommodity(comm)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                      selectedCommodity.commodity === comm.commodity
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${selectedCommodity.commodity === comm.commodity
                         ? "bg-emerald-800 text-white shadow-xs"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                    }`}
+                      }`}
                   >
                     {comm.commodity.split(" ")[0]}
                   </button>
@@ -299,11 +297,11 @@ export function ImpactDashboardClient({
                 </p>
               </div>
 
-              {/* KisanDirect Model */}
+              {/* KISANOVA Model */}
               <div className="p-5 rounded-2xl bg-emerald-50/60 border border-emerald-300 space-y-4">
                 <div className="flex items-center justify-between">
                   <Badge className="bg-emerald-700 text-white text-xs">
-                    KisanDirect Direct Agritech Model
+                    KISANOVA Direct Agritech Model
                   </Badge>
                   <span className="text-xs font-bold text-emerald-800">1 Direct Consolidated Step</span>
                 </div>
@@ -312,14 +310,14 @@ export function ImpactDashboardClient({
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-slate-600">Consumer Marketplace Price:</span>
                     <span className="text-base font-extrabold text-slate-900">
-                      ₹{selectedCommodity.kisanDirectConsumerPrice.toFixed(2)} / {selectedCommodity.unit}
+                      ₹{selectedCommodity.KISANOVAConsumerPrice.toFixed(2)} / {selectedCommodity.unit}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-slate-600">Farmer Farm-Gate Realization:</span>
                     <span className="text-base font-extrabold text-emerald-700">
-                      ₹{selectedCommodity.kisanDirectFarmerRealization.toFixed(2)} / {selectedCommodity.unit}
+                      ₹{selectedCommodity.KISANOVAFarmerRealization.toFixed(2)} / {selectedCommodity.unit}
                     </span>
                   </div>
 
@@ -327,16 +325,16 @@ export function ImpactDashboardClient({
                   <div className="pt-2">
                     <div className="flex justify-between text-[11px] text-slate-600 mb-1">
                       <span className="font-bold text-emerald-800">
-                        Farmer Share: {((selectedCommodity.kisanDirectFarmerRealization / selectedCommodity.kisanDirectConsumerPrice) * 100).toFixed(0)}%
+                        Farmer Share: {((selectedCommodity.KISANOVAFarmerRealization / selectedCommodity.KISANOVAConsumerPrice) * 100).toFixed(0)}%
                       </span>
                       <span>
-                        Freight &amp; Tech Fee: ₹{(selectedCommodity.kisanDirectConsumerPrice - selectedCommodity.kisanDirectFarmerRealization).toFixed(2)}
+                        Freight &amp; Tech Fee: ₹{(selectedCommodity.KISANOVAConsumerPrice - selectedCommodity.KISANOVAFarmerRealization).toFixed(2)}
                       </span>
                     </div>
                     <div className="h-3 w-full bg-slate-200 rounded-full overflow-hidden flex">
                       <div
                         style={{
-                          width: `${(selectedCommodity.kisanDirectFarmerRealization / selectedCommodity.kisanDirectConsumerPrice) * 100}%`,
+                          width: `${(selectedCommodity.KISANOVAFarmerRealization / selectedCommodity.KISANOVAConsumerPrice) * 100}%`,
                         }}
                         className="bg-emerald-600 h-full"
                         title="Farmer Share"
@@ -399,8 +397,8 @@ export function ImpactDashboardClient({
                     <th className="py-3 px-4">Commodity</th>
                     <th className="py-3 px-4">Traditional Retail</th>
                     <th className="py-3 px-4">Mandi Farmer Rate</th>
-                    <th className="py-3 px-4">KisanDirect Consumer</th>
-                    <th className="py-3 px-4">KisanDirect Farmer</th>
+                    <th className="py-3 px-4">KISANOVA Consumer</th>
+                    <th className="py-3 px-4">KISANOVA Farmer</th>
                     <th className="py-3 px-4 text-emerald-700 font-bold">Farmer Net Gain</th>
                     <th className="py-3 px-4 text-purple-700 font-bold">Consumer Saving</th>
                   </tr>
@@ -409,15 +407,14 @@ export function ImpactDashboardClient({
                   {report.commodityComparisonMatrix.map((comm) => (
                     <tr
                       key={comm.commodity}
-                      className={`hover:bg-slate-50/60 transition-colors ${
-                        selectedCommodity.commodity === comm.commodity ? "bg-emerald-50/30 font-semibold" : ""
-                      }`}
+                      className={`hover:bg-slate-50/60 transition-colors ${selectedCommodity.commodity === comm.commodity ? "bg-emerald-50/30 font-semibold" : ""
+                        }`}
                     >
                       <td className="py-3 px-4 font-bold text-slate-900">{comm.commodity}</td>
                       <td className="py-3 px-4 text-slate-600">₹{comm.traditionalRetailPrice.toFixed(2)}/{comm.unit}</td>
                       <td className="py-3 px-4 text-rose-700">₹{comm.traditionalFarmerRealization.toFixed(2)}/{comm.unit}</td>
-                      <td className="py-3 px-4 font-semibold text-slate-900">₹{comm.kisanDirectConsumerPrice.toFixed(2)}/{comm.unit}</td>
-                      <td className="py-3 px-4 font-bold text-emerald-700">₹{comm.kisanDirectFarmerRealization.toFixed(2)}/{comm.unit}</td>
+                      <td className="py-3 px-4 font-semibold text-slate-900">₹{comm.KISANOVAConsumerPrice.toFixed(2)}/{comm.unit}</td>
+                      <td className="py-3 px-4 font-bold text-emerald-700">₹{comm.KISANOVAFarmerRealization.toFixed(2)}/{comm.unit}</td>
                       <td className="py-3 px-4 font-bold text-emerald-700">
                         +₹{comm.farmerRealizationGain.toFixed(2)} (+{comm.farmerGainPercentage}%)
                       </td>
@@ -515,12 +512,12 @@ export function ImpactDashboardClient({
 
                 <div>
                   <span className="text-emerald-700 font-bold block mb-1">
-                    2. KisanDirect Streamlined Network (1 Direct Aggregated Hop — 12-16% Logistics Cost):
+                    2. KISANOVA Streamlined Network (1 Direct Aggregated Hop — 12-16% Logistics Cost):
                   </span>
                   <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-900 flex flex-wrap items-center gap-2">
                     <Badge className="bg-emerald-700 text-white">Farmer / FPO Packhouse</Badge>
                     <span className="font-bold text-emerald-700">→</span>
-                    <Badge className="bg-teal-700 text-white">KisanDirect Heuristic Grouped Logistics</Badge>
+                    <Badge className="bg-teal-700 text-white">KISANOVA Heuristic Grouped Logistics</Badge>
                     <span className="font-bold text-emerald-700">→</span>
                     <Badge className="bg-slate-900 text-white">Direct Consumer / Bulk Institutional Buyer</Badge>
                   </div>
@@ -540,7 +537,7 @@ export function ImpactDashboardClient({
                 Executive Defense Summary
               </Badge>
               <h2 className="text-xl font-bold text-slate-900">
-                How KisanDirect Conclusively Solves the Stated Problem
+                How KISANOVA Conclusively Solves the Stated Problem
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
                 A direct response to the national Smart India Hackathon problem statement across 4 core operational pillars
@@ -557,7 +554,7 @@ export function ImpactDashboardClient({
                   <h3 className="font-bold text-sm text-slate-900">Better Farmer Prices (+24% to +33%)</h3>
                 </div>
                 <p className="text-slate-600 leading-relaxed">
-                  Traditional farmers receive barely 50% of the retail price due to predatory 6-8% commission agent deductions, unrecorded weighbridge losses, and delayed credit payments. KisanDirect enables direct farm-gate lot listing, escrow-settled payments, and APMC benchmarked price corridors, securing ₹5-6/kg extra realization.
+                  Traditional farmers receive barely 50% of the retail price due to predatory 6-8% commission agent deductions, unrecorded weighbridge losses, and delayed credit payments. KISANOVA enables direct farm-gate lot listing, escrow-settled payments, and APMC benchmarked price corridors, securing ₹5-6/kg extra realization.
                 </p>
               </div>
 
@@ -583,7 +580,7 @@ export function ImpactDashboardClient({
                   <h3 className="font-bold text-sm text-slate-900">Reduced Logistics Inefficiency (21.2% Distance Cut)</h3>
                 </div>
                 <p className="text-slate-600 leading-relaxed">
-                  Individual smallholders cannot afford dedicated freight trucks, leading to high transit costs and 25-30% transit decay. KisanDirect uses a deterministic Nearest-Neighbor greedy heuristic with 2-opt edge untangling to group collections along highways, cutting transit distance by 77.4 km per trip and reducing decay to &lt;3.5%.
+                  Individual smallholders cannot afford dedicated freight trucks, leading to high transit costs and 25-30% transit decay. KISANOVA uses a deterministic Nearest-Neighbor greedy heuristic with 2-opt edge untangling to group collections along highways, cutting transit distance by 77.4 km per trip and reducing decay to &lt;3.5%.
                 </p>
               </div>
 
@@ -596,7 +593,7 @@ export function ImpactDashboardClient({
                   <h3 className="font-bold text-sm text-slate-900">Better Demand Planning (Grounded Gemini AI)</h3>
                 </div>
                 <p className="text-slate-600 leading-relaxed">
-                  Farmers routinely suffer seasonal market gluts and panic harvest dumping because they have no visibility into urban demand. KisanDirect integrates Google Gemini 2.5 Flash with moving-average platform sales velocity to deliver 14-day demand projections and prevent distress selling.
+                  Farmers routinely suffer seasonal market gluts and panic harvest dumping because they have no visibility into urban demand. KISANOVA integrates Google Gemini 2.5 Flash with moving-average platform sales velocity to deliver 14-day demand projections and prevent distress selling.
                 </p>
               </div>
             </div>

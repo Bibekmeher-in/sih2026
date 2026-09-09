@@ -5,7 +5,7 @@ const envSchema = z.object({
   MONGODB_URI: z
     .string()
     .min(1, "MONGODB_URI is required")
-    .default("mongodb://localhost:27017/kisandirect"),
+    .default("mongodb://localhost:27017/KISANOVA"),
   GEMINI_API_KEY: z
     .string()
     .min(1, "GEMINI_API_KEY is required")

@@ -23,7 +23,7 @@ export function Navbar() {
           </div>
           <div>
             <span className="text-xl font-bold tracking-tight text-slate-900">
-              Kisan<span className="text-emerald-700">Direct</span>
+              Kisan<span className="text-emerald-700">ova</span>
             </span>
             <p className="text-[11px] text-slate-500 font-medium">{t("common.tagline")}</p>
           </div>

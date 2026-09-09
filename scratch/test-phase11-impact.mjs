@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-process.env.MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/kisandirect";
+process.env.MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/KISANOVA";
 const MONGODB_URI = process.env.MONGODB_URI;
 
 async function runPhase11ImpactTests() {
@@ -80,15 +80,15 @@ async function runPhase11ImpactTests() {
   for (const item of report.commodityComparisonMatrix) {
     console.log(`[${item.commodity}]`);
     console.log(`  Traditional: Consumer pays ₹${item.traditionalRetailPrice}, Farmer gets ₹${item.traditionalFarmerRealization}`);
-    console.log(`  KisanDirect: Consumer pays ₹${item.kisanDirectConsumerPrice}, Farmer gets ₹${item.kisanDirectFarmerRealization}`);
+    console.log(`  KISANOVA: Consumer pays ₹${item.KISANOVAConsumerPrice}, Farmer gets ₹${item.KISANOVAFarmerRealization}`);
     console.log(`  Delta: Farmer Net Gain +₹${item.farmerRealizationGain} (+${item.farmerGainPercentage}%), Consumer Saving ₹${item.consumerSaving} (-${item.consumerSavingPercentage}%)`);
 
-    // Ensure farmer gets MORE on KisanDirect than traditional mandi
-    if (item.kisanDirectFarmerRealization <= item.traditionalFarmerRealization) {
+    // Ensure farmer gets MORE on KISANOVA than traditional mandi
+    if (item.KISANOVAFarmerRealization <= item.traditionalFarmerRealization) {
       throw new Error(`Farmer realization failed for ${item.commodity}`);
     }
-    // Ensure consumer pays LESS on KisanDirect than traditional retail
-    if (item.kisanDirectConsumerPrice >= item.traditionalRetailPrice) {
+    // Ensure consumer pays LESS on KISANOVA than traditional retail
+    if (item.KISANOVAConsumerPrice >= item.traditionalRetailPrice) {
       throw new Error(`Consumer price failed for ${item.commodity}`);
     }
   }

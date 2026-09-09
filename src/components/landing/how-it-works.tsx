@@ -59,7 +59,7 @@ export function HowItWorksSection() {
             {t("nav.howItWorks", "End-to-End Workflow")}
           </Badge>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
-            {t("landingSections.howTitle", "How KisanDirect Works")}
+            {t("landingSections.howTitle", "How KISANOVA Works")}
           </h2>
           <p className="mt-4 text-base sm:text-lg text-slate-600">
             {t(

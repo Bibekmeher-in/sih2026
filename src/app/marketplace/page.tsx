@@ -127,7 +127,7 @@ function MarketplaceContent() {
             </div>
             <div className="hidden sm:block">
               <span className="text-lg font-bold tracking-tight text-slate-900">
-                Kisan<span className="text-emerald-700">Direct</span>
+                Kisan<span className="text-emerald-700">ova</span>
               </span>
               <span className="text-[10px] block font-bold text-slate-400 uppercase tracking-widest -mt-1">
                 Marketplace
@@ -162,11 +162,10 @@ function MarketplaceContent() {
                 setBulkBuyerMode(!bulkBuyerMode);
                 setPage(1);
               }}
-              className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all ${
-                bulkBuyerMode
+              className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all ${bulkBuyerMode
                   ? "bg-amber-100 border-amber-300 text-amber-900 shadow-xs"
                   : "bg-white border-slate-200 text-slate-700 hover:border-slate-300"
-              }`}
+                }`}
             >
               <Building2 className="h-3.5 w-3.5 text-amber-700" />
               <span>Bulk Buyer Mode</span>
@@ -258,47 +257,47 @@ function MarketplaceContent() {
               filters.grade !== "all" ||
               filters.search ||
               bulkBuyerMode) && (
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-semibold text-slate-500">Active Filters:</span>
-                {bulkBuyerMode && (
-                  <Badge variant="amber" className="text-xs font-medium">
-                    Bulk Volume (&gt;500 kg)
-                  </Badge>
-                )}
-                {filters.category !== "all" && (
-                  <Badge variant="secondary" className="text-xs">
-                    Category: {filters.category}
-                  </Badge>
-                )}
-                {filters.sellerType !== "all" && (
-                  <Badge variant="secondary" className="text-xs">
-                    Seller: {filters.sellerType}
-                  </Badge>
-                )}
-                {filters.state !== "all" && (
-                  <Badge variant="secondary" className="text-xs">
-                    State: {filters.state}
-                  </Badge>
-                )}
-                {filters.grade !== "all" && (
-                  <Badge variant="secondary" className="text-xs">
-                    Grade: {filters.grade}
-                  </Badge>
-                )}
-                {filters.search && (
-                  <Badge variant="secondary" className="text-xs">
-                    Query: &quot;{filters.search}&quot;
-                  </Badge>
-                )}
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  className="text-xs text-red-600 hover:underline font-semibold ml-1"
-                >
-                  Clear All
-                </button>
-              </div>
-            )}
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-semibold text-slate-500">Active Filters:</span>
+                  {bulkBuyerMode && (
+                    <Badge variant="amber" className="text-xs font-medium">
+                      Bulk Volume (&gt;500 kg)
+                    </Badge>
+                  )}
+                  {filters.category !== "all" && (
+                    <Badge variant="secondary" className="text-xs">
+                      Category: {filters.category}
+                    </Badge>
+                  )}
+                  {filters.sellerType !== "all" && (
+                    <Badge variant="secondary" className="text-xs">
+                      Seller: {filters.sellerType}
+                    </Badge>
+                  )}
+                  {filters.state !== "all" && (
+                    <Badge variant="secondary" className="text-xs">
+                      State: {filters.state}
+                    </Badge>
+                  )}
+                  {filters.grade !== "all" && (
+                    <Badge variant="secondary" className="text-xs">
+                      Grade: {filters.grade}
+                    </Badge>
+                  )}
+                  {filters.search && (
+                    <Badge variant="secondary" className="text-xs">
+                      Query: &quot;{filters.search}&quot;
+                    </Badge>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleReset}
+                    className="text-xs text-red-600 hover:underline font-semibold ml-1"
+                  >
+                    Clear All
+                  </button>
+                </div>
+              )}
 
             {/* Product Grid */}
             {loading ? (
@@ -407,11 +406,10 @@ function MarketplaceContent() {
                     setBulkBuyerMode(!bulkBuyerMode);
                     setPage(1);
                   }}
-                  className={`px-3 py-1 text-xs font-bold rounded-lg border transition-colors ${
-                    bulkBuyerMode
+                  className={`px-3 py-1 text-xs font-bold rounded-lg border transition-colors ${bulkBuyerMode
                       ? "bg-amber-700 text-white border-amber-700"
                       : "bg-white text-slate-700 border-slate-300"
-                  }`}
+                    }`}
                 >
                   {bulkBuyerMode ? "Active" : "Enable"}
                 </button>
@@ -451,7 +449,7 @@ function MarketplaceContent() {
 
 export default function MarketplacePage() {
   return (
-    <Suspense fallback={<div className="p-10 text-center text-sm text-slate-500">Loading KisanDirect Marketplace...</div>}>
+    <Suspense fallback={<div className="p-10 text-center text-sm text-slate-500">Loading KISANOVA Marketplace...</div>}>
       <MarketplaceContent />
     </Suspense>
   );

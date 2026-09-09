@@ -1,5 +1,5 @@
 /**
- * KisanDirect — Deterministic Route Optimization Engine
+ * KISANOVA — Deterministic Route Optimization Engine
  *
  * Implements Nearest-Neighbor Greedy Heuristic for multi-stop farm-gate pickups.
  *
