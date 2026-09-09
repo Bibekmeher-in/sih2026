@@ -1,26 +1,155 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #fcfdfd;
+    --foreground: #0f172a;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
+    --primary: #15803d;
+    --primary-foreground: #ffffff;
+    --secondary: #f1f5f9;
+    --secondary-foreground: #0f172a;
+    --muted: #f8fafc;
+    --muted-foreground: #64748b;
+    --accent: #ecfdf5;
+    --accent-foreground: #166534;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #15803d;
+    --radius: 0.5rem;
   }
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Container utility for consistent padding & max-width */
+.agri-container {
+  width: 100%;
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .agri-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Subtle agricultural badge & card styling */
+.agri-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+.agri-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+}
+
+/* ======================================================
+   Accessibility: visible focus rings for keyboard nav
+   ====================================================== */
+:focus-visible {
+  outline: 2px solid #15803d;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove focus ring for mouse interaction, keep for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ======================================================
+   Form field error state
+   ====================================================== */
+.field-error {
+  border-color: #ef4444 !important;
+  background-color: #fff5f5;
+}
+
+.field-error:focus-visible {
+  outline-color: #ef4444;
+}
+
+/* ======================================================
+   Scrollbar suppression utility
+   ====================================================== */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ======================================================
+   Slide-in / fade-in animation (for toasts)
+   ====================================================== */
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation-fill-mode: both;
+}
+.slide-in-from-bottom-4 {
+  animation-name: slideInFromBottom;
+}
+.fade-in {
+  animation-name: fadeIn;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.duration-200 {
+  animation-duration: 200ms;
+}
+
+/* ======================================================
+   Pulse animation for skeleton loaders
+   ====================================================== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.animate-pulse {
+  animation: pulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ======================================================
+   Print — hide interactive chrome
+   ====================================================== */
+@media print {
+  header, nav, aside, .no-print {
+    display: none !important;
+  }
+}
+
