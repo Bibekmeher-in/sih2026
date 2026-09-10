@@ -20,9 +20,13 @@ function getApiKey(): string | undefined {
 
 function isDummyKey(key?: string): boolean {
   if (!key) return true;
+  // Real Google AI Studio API keys start with "AIza" and are at least 30 chars
+  if (key.startsWith("AIza") && key.length >= 30) return false;
+  // Reject obvious placeholders
   return (
     key.includes("dummy") ||
-    key === "dev_dummy_gemini_key_configure_in_env" ||
+    key.includes("PASTE_YOUR") ||
+    key.includes("configure_in_env") ||
     key.length < 15
   );
 }

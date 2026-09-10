@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { USER_ROLES } from "@/types";
 import { getFarmerProducts, createFarmerProduct } from "@/lib/farmer-service";
@@ -16,7 +16,7 @@ export async function GET() {
       );
     }
 
-    const products = await getFarmerProducts(user.id);
+    const products = await getFarmerProducts(user.id, user.email ?? undefined);
     return NextResponse.json({ success: true, products });
   } catch (error) {
     console.error("Error fetching farmer products:", error);
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const product = await createFarmerProduct(user.id, parsed.data);
+    const product = await createFarmerProduct(user.id, parsed.data, user.email ?? undefined);
     return NextResponse.json({ success: true, product }, { status: 201 });
   } catch (error: unknown) {
     console.error("Error creating farmer product:", error);

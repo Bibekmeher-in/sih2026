@@ -16,7 +16,7 @@ export async function GET() {
       );
     }
 
-    const profile = await getFarmerProfile(user.id);
+    const profile = await getFarmerProfile(user.id, user.email ?? undefined);
     return NextResponse.json({ success: true, profile });
   } catch {
     return NextResponse.json(
@@ -45,7 +45,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await updateFarmerProfile(user.id, parsed.data);
+    await updateFarmerProfile(user.id, parsed.data, user.email ?? undefined);
     return NextResponse.json({ success: true, message: "Profile updated successfully" });
   } catch {
     return NextResponse.json(

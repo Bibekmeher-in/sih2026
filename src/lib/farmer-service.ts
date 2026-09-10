@@ -39,19 +39,28 @@ export interface FarmerOverviewStats {
 /**
  * Get or initialize farmer profile
  */
-export async function getOrCreateFarmerProfile(userId: string) {
+export async function getOrCreateFarmerProfile(userId: string, userEmail?: string) {
   await connectToDatabase();
 
   let user = null;
+
+  // Primary: look up by ObjectId
   if (mongoose.Types.ObjectId.isValid(userId)) {
     user = await User.findById(userId);
-  } else {
-    user = await User.findOne({
-      $or: [{ email: userId.toLowerCase() }, { role: "FARMER" }],
-    });
   }
+
+  // Fallback 1: stale session after DB reseed — look up by email
+  if (!user && userEmail) {
+    user = await User.findOne({ email: userEmail.toLowerCase() });
+  }
+
+  // Fallback 2: userId is an email string
+  if (!user && userId && !mongoose.Types.ObjectId.isValid(userId)) {
+    user = await User.findOne({ email: userId.toLowerCase() });
+  }
+
   if (!user) {
-    throw new Error("User not found. Please sign in again.");
+    throw new Error("User not found. Please sign out and sign in again.");
   }
 
   let profile = await FarmerProfile.findOne({ user: user._id });
@@ -165,43 +174,48 @@ export async function getFarmerOverview(userId: string): Promise<FarmerOverviewS
 /**
  * Get farmer produce listings from real DB
  */
-export async function getFarmerProducts(userId: string) {
+export async function getFarmerProducts(userId: string, userEmail?: string) {
   try {
     await connectToDatabase();
 
+    let user = null;
     if (mongoose.Types.ObjectId.isValid(userId)) {
-      const user = await User.findById(userId);
-      if (user) {
-        const products = await Product.find({ seller: user._id })
-          .populate("category", "name slug")
-          .sort({ createdAt: -1 })
-          .lean();
+      user = await User.findById(userId);
+    }
+    if (!user && userEmail) {
+      user = await User.findOne({ email: userEmail.toLowerCase() });
+    }
 
-        return products.map((p) => {
-          const catName =
-            p.category && typeof p.category === "object" && "name" in p.category
-              ? String((p.category as { name: unknown }).name)
-              : "Vegetables";
+    if (user) {
+      const products = await Product.find({ seller: user._id })
+        .populate("category", "name slug")
+        .sort({ createdAt: -1 })
+        .lean();
 
-          return {
-            _id: p._id.toString(),
-            name: p.name,
-            hindiName: p.hindiName || "",
-            variety: p.variety || "",
-            categoryName: catName,
-            price: p.price,
-            mandiBenchmarkPrice: p.mandiBenchmarkPrice || Math.round(p.price * 0.78),
-            unit: p.unit,
-            availableQuantity: p.availableQuantity,
-            minimumOrderQuantity: p.minimumOrderQuantity,
-            qualityGrade: p.qualityGrade,
-            harvestDate: p.harvestDate ? new Date(p.harvestDate).toISOString().split("T")[0] : "",
-            location: p.location,
-            status: p.status,
-            images: p.images || [],
-          };
-        });
-      }
+      return products.map((p) => {
+        const catName =
+          p.category && typeof p.category === "object" && "name" in p.category
+            ? String((p.category as { name: unknown }).name)
+            : "Vegetables";
+
+        return {
+          _id: p._id.toString(),
+          name: p.name,
+          hindiName: p.hindiName || "",
+          variety: p.variety || "",
+          categoryName: catName,
+          price: p.price,
+          mandiBenchmarkPrice: p.mandiBenchmarkPrice || Math.round(p.price * 0.78),
+          unit: p.unit,
+          availableQuantity: p.availableQuantity,
+          minimumOrderQuantity: p.minimumOrderQuantity,
+          qualityGrade: p.qualityGrade,
+          harvestDate: p.harvestDate ? new Date(p.harvestDate).toISOString().split("T")[0] : "",
+          location: p.location,
+          status: p.status,
+          images: p.images || [],
+        };
+      });
     }
   } catch (err) {
     console.error("Error querying farmer products:", err);
@@ -213,10 +227,10 @@ export async function getFarmerProducts(userId: string) {
 /**
  * Create a new product listing owned by the farmer
  */
-export async function createFarmerProduct(userId: string, input: FarmerProductFormInput) {
+export async function createFarmerProduct(userId: string, input: FarmerProductFormInput, userEmail?: string) {
   await connectToDatabase();
 
-  const { user } = await getOrCreateFarmerProfile(userId);
+  const { user } = await getOrCreateFarmerProfile(userId, userEmail);
 
   // Find or default category
   let categoryDoc = await Category.findOne({
@@ -474,9 +488,9 @@ export async function getFarmerDeliveries(userId: string) {
 /**
  * Get farmer profile
  */
-export async function getFarmerProfile(userId: string) {
+export async function getFarmerProfile(userId: string, userEmail?: string) {
   try {
-    const { user, profile } = await getOrCreateFarmerProfile(userId);
+    const { user, profile } = await getOrCreateFarmerProfile(userId, userEmail);
 
     return {
       name: user.name,
@@ -499,37 +513,42 @@ export async function getFarmerProfile(userId: string) {
   }
 }
 
-export async function updateFarmerProfile(userId: string, input: FarmerProfileFormInput) {
+export async function updateFarmerProfile(userId: string, input: FarmerProfileFormInput, userEmail?: string) {
   try {
     await connectToDatabase();
 
+    let user = null;
     if (mongoose.Types.ObjectId.isValid(userId)) {
-      const user = await User.findById(userId);
-      if (user) {
-        user.name = input.name;
-        user.phone = input.phone;
-        user.location = {
-          ...user.location,
-          district: input.district,
-          state: input.state,
-        };
-        await user.save();
+      user = await User.findById(userId);
+    }
+    if (!user && userEmail) {
+      user = await User.findOne({ email: userEmail.toLowerCase() });
+    }
 
-        const profile = await FarmerProfile.findOne({ user: user._id });
-        if (profile) {
-          profile.farmName = input.farmName;
-          profile.landAreaAcres = input.landAreaAcres;
-          profile.irrigationType = input.irrigationType;
-          profile.soilType = input.soilType;
-          profile.primaryCrops = input.primaryCrops.split(",").map((c) => c.trim()).filter(Boolean);
-          profile.bankDetails = {
-            accountName: input.bankAccountName || user.name,
-            accountNumber: input.bankAccountNumber,
-            ifscCode: input.bankIfscCode,
-            bankName: input.bankName,
-          };
-          await profile.save();
-        }
+    if (user) {
+      user.name = input.name;
+      user.phone = input.phone;
+      user.location = {
+        ...user.location,
+        district: input.district,
+        state: input.state,
+      };
+      await user.save();
+
+      const profile = await FarmerProfile.findOne({ user: user._id });
+      if (profile) {
+        profile.farmName = input.farmName;
+        profile.landAreaAcres = input.landAreaAcres;
+        profile.irrigationType = input.irrigationType;
+        profile.soilType = input.soilType;
+        profile.primaryCrops = input.primaryCrops.split(",").map((c) => c.trim()).filter(Boolean);
+        profile.bankDetails = {
+          accountName: input.bankAccountName || user.name,
+          accountNumber: input.bankAccountNumber,
+          ifscCode: input.bankIfscCode,
+          bankName: input.bankName,
+        };
+        await profile.save();
       }
     }
   } catch (err) {
