@@ -17,7 +17,7 @@ interface RouteParams {
 export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role !== USER_ROLES.FARMER) {
+    if (!user || (user.role !== USER_ROLES.FARMER && user.role !== USER_ROLES.FPO)) {
       return NextResponse.json(
         { message: "Unauthorized: Farmer credentials required" },
         { status: 401 }
@@ -25,7 +25,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
     }
 
     const { id } = await params;
-    const products = await getFarmerProducts(user.id);
+    const products = await getFarmerProducts(user.id, user.email ?? undefined);
     const product = products.find((p: { _id: string }) => p._id === id);
 
     if (!product) {
@@ -36,9 +36,10 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
     }
 
     return NextResponse.json({ success: true, product });
-  } catch {
+  } catch (err) {
+    const message = (err as Error)?.message || "Failed to fetch product details. Please try again.";
     return NextResponse.json(
-      { message: "Failed to fetch product details. Please try again." },
+      { message },
       { status: 500 }
     );
   }
@@ -47,7 +48,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
 export async function PUT(req: NextRequest, { params }: RouteParams) {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role !== USER_ROLES.FARMER) {
+    if (!user || (user.role !== USER_ROLES.FARMER && user.role !== USER_ROLES.FPO)) {
       return NextResponse.json(
         { message: "Unauthorized: Farmer credentials required" },
         { status: 401 }
@@ -68,9 +69,10 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 
     const updated = await updateFarmerProduct(user.id, id, parsed.data);
     return NextResponse.json({ success: true, product: updated });
-  } catch {
+  } catch (err) {
+    const message = (err as Error)?.message || "Failed to update product listing. Please try again.";
     return NextResponse.json(
-      { message: "Failed to update product listing. Please try again." },
+      { message },
       { status: 500 }
     );
   }
@@ -79,7 +81,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 export async function DELETE(_req: NextRequest, { params }: RouteParams) {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role !== USER_ROLES.FARMER) {
+    if (!user || (user.role !== USER_ROLES.FARMER && user.role !== USER_ROLES.FPO)) {
       return NextResponse.json(
         { message: "Unauthorized: Farmer credentials required" },
         { status: 401 }
@@ -89,9 +91,10 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     await deleteFarmerProduct(user.id, id);
     return NextResponse.json({ success: true, message: "Produce listing archived" });
-  } catch {
+  } catch (err) {
+    const message = (err as Error)?.message || "Failed to delete product. Please try again.";
     return NextResponse.json(
-      { message: "Failed to delete product. Please try again." },
+      { message },
       { status: 500 }
     );
   }

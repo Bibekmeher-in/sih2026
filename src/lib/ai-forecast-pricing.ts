@@ -161,10 +161,26 @@ export async function calculateAndStoreDemandForecast(
   return forecastDoc;
 }
 
+interface CachedFarmerInsights {
+  timestamp: number;
+  insights: FarmerInsightsResult;
+  productCount: number;
+  salesVolume: number;
+}
+
+// In-memory short-lived cache for top-level farmer insights to avoid redundant Gemini calls on page reload
+const insightsMemoryCache = new Map<string, CachedFarmerInsights>();
+const INSIGHTS_CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+const REC_FRESHNESS_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours for real AI recommendations
+const FALLBACK_COOLDOWN_TTL_MS = 5 * 60 * 1000; // 5 minutes cooldown before re-attempting fallback
+
 /**
  * Retrieve comprehensive AI hub intelligence for an authenticated farmer
  */
-export async function getFarmerAiHubData(userId: string): Promise<{
+export async function getFarmerAiHubData(
+  userId: string,
+  forceRefresh = false
+): Promise<{
   insights: FarmerInsightsResult;
   recommendations: IPriceRecommendationDocument[];
   forecasts: IDemandForecastDocument[];
@@ -178,27 +194,23 @@ export async function getFarmerAiHubData(userId: string): Promise<{
   if (mongoose.Types.ObjectId.isValid(userId)) {
     sellerId = new mongoose.Types.ObjectId(userId);
     userDoc = await User.findById(sellerId);
-  } else {
-    // If a non-ObjectId string is passed (e.g. from legacy session), resolve to actual DB farmer
-    userDoc = await User.findOne({
-      $or: [{ email: userId.toLowerCase() }, { role: "FARMER" }],
-    });
+  }
+
+  // If not found by ObjectId, try matching by email if it looks like an email
+  if (!userDoc && typeof userId === "string" && userId.includes("@")) {
+    userDoc = await User.findOne({ email: userId.toLowerCase() });
     if (userDoc) {
       sellerId = userDoc._id;
     }
   }
 
-  // Get farmer products
-  let products = sellerId
+  // Get strictly this farmer's products
+  const products = sellerId
     ? await Product.find({
-        $or: [{ seller: sellerId }, { sellerType: "FarmerProfile" }],
+        seller: sellerId,
         status: { $ne: "ARCHIVED" },
       }).lean()
     : [];
-
-  if (!products || products.length === 0) {
-    products = await Product.find({ status: "AVAILABLE" }).limit(3).lean();
-  }
 
   // Get farmer completed orders
   const orders = sellerId
@@ -235,20 +247,82 @@ export async function getFarmerAiHubData(userId: string): Promise<{
     openOrdersCount: orders.filter((o) => o.orderStatus !== "DELIVERED").length,
   };
 
-  // Generate top-level insights
-  const insights = await generateFarmerInsights(farmerContext);
+  // 1. Retrieve or generate top-level insights with TTL caching
+  const cacheKey = sellerId ? sellerId.toString() : userId;
+  const cached = insightsMemoryCache.get(cacheKey);
+  const isCacheValid =
+    !forceRefresh &&
+    cached &&
+    Date.now() - cached.timestamp < INSIGHTS_CACHE_TTL_MS &&
+    cached.productCount === products.length &&
+    cached.salesVolume === totalVolumeKg;
 
-  // Generate / retrieve price recommendations and demand forecasts for top products
+  let insights: FarmerInsightsResult;
+  if (isCacheValid && cached) {
+    insights = cached.insights;
+  } else {
+    insights = await generateFarmerInsights(farmerContext);
+    if (insights.isAiGenerated) {
+      insightsMemoryCache.set(cacheKey, {
+        timestamp: Date.now(),
+        insights,
+        productCount: products.length,
+        salesVolume: totalVolumeKg,
+      });
+    }
+  }
+
+  // 2. Retrieve or generate price recommendations and demand forecasts for top products
   const recommendations: IPriceRecommendationDocument[] = [];
   const forecasts: IDemandForecastDocument[] = [];
 
   for (const prod of products.slice(0, 3)) {
     try {
-      const rec = await calculateAndStorePriceRecommendation(prod._id.toString());
-      recommendations.push(rec);
+      // Check for fresh existing recommendation in MongoDB
+      let rec: IPriceRecommendationDocument | null = null;
+      if (!forceRefresh) {
+        const existingRec = await PriceRecommendation.findOne({
+          product: prod._id,
+        }).sort({ generatedAt: -1 });
 
-      const fc = await calculateAndStoreDemandForecast(prod._id.toString());
-      forecasts.push(fc);
+        if (existingRec && existingRec.currentFarmerPrice === prod.price) {
+          const ageMs = Date.now() - new Date(existingRec.generatedAt).getTime();
+          const isAi = existingRec.aiModel && !existingRec.aiModel.includes("fallback");
+          if ((isAi && ageMs < REC_FRESHNESS_TTL_MS) || (!isAi && ageMs < FALLBACK_COOLDOWN_TTL_MS)) {
+            rec = existingRec;
+          }
+        }
+      }
+
+      if (!rec) {
+        // Sequential pacing to avoid hitting Google Gemini concurrent burst limits
+        await new Promise((r) => setTimeout(r, 400));
+        rec = await calculateAndStorePriceRecommendation(prod._id.toString());
+      }
+      if (rec) recommendations.push(rec);
+
+      // Check for fresh existing demand forecast in MongoDB
+      let fc: IDemandForecastDocument | null = null;
+      if (!forceRefresh) {
+        const existingFc = await DemandForecast.findOne({
+          product: prod._id,
+          forecastPeriod: "Next 14 Days",
+        }).sort({ generatedAt: -1 });
+
+        if (existingFc) {
+          const ageMs = Date.now() - new Date(existingFc.generatedAt).getTime();
+          const isAi = existingFc.aiModelVersion && !existingFc.aiModelVersion.includes("fallback");
+          if ((isAi && ageMs < REC_FRESHNESS_TTL_MS) || (!isAi && ageMs < FALLBACK_COOLDOWN_TTL_MS)) {
+            fc = existingFc;
+          }
+        }
+      }
+
+      if (!fc) {
+        await new Promise((r) => setTimeout(r, 400));
+        fc = await calculateAndStoreDemandForecast(prod._id.toString());
+      }
+      if (fc) forecasts.push(fc);
     } catch (err) {
       console.warn("Could not generate individual product AI intelligence:", err);
     }

@@ -5,6 +5,11 @@ export type NotificationType =
   | "PRICE_ALERT"
   | "DELIVERY_UPDATE"
   | "DEMAND_SPIKE"
+  | "COMMUNITY_POST"
+  | "COMMUNITY_COMMENT"
+  | "GROUP_INVITE"
+  | "BULK_OPPORTUNITY"
+  | "AGGREGATION_UPDATE"
   | "SYSTEM";
 
 export interface INotificationDocument extends Document {
@@ -34,6 +39,11 @@ const NotificationSchema = new Schema<INotificationDocument>(
         "PRICE_ALERT",
         "DELIVERY_UPDATE",
         "DEMAND_SPIKE",
+        "COMMUNITY_POST",
+        "COMMUNITY_COMMENT",
+        "GROUP_INVITE",
+        "BULK_OPPORTUNITY",
+        "AGGREGATION_UPDATE",
         "SYSTEM",
       ],
       default: "SYSTEM",

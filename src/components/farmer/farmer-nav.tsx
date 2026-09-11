@@ -15,6 +15,7 @@ import {
   User,
   ShoppingBag,
   Sparkles,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/language-context";
@@ -68,6 +69,11 @@ export function FarmerNav() {
       label: t("portalNav.deliveries", "Logistics & Deliveries"),
       href: "/farmer/deliveries",
       icon: Truck,
+    },
+    {
+      label: "FPO & Community Hub",
+      href: "/fpo",
+      icon: Users,
     },
     {
       label: t("portalNav.profile", "Farm Profile"),

@@ -9,6 +9,16 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
+interface DeliveryLocationObj {
+  name?: string;
+  address?: string;
+  district?: string;
+  state?: string;
+  latitude?: number;
+  longitude?: number;
+  contactPhone?: string;
+}
+
 interface DeliveryItem {
   _id: string;
   trackingNumber: string;
@@ -17,8 +27,8 @@ interface DeliveryItem {
   vehicleType: string;
   driverName: string;
   driverPhone: string;
-  pickupLocation: string;
-  dropLocation: string;
+  pickupLocation: string | DeliveryLocationObj;
+  dropLocation: string | DeliveryLocationObj;
   status: string;
   distanceKm: number;
   estimatedHours: number;
@@ -26,6 +36,19 @@ interface DeliveryItem {
   pickupTime: string;
   eta?: string;
   deliveredTime?: string;
+}
+
+function formatLocation(
+  loc: string | DeliveryLocationObj | undefined,
+  fallback: string
+): string {
+  if (!loc) return fallback;
+  if (typeof loc === "string") return loc;
+  if (typeof loc === "object") {
+    const parts = [loc.name || loc.address, loc.district, loc.state].filter(Boolean);
+    return parts.join(", ") || fallback;
+  }
+  return fallback;
 }
 
 export default function FarmerDeliveriesPage() {
@@ -115,14 +138,18 @@ export default function FarmerDeliveriesPage() {
                       <MapPin className="h-3.5 w-3.5 text-emerald-700 shrink-0 mt-0.5" />
                       <div>
                         <span className="text-slate-500 block">Pickup:</span>
-                        <span className="font-semibold text-slate-900">{del.pickupLocation}</span>
+                        <span className="font-semibold text-slate-900">
+                          {formatLocation(del.pickupLocation, "Farm Gate Hub")}
+                        </span>
                       </div>
                     </div>
                     <div className="flex items-start gap-1.5 text-slate-700 pt-1">
                       <MapPin className="h-3.5 w-3.5 text-blue-700 shrink-0 mt-0.5" />
                       <div>
                         <span className="text-slate-500 block">Destination:</span>
-                        <span className="font-semibold text-slate-900">{del.dropLocation}</span>
+                        <span className="font-semibold text-slate-900">
+                          {formatLocation(del.dropLocation, "Delivery Destination Hub")}
+                        </span>
                       </div>
                     </div>
                     <div className="pt-1 font-mono text-slate-500 font-semibold">

@@ -5,15 +5,15 @@ import { USER_ROLES } from "@/types";
 
 interface RoleRouteMapping {
   prefix: string;
-  allowedRole: string;
+  allowedRoles: string[];
 }
 
 const PROTECTED_ROUTES: RoleRouteMapping[] = [
-  { prefix: "/farmer", allowedRole: USER_ROLES.FARMER },
-  { prefix: "/fpo", allowedRole: USER_ROLES.FPO },
-  { prefix: "/consumer", allowedRole: USER_ROLES.CONSUMER },
-  { prefix: "/buyer", allowedRole: USER_ROLES.BULK_BUYER },
-  { prefix: "/admin", allowedRole: USER_ROLES.ADMIN },
+  { prefix: "/farmer", allowedRoles: [USER_ROLES.FARMER, USER_ROLES.FPO, USER_ROLES.ADMIN] },
+  { prefix: "/fpo", allowedRoles: [USER_ROLES.FPO, USER_ROLES.FARMER, USER_ROLES.ADMIN] },
+  { prefix: "/consumer", allowedRoles: [USER_ROLES.CONSUMER, USER_ROLES.ADMIN] },
+  { prefix: "/buyer", allowedRoles: [USER_ROLES.BULK_BUYER, USER_ROLES.ADMIN] },
+  { prefix: "/admin", allowedRoles: [USER_ROLES.ADMIN] },
 ];
 
 export async function middleware(req: NextRequest) {
@@ -42,9 +42,9 @@ export async function middleware(req: NextRequest) {
   }
 
   // 2. If authenticated but wrong role, redirect to unauthorized error page
-  if (token.role !== matchingRoute.allowedRole) {
+  if (!matchingRoute.allowedRoles.includes(token.role as string)) {
     const unauthorizedUrl = new URL("/unauthorized", req.url);
-    unauthorizedUrl.searchParams.set("required", matchingRoute.allowedRole);
+    unauthorizedUrl.searchParams.set("required", matchingRoute.allowedRoles.join(","));
     unauthorizedUrl.searchParams.set("actual", String(token.role));
     return NextResponse.redirect(unauthorizedUrl);
   }

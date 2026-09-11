@@ -59,10 +59,56 @@ export function BuyerAssistantModal() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to search inventory.");
+        throw new Error(data.error || data.message || "Failed to search inventory.");
       }
 
-      setResults(data);
+      const rawItems = Array.isArray(data.matchedProducts)
+        ? data.matchedProducts
+        : Array.isArray(data.matchingOptions)
+        ? data.matchingOptions
+        : [];
+
+      interface RawProductItem {
+        id?: string;
+        _id?: string;
+        name?: string;
+        category?: string;
+        price?: number;
+        unit?: string;
+        availableQuantity?: number;
+        minimumOrderQuantity?: number;
+        qualityGrade?: string;
+        location?: { district?: string; state?: string } | string;
+        sellerName?: string;
+        farmerName?: string;
+      }
+
+      const formattedMatchedProducts: MatchedProduct[] = (rawItems as RawProductItem[]).map((p) => ({
+        id: p.id || p._id || "",
+        name: p.name || "Produce Lot",
+        category: p.category || "Produce",
+        price: typeof p.price === "number" ? p.price : 0,
+        unit: p.unit || "kg",
+        availableQuantity: typeof p.availableQuantity === "number" ? p.availableQuantity : 0,
+        minimumOrderQuantity: typeof p.minimumOrderQuantity === "number" ? p.minimumOrderQuantity : 1,
+        qualityGrade: p.qualityGrade || "Grade A",
+        location: typeof p.location === "object" && p.location !== null
+          ? { district: p.location.district || "Odisha", state: p.location.state || "India" }
+          : typeof p.location === "string"
+          ? { district: p.location.split(",")[0]?.trim() || "Odisha", state: p.location.split(",")[1]?.trim() || "India" }
+          : { district: "Odisha", state: "India" },
+        sellerName: p.sellerName || p.farmerName || "Verified Grower",
+      }));
+
+      const totalStock = formattedMatchedProducts.reduce((acc, curr) => acc + (curr.availableQuantity || 0), 0);
+
+      setResults({
+        answer: data.answer || data.summary || "Here are the matching lots found in our live database.",
+        matchedProducts: formattedMatchedProducts,
+        source: data.source || (data.isAiGenerated ? "AI Copilot" : "Verified Database"),
+        model: data.model || data.modelUsed || "Gemini 1.5",
+        totalAvailableInMarket: typeof data.totalAvailableInMarket === "number" ? data.totalAvailableInMarket : totalStock,
+      });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to query procurement scout.";
       setError(msg);
@@ -194,14 +240,14 @@ export function BuyerAssistantModal() {
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                        Matched Live Lots ({results.matchedProducts.length})
+                        Matched Live Lots ({results.matchedProducts?.length ?? 0})
                       </span>
                       <span className="text-xs text-slate-500">
-                        Total Stock: {results.totalAvailableInMarket} units
+                        Total Stock: {results.totalAvailableInMarket ?? 0} units
                       </span>
                     </div>
 
-                    {results.matchedProducts.length === 0 ? (
+                    {(!results.matchedProducts || results.matchedProducts.length === 0) ? (
                       <div className="text-center py-6 bg-slate-50 rounded-xl border border-dashed border-slate-300">
                         <Package className="h-8 w-8 mx-auto text-slate-400 mb-2" />
                         <p className="text-xs font-medium text-slate-700">
@@ -220,7 +266,7 @@ export function BuyerAssistantModal() {
                       </div>
                     ) : (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                        {results.matchedProducts.map((p) => (
+                        {(results.matchedProducts || []).map((p) => (
                           <div
                             key={p.id}
                             className="p-3 rounded-xl border border-slate-200 bg-white hover:border-emerald-300 hover:shadow-xs transition-all flex flex-col justify-between"

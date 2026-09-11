@@ -106,7 +106,16 @@ export async function getConsumerOrders(userId: string) {
           total: o.total,
           paymentStatus: o.paymentStatus,
           paymentMethod: o.paymentMethod,
+          status: o.orderStatus,
           orderStatus: o.orderStatus,
+          statusHistory: (o.statusHistory || []).map((h) => ({
+            status: h.status,
+            timestamp: h.timestamp ? new Date(h.timestamp).toISOString() : new Date().toISOString(),
+            note: h.note || "",
+          })),
+          estimatedDeliveryAt: o.estimatedDeliveryAt ? new Date(o.estimatedDeliveryAt).toISOString() : undefined,
+          deliveredAt: o.deliveredAt ? new Date(o.deliveredAt).toISOString() : undefined,
+          cancelledAt: o.cancelledAt ? new Date(o.cancelledAt).toISOString() : undefined,
           deliveryAddress: o.deliveryAddress
             ? {
               recipientName: o.deliveryAddress.recipientName || "",
@@ -115,6 +124,12 @@ export async function getConsumerOrders(userId: string) {
               district: o.deliveryAddress.district || "",
               state: o.deliveryAddress.state || "",
               pincode: o.deliveryAddress.pincode || "",
+              coordinates: o.deliveryAddress.coordinates
+                ? {
+                  latitude: o.deliveryAddress.coordinates.latitude,
+                  longitude: o.deliveryAddress.coordinates.longitude,
+                }
+                : undefined,
             }
             : undefined,
           createdAt: o.createdAt ? new Date(o.createdAt).toISOString() : new Date().toISOString(),
@@ -229,7 +244,18 @@ export async function getConsumerOrderById(userId: string, orderId: string) {
       total: order.total,
       paymentStatus: order.paymentStatus,
       paymentMethod: order.paymentMethod,
+      status: order.orderStatus || "PENDING",
       orderStatus: order.orderStatus || "PENDING",
+      statusHistory: (order.statusHistory || []).map((h) => ({
+        status: h.status,
+        timestamp: h.timestamp ? new Date(h.timestamp).toISOString() : new Date().toISOString(),
+        note: h.note || "",
+      })),
+      deliveryOtp: order.deliveryOtp,
+      otpVerified: order.otpVerified || false,
+      estimatedDeliveryAt: order.estimatedDeliveryAt ? new Date(order.estimatedDeliveryAt).toISOString() : undefined,
+      deliveredAt: order.deliveredAt ? new Date(order.deliveredAt).toISOString() : undefined,
+      cancelledAt: order.cancelledAt ? new Date(order.cancelledAt).toISOString() : undefined,
       deliveryAddress: order.deliveryAddress
         ? {
           recipientName: order.deliveryAddress.recipientName || "",
@@ -272,6 +298,12 @@ export async function createConsumerOrder(userId: string, input: CheckoutFormInp
     throw new Error("Invalid user session. Please sign in and try again.");
   }
 
+  if (input.paymentMethod !== "CASH_ON_DELIVERY") {
+    throw new Error(
+      "Online payments must be processed via the Razorpay payment gateway (/api/payments/create-order) and verified before order confirmation."
+    );
+  }
+
   const orderResult = await createOrder({
     userId,
     items: input.items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
@@ -282,10 +314,10 @@ export async function createConsumerOrder(userId: string, input: CheckoutFormInp
       district: input.district,
       state: input.state,
       pincode: input.pincode,
+      coordinates: input.coordinates,
     },
     buyerType: "CONSUMER",
-    paymentMethod: input.paymentMethod,
-    autoConfirm: true,
+    paymentMethod: "CASH_ON_DELIVERY",
   });
 
   return {

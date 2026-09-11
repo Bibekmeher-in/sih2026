@@ -294,9 +294,8 @@ cd sih2026
 Create or verify `.env.local` in the project root:
 ```env
 # Database Configuration
-MONGODB_URI="mongodb://127.0.0.1:27017/kisan_direct"
-
-# NextAuth Security
+MONGODB_URI="mongodb://127.0.0.1:27017/KISANOVA"
+AUTH_SECRET="your_production_secret_key_minimum_32_characters_long"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="kisan_direct_production_secret_key_sih_2024"
 

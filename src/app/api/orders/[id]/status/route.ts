@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { transitionOrderStatus, OrderEngineError } from "@/lib/order-engine";
 
@@ -32,20 +32,23 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
       userId: user.id,
       role: user.role,
       reason: body.reason,
+      providedOtp: body.providedOtp || body.otp,
     });
 
     return NextResponse.json(result, { status: 200 });
   } catch (error: unknown) {
-    if (error instanceof OrderEngineError) {
+    const err = error as { message?: string; statusCode?: number; code?: string; name?: string };
+    if (err && (err.name === "OrderEngineError" || typeof err.statusCode === "number")) {
       return NextResponse.json(
-        { success: false, message: error.message, code: error.code },
-        { status: error.statusCode }
+        { success: false, message: err.message || "Order engine error", code: err.code || "ORDER_ENGINE_ERROR" },
+        { status: err.statusCode || 400 }
       );
     }
 
     console.error("Error updating order status:", error);
+    const msg = error instanceof Error ? error.message : "Failed to update order status. Please try again.";
     return NextResponse.json(
-      { success: false, message: "Failed to update order status. Please try again." },
+      { success: false, message: msg, error: String(error) },
       { status: 500 }
     );
   }

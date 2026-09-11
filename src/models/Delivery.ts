@@ -46,6 +46,8 @@ export interface IDeliveryDocument extends Document {
   actualDeliveryTime?: Date;
   temperatureCelsius?: number; // For cold-chain produce
   signatureUrl?: string;
+  otpCode?: string;
+  isOtpVerified?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -143,11 +145,23 @@ const DeliverySchema = new Schema<IDeliveryDocument>(
       type: String,
       default: "",
     },
+    otpCode: {
+      type: String,
+      default: "",
+    },
+    isOtpVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
+
+if (process.env.NODE_ENV !== "production") {
+  delete (mongoose.models as Record<string, unknown>).Delivery;
+}
 
 export const Delivery: Model<IDeliveryDocument> =
   mongoose.models.Delivery ||

@@ -109,7 +109,7 @@ const ProductSchema = new Schema<IProductDocument>(
     },
     qualityGrade: {
       type: String,
-      enum: ["Grade A", "Grade B", "Premium Organic"],
+      enum: ["Grade A", "Grade B", "Grade C", "Premium Organic"],
       default: "Grade A",
       required: true,
     },

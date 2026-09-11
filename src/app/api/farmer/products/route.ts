@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role !== USER_ROLES.FARMER) {
+    if (!user || (user.role !== USER_ROLES.FARMER && user.role !== USER_ROLES.FPO)) {
       return NextResponse.json(
         { message: "Unauthorized: Farmer credentials required" },
         { status: 401 }
@@ -20,8 +20,9 @@ export async function GET() {
     return NextResponse.json({ success: true, products });
   } catch (error) {
     console.error("Error fetching farmer products:", error);
+    const message = (error as Error)?.message || "Failed to fetch farmer products";
     return NextResponse.json(
-      { message: "Failed to fetch farmer products" },
+      { message },
       { status: 500 }
     );
   }
@@ -30,7 +31,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role !== USER_ROLES.FARMER) {
+    if (!user || (user.role !== USER_ROLES.FARMER && user.role !== USER_ROLES.FPO)) {
       return NextResponse.json(
         { message: "Unauthorized: Farmer credentials required" },
         { status: 401 }
@@ -50,8 +51,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, product }, { status: 201 });
   } catch (error: unknown) {
     console.error("Error creating farmer product:", error);
+    const message = (error as Error)?.message || "Failed to create product listing. Please try again.";
     return NextResponse.json(
-      { message: "Failed to create product listing. Please try again." },
+      { message },
       { status: 500 }
     );
   }

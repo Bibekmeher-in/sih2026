@@ -71,57 +71,28 @@ export async function PATCH(
     const body = await req.json();
     const { orderStatus, paymentStatus, notes } = body;
 
-    const updateFields: Record<string, unknown> = {};
+    let updatedOrder = null;
 
     if (orderStatus) {
-      const allowedOrderStatuses = [
-        "PENDING",
-        "CONFIRMED",
-        "PROCESSING",
-        "READY_FOR_PICKUP",
-        "ASSIGNED_FOR_DELIVERY",
-        "IN_TRANSIT",
-        "DELIVERED",
-        "CANCELLED",
-      ];
-      if (!allowedOrderStatuses.includes(orderStatus)) {
-        return NextResponse.json(
-          { success: false, message: `Invalid status. Allowed: ${allowedOrderStatuses.join(", ")}` },
-          { status: 400 }
-        );
-      }
-      updateFields.orderStatus = orderStatus;
+      const { transitionOrderStatus } = await import("@/lib/order-engine");
+      const transitionResult = await transitionOrderStatus(id, orderStatus, {
+        userId: admin.id,
+        role: "ADMIN",
+        reason: notes || "Updated by platform administrator",
+      });
+      updatedOrder = transitionResult.order;
+    } else {
+      updatedOrder = await Order.findById(id);
     }
-
-    if (paymentStatus) {
-      const allowedPaymentStatuses = [
-        "PENDING",
-        "PAID",
-        "ESCROW_HELD",
-        "RELEASED_TO_SELLER",
-        "REFUNDED",
-      ];
-      if (!allowedPaymentStatuses.includes(paymentStatus)) {
-        return NextResponse.json(
-          { success: false, message: `Invalid payment status. Allowed: ${allowedPaymentStatuses.join(", ")}` },
-          { status: 400 }
-        );
-      }
-      updateFields.paymentStatus = paymentStatus;
-    }
-
-    if (notes !== undefined) {
-      updateFields.notes = notes;
-    }
-
-    const updatedOrder = await Order.findByIdAndUpdate(
-      id,
-      { $set: updateFields },
-      { returnDocument: "after" }
-    );
 
     if (!updatedOrder) {
       return NextResponse.json({ success: false, message: "Order not found" }, { status: 404 });
+    }
+
+    if (paymentStatus || notes !== undefined) {
+      if (paymentStatus) updatedOrder.paymentStatus = paymentStatus;
+      if (notes !== undefined) updatedOrder.notes = notes;
+      await updatedOrder.save();
     }
 
     return NextResponse.json({

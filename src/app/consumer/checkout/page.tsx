@@ -14,14 +14,28 @@ import {
   ArrowLeft,
   Loader2,
   Lock,
+  MapPin,
+  Navigation,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/context/cart-context";
 import { formatCurrency } from "@/lib/utils";
+import { useUserLocation } from "@/hooks/use-user-location";
+import { LocationPermissionDialog } from "@/components/location/location-permission-dialog";
+import { useRazorpay } from "@/hooks/use-razorpay";
 
 export default function ConsumerCheckoutPage() {
   const { items, clearCart, serverSummary } = useCart();
+  const { openCheckout } = useRazorpay();
+  const {
+    permissionState,
+    isDetecting,
+    requestLocation,
+    showExplanation,
+    openExplanationModal,
+    closeExplanationModal,
+  } = useUserLocation();
 
   // Delivery Address Form
   const [recipientName, setRecipientName] = useState("");
@@ -30,28 +44,56 @@ export default function ConsumerCheckoutPage() {
   const [district, setDistrict] = useState("");
   const [state, setState] = useState("");
   const [pincode, setPincode] = useState("");
+  const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [locationStatusNotice, setLocationStatusNotice] = useState<string | null>(null);
 
   // Payment Method
   const [paymentMethod, setPaymentMethod] = useState<
-    "UPI" | "DIRECT_BANK_TRANSFER" | "CASH_ON_DELIVERY" | "NET_BANKING"
+    "UPI" | "CARD" | "NET_BANKING" | "DIRECT_BANK_TRANSFER" | "CASH_ON_DELIVERY"
   >("UPI");
 
-  // Simulation state
+  // Flow state
   const [isProcessing, setIsProcessing] = useState(false);
+  const [processingStatusText, setProcessingStatusText] = useState("Processing Payment...");
+  const [cancellationNotice, setCancellationNotice] = useState<string | null>(null);
+  const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
   const [confirmedOrder, setConfirmedOrder] = useState<{
     orderNumber: string;
     id: string;
     total: number;
     transactionId: string;
+    paidAt?: string;
   } | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
 
   const deliveryFee = serverSummary.subtotal >= 500 ? 0 : 40;
   const grandTotal = serverSummary.subtotal + deliveryFee;
 
-  const handlePlaceOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleExecuteLocation = async () => {
+    setLocationStatusNotice("Getting your location...");
+    const res = await requestLocation();
+    if (res.coordinates) {
+      setCoordinates(res.coordinates);
+      if (res.address) {
+        if (res.address.district) setDistrict(res.address.district);
+        if (res.address.state) setState(res.address.state);
+        if (res.address.pincode) setPincode(res.address.pincode);
+        if (res.address.addressLine && !addressLine) setAddressLine(res.address.addressLine);
+        setLocationStatusNotice(`Location detected: ${res.address.district}, ${res.address.state}`);
+      } else {
+        setLocationStatusNotice("Location coordinates detected successfully.");
+      }
+    } else if (res.error) {
+      setLocationStatusNotice(res.error);
+    }
+  };
+
+  const handlePlaceOrder = async (e?: React.FormEvent, isRetry = false) => {
+    if (e && typeof e.preventDefault === "function") {
+      e.preventDefault();
+    }
     setErrorMessage("");
+    setCancellationNotice(null);
 
     if (items.length === 0) {
       setErrorMessage("Your cart is empty. Add produce lots to proceed.");
@@ -66,46 +108,156 @@ export default function ConsumerCheckoutPage() {
     setIsProcessing(true);
 
     try {
-      const payload = {
-        recipientName,
-        recipientPhone,
-        addressLine,
-        district,
-        state,
-        pincode,
-        paymentMethod,
+      // 1. CASH ON DELIVERY FLOW
+      if (paymentMethod === "CASH_ON_DELIVERY") {
+        setProcessingStatusText("Confirming COD Order...");
+        const payload = {
+          recipientName,
+          recipientPhone,
+          addressLine,
+          district,
+          state,
+          pincode,
+          coordinates: coordinates || undefined,
+          paymentMethod: "CASH_ON_DELIVERY",
+          items: items.map((i) => ({
+            productId: i.productId,
+            quantity: i.quantity,
+          })),
+        };
+
+        const res = await fetch("/api/consumer/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.message || "Order placement failed");
+        }
+
+        clearCart();
+        setConfirmedOrder({
+          id: data.order?._id || "",
+          orderNumber: data.order?.orderNumber || "",
+          total: data.order?.total || grandTotal,
+          transactionId: `COD-${Date.now().toString().slice(-6)}`,
+        });
+        setIsProcessing(false);
+        return;
+      }
+
+      // 2. RAZORPAY ONLINE PAYMENT FLOW (UPI, CARD, NETBANKING, ESCROW)
+      setProcessingStatusText("Creating payment...");
+      const orderPayload = {
         items: items.map((i) => ({
           productId: i.productId,
           quantity: i.quantity,
         })),
+        deliveryAddress: {
+          recipientName,
+          recipientPhone,
+          addressLine,
+          district,
+          state,
+          pincode,
+          coordinates: coordinates || undefined,
+        },
+        buyerType: "CONSUMER",
+        paymentMethod,
+        existingOrderId: (isRetry && pendingOrderId) ? pendingOrderId : undefined,
       };
 
-      const res = await fetch("/api/consumer/orders", {
+      const initRes = await fetch("/api/payments/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(orderPayload),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Order placement failed");
+      const initData = await initRes.json();
+      if (!initRes.ok || !initData.success) {
+        if (initRes.status === 503 || (initData.message && initData.message.includes("unavailable"))) {
+          throw new Error("Online payment is currently unavailable. Please try again or select Cash on Delivery.");
+        }
+        throw new Error(initData.message || "Failed to initiate payment session with Razorpay");
       }
 
-      // Clear the cart
-      clearCart();
+      // Save pending order ID for reuse on retry
+      if (initData.orderId) {
+        setPendingOrderId(initData.orderId);
+      }
 
-      // Show confirmation screen
-      setConfirmedOrder({
-        id: data.order?._id || "",
-        orderNumber: data.order?.orderNumber || "",
-        total: data.order?.total || grandTotal,
-        transactionId: data.order?.transactionRef || `KD-TXN-${Date.now()}`,
+      setProcessingStatusText("Opening Razorpay...");
+
+      // Open Razorpay Checkout Modal
+      openCheckout({
+        key: initData.keyId,
+        amount: initData.amount,
+        currency: initData.currency || "INR",
+        name: "KisanDirect",
+        description: `Order #${initData.orderNumber} Farm-to-Door`,
+        order_id: initData.razorpayOrderId,
+        prefill: {
+          name: initData.customer?.name || recipientName,
+          email: initData.customer?.email || "customer@kisandirect.in",
+          contact: initData.customer?.contact || recipientPhone,
+        },
+        theme: { color: "#059669" },
+        onSuccess: async (rzpResponse) => {
+          setProcessingStatusText("Verifying payment...");
+          try {
+            const verifyRes = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                orderId: initData.orderId,
+                razorpay_order_id: rzpResponse.razorpay_order_id,
+                razorpay_payment_id: rzpResponse.razorpay_payment_id,
+                razorpay_signature: rzpResponse.razorpay_signature,
+                method: paymentMethod,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (verifyRes.ok && verifyData.success) {
+              setProcessingStatusText("Payment successful! Order confirmed.");
+              clearCart();
+              setConfirmedOrder({
+                id: initData.orderId,
+                orderNumber: initData.orderNumber,
+                total: grandTotal,
+                transactionId: rzpResponse.razorpay_payment_id,
+                paidAt: new Date().toLocaleTimeString(),
+              });
+              setPendingOrderId(null);
+            } else {
+              setErrorMessage(
+                verifyData.message || "Payment verification failed. Please contact support with Payment ID: " + rzpResponse.razorpay_payment_id
+              );
+            }
+          } catch (vErr: unknown) {
+            const msg = vErr instanceof Error ? vErr.message : "Network issue";
+            setErrorMessage("Payment verification error: " + msg);
+          } finally {
+            setIsProcessing(false);
+          }
+        },
+        onFailure: (err) => {
+          setIsProcessing(false);
+          setProcessingStatusText("");
+          setErrorMessage(err.description || "Payment failed or was declined by bank. You can retry anytime.");
+        },
+        onDismiss: () => {
+          setIsProcessing(false);
+          setProcessingStatusText("");
+          setCancellationNotice("Payment was cancelled. Your order has not been confirmed.");
+        },
       });
     } catch (err: unknown) {
       setErrorMessage((err as Error).message || "An unexpected error occurred");
-    } finally {
       setIsProcessing(false);
+      setProcessingStatusText("");
     }
   };
 
@@ -214,17 +366,64 @@ export default function ConsumerCheckoutPage() {
         </div>
       )}
 
+      <LocationPermissionDialog
+        open={showExplanation}
+        onAllow={handleExecuteLocation}
+        onManual={closeExplanationModal}
+        onClose={closeExplanationModal}
+      />
+
       <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left 2 Columns: Address & Payment Selection */}
         <div className="lg:col-span-2 space-y-6">
           {/* 1. Delivery Address Card */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs space-y-4">
-            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-              <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs">
-                1
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                  1
+                </div>
+                <h3 className="font-bold text-slate-900 text-sm">Delivery Address</h3>
               </div>
-              <h3 className="font-bold text-slate-900 text-sm">Delivery Address</h3>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={openExplanationModal}
+                disabled={isDetecting}
+                className="border-emerald-300 text-emerald-800 hover:bg-emerald-50 rounded-xl text-xs font-semibold gap-1.5 self-start sm:self-auto"
+              >
+                {isDetecting ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-emerald-600" />
+                    <span>Detecting Location...</span>
+                  </>
+                ) : (
+                  <>
+                    <MapPin className="h-3.5 w-3.5 text-emerald-600" />
+                    <span>Use My Current Location</span>
+                  </>
+                )}
+              </Button>
             </div>
+
+            {locationStatusNotice && (
+              <div
+                className={`rounded-xl p-3 text-xs flex items-center gap-2 ${
+                  coordinates
+                    ? "bg-emerald-50 border border-emerald-200 text-emerald-800"
+                    : "bg-slate-50 border border-slate-200 text-slate-700"
+                }`}
+              >
+                {coordinates ? (
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                ) : (
+                  <MapPin className="h-4 w-4 text-slate-500 shrink-0" />
+                )}
+                <span>{locationStatusNotice}</span>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div className="space-y-1">
@@ -341,6 +540,22 @@ export default function ConsumerCheckoutPage() {
               </label>
 
               <label
+                onClick={() => setPaymentMethod("CARD")}
+                className={`rounded-xl border p-3.5 flex items-start gap-3 cursor-pointer transition-all ${paymentMethod === "CARD"
+                    ? "border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600"
+                    : "border-slate-200 hover:border-slate-300"
+                  }`}
+              >
+                <CreditCard className="h-5 w-5 text-emerald-700 shrink-0 mt-0.5" />
+                <div className="text-xs space-y-0.5">
+                  <div className="font-bold text-slate-900">Debit / Credit Card</div>
+                  <p className="text-slate-500 text-[11px]">
+                    Visa, Mastercard, RuPay via Razorpay
+                  </p>
+                </div>
+              </label>
+
+              <label
                 onClick={() => setPaymentMethod("NET_BANKING")}
                 className={`rounded-xl border p-3.5 flex items-start gap-3 cursor-pointer transition-all ${paymentMethod === "NET_BANKING"
                     ? "border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600"
@@ -415,6 +630,41 @@ export default function ConsumerCheckoutPage() {
               </div>
             </div>
 
+            {/* Payment Dismissal / Cancellation Notice */}
+            {cancellationNotice && (
+              <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs space-y-2">
+                <div className="flex items-center gap-2 font-bold text-amber-800">
+                  <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
+                  <span>Payment Cancelled</span>
+                </div>
+                <p className="text-[11px] text-amber-800 leading-relaxed">
+                  {cancellationNotice}
+                </p>
+                <div className="pt-1">
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => handlePlaceOrder(undefined, true)}
+                    disabled={isProcessing}
+                    className="bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs gap-1.5 h-8 rounded-lg"
+                  >
+                    <span>Retry Payment</span>
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="p-3.5 rounded-xl bg-red-50 border border-red-300 text-red-800 text-xs space-y-1">
+                <div className="flex items-center gap-1.5 font-bold">
+                  <AlertCircle className="h-4 w-4 shrink-0 text-red-600" />
+                  <span>Payment Error</span>
+                </div>
+                <p className="text-[11px] leading-relaxed">{errorMessage}</p>
+              </div>
+            )}
+
             <Button
               type="submit"
               disabled={isProcessing}
@@ -423,7 +673,7 @@ export default function ConsumerCheckoutPage() {
               {isProcessing ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Processing Payment...</span>
+                  <span>{processingStatusText}</span>
                 </>
               ) : (
                 <>

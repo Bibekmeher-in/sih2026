@@ -28,25 +28,31 @@ const securityHeaders = [
     key: "Referrer-Policy",
     value: "strict-origin-when-cross-origin",
   },
-  // Restrict browser feature access (camera, mic, geolocation disabled)
+  // Browser feature permissions policy
+  // - Camera and mic disabled
+  // - Geolocation enabled for same-origin (used for buyer/farmer delivery addresses and logistics)
+  // - Payment enabled for checkout gateways (Razorpay Payment Request API / iframe checkout)
   {
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(), payment=()",
+    value: "camera=(), microphone=(), geolocation=(self), payment=*",
   },
   // Content Security Policy
   // - script-src includes 'unsafe-inline' + 'unsafe-eval' required by Next.js dev hydration
   //   and Recharts. In a stricter production environment, use nonces instead.
-  // - img-src allows OpenStreetMap tiles (Leaflet) and data URIs
-  // - connect-src allows Google Gemini API calls from server (never client)
+  // - script-src includes checkout.razorpay.com for the Razorpay Standard Checkout script
+  // - img-src allows OpenStreetMap tiles (Leaflet), data URIs, and Razorpay CDN (payment icons)
+  // - connect-src allows Google Gemini API calls from server and Razorpay API for checkout XHR
+  // - frame-src allows Razorpay checkout iframe (used by Razorpay Standard Checkout flow)
   {
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
-      "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org",
-      "connect-src 'self' https://generativelanguage.googleapis.com",
+      "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://cdn.razorpay.com",
+      "connect-src 'self' https://generativelanguage.googleapis.com https://api.razorpay.com",
+      "frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com",
       "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self'",

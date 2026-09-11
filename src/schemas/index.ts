@@ -116,9 +116,27 @@ export const checkoutFormSchema = z.object({
   district: z.string().trim().min(2, "District is required"),
   state: z.string().trim().min(2, "State is required"),
   pincode: z.string().trim().regex(/^\d{6}$/, "Valid 6-digit PIN code required"),
-  paymentMethod: z.enum(["UPI", "DIRECT_BANK_TRANSFER", "CASH_ON_DELIVERY", "NET_BANKING"], {
-    message: "Select a valid payment option",
-  }),
+  paymentMethod: z.enum(
+    [
+      "CARD",
+      "UPI",
+      "NETBANKING",
+      "WALLET",
+      "CASH_ON_DELIVERY",
+      "DIRECT_BANK_TRANSFER",
+      "NET_BANKING",
+      "OTHER",
+    ],
+    {
+      message: "Select a valid payment option",
+    }
+  ),
+  coordinates: z
+    .object({
+      latitude: z.number(),
+      longitude: z.number(),
+    })
+    .optional(),
   items: z
     .array(
       z.object({

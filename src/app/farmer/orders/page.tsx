@@ -41,11 +41,10 @@ interface OrderItem {
   };
 }
 
-const STATUS_PROGRESSION: Record<string, string> = {
-  CONFIRMED: "PROCESSING",
-  PROCESSING: "ASSIGNED_FOR_DELIVERY",
-  ASSIGNED_FOR_DELIVERY: "IN_TRANSIT",
-  IN_TRANSIT: "DELIVERED",
+const FARMER_PERMITTED_TRANSITIONS: Record<string, { nextStatus: string; buttonLabel: string }> = {
+  PENDING: { nextStatus: "CONFIRMED", buttonLabel: "Accept Order" },
+  CONFIRMED: { nextStatus: "PROCESSING", buttonLabel: "Mark Processing" },
+  PROCESSING: { nextStatus: "READY_FOR_PICKUP", buttonLabel: "Ready for Pickup" },
 };
 
 export default function FarmerOrdersPage() {
@@ -79,7 +78,10 @@ export default function FarmerOrdersPage() {
   }
 
   const handleAdvanceStatus = async (orderId: string, currentStatus: string) => {
-    const nextStatus = STATUS_PROGRESSION[currentStatus] || "DELIVERED";
+    const transitionConfig = FARMER_PERMITTED_TRANSITIONS[currentStatus];
+    if (!transitionConfig) return;
+
+    const nextStatus = transitionConfig.nextStatus;
     setUpdatingId(orderId);
 
     try {
@@ -96,7 +98,7 @@ export default function FarmerOrdersPage() {
               ? {
                   ...o,
                   orderStatus: nextStatus,
-                  paymentStatus: nextStatus === "DELIVERED" ? "RELEASED_TO_SELLER" : o.paymentStatus,
+                  paymentStatus: nextStatus === "CONFIRMED" ? "PAID" : o.paymentStatus,
                 }
               : o
           )
@@ -136,7 +138,7 @@ export default function FarmerOrdersPage() {
       {/* Filter Tabs & Search Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-1 overflow-x-auto pb-1 max-w-full w-full sm:w-auto scrollbar-none min-w-0">
-          {["ALL", "CONFIRMED", "PROCESSING", "ASSIGNED_FOR_DELIVERY", "IN_TRANSIT", "DELIVERED"].map(
+          {["ALL", "PENDING", "CONFIRMED", "PROCESSING", "READY_FOR_PICKUP", "IN_TRANSIT", "DELIVERED", "CANCELLED"].map(
             (status) => (
               <button
                 key={status}
@@ -188,7 +190,7 @@ export default function FarmerOrdersPage() {
         <div className="grid grid-cols-1 gap-4">
           {filteredOrders.map((order) => {
             const isUpdating = updatingId === order._id;
-            const nextStatus = STATUS_PROGRESSION[order.orderStatus];
+            const farmerAction = FARMER_PERMITTED_TRANSITIONS[order.orderStatus];
 
             return (
               <div
@@ -312,7 +314,21 @@ export default function FarmerOrdersPage() {
                         <CheckCircle2 className="h-4 w-4 shrink-0" />
                         <span>Order Fulfilled &amp; Payment Released</span>
                       </div>
-                    ) : nextStatus ? (
+                    ) : order.orderStatus === "CANCELLED" ? (
+                      <div className="flex items-center gap-1.5 text-rose-700 font-bold text-xs bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200 justify-center sm:justify-start">
+                        <span>Cancelled</span>
+                      </div>
+                    ) : order.orderStatus === "READY_FOR_PICKUP" ? (
+                      <div className="flex items-center gap-1.5 text-indigo-700 font-bold text-xs bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-200 justify-center sm:justify-start">
+                        <Truck className="h-4 w-4 shrink-0" />
+                        <span>Ready at Bay • Awaiting Fleet Pickup</span>
+                      </div>
+                    ) : ["ASSIGNED_FOR_DELIVERY", "PICKED_UP", "IN_TRANSIT", "OUT_FOR_DELIVERY"].includes(order.orderStatus) ? (
+                      <div className="flex items-center gap-1.5 text-slate-700 font-bold text-xs bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 justify-center sm:justify-start">
+                        <Truck className="h-4 w-4 shrink-0 text-slate-500" />
+                        <span>In Custody of Logistics Fleet</span>
+                      </div>
+                    ) : farmerAction ? (
                       <Button
                         size="sm"
                         disabled={isUpdating}
@@ -324,9 +340,7 @@ export default function FarmerOrdersPage() {
                         ) : (
                           <Truck className="h-3.5 w-3.5 mr-1.5" />
                         )}
-                        <span>
-                          Advance to {nextStatus.replace(/_/g, " ")}
-                        </span>
+                        <span>{farmerAction.buttonLabel}</span>
                         <ArrowRight className="h-3.5 w-3.5 ml-1" />
                       </Button>
                     ) : null}

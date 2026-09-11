@@ -78,6 +78,8 @@ export default function FarmerAiInsightsClient({ initialData }: AiInsightsClient
       text: string;
       actions?: string[];
       isAi?: boolean;
+      modelUsed?: string;
+      errorCode?: string;
       time: string;
     }>
   >([
@@ -88,8 +90,11 @@ export default function FarmerAiInsightsClient({ initialData }: AiInsightsClient
         "What should I sell more of?",
         "Why is tomato demand increasing?",
         "How can I improve my earnings?",
+        "What is the current tomato price?",
+        "What is the current rice price?",
       ],
-      isAi: true,
+      isAi: false,
+      modelUsed: "system-welcome",
       time: "Just now",
     },
   ]);
@@ -128,6 +133,8 @@ export default function FarmerAiInsightsClient({ initialData }: AiInsightsClient
             text: data.answer,
             actions: data.suggestedActions,
             isAi: data.isAiGenerated,
+            modelUsed: data.modelUsed,
+            errorCode: data.errorCode,
             time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           },
         ]);
@@ -434,9 +441,27 @@ export default function FarmerAiInsightsClient({ initialData }: AiInsightsClient
                   <div className="flex items-center gap-1.5 mb-1 text-[10px] text-emerald-700 font-bold">
                     <Sparkles className="h-3 w-3" />
                     <span>KISANOVA Copilot</span>
-                    {msg.isAi && (
-                      <Badge className="bg-emerald-100 text-emerald-800 border-none font-bold text-[9px] px-1 py-0">
-                        Gemini
+                    {msg.isAi ? (
+                      <Badge className="bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-[9px] px-1.5 py-0.5">
+                        AI Generated
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-slate-100 text-slate-600 border border-slate-200 font-medium text-[9px] px-1.5 py-0.5">
+                        {msg.errorCode === "GEMINI_KEY_MISSING"
+                          ? "Fallback (Gemini key not configured)"
+                          : msg.errorCode === "GEMINI_AUTH_ERROR"
+                          ? "Fallback (Gemini authentication failed)"
+                          : msg.errorCode === "GEMINI_QUOTA_ERROR"
+                          ? "Fallback (Gemini quota exceeded)"
+                          : msg.errorCode === "GEMINI_RATE_LIMIT"
+                          ? "Fallback (Gemini rate limit exceeded)"
+                          : msg.errorCode === "GEMINI_TIMEOUT"
+                          ? "Fallback (Gemini request timed out)"
+                          : msg.errorCode === "GEMINI_MODEL_ERROR"
+                          ? "Fallback (Gemini model unavailable)"
+                          : msg.errorCode
+                          ? `Fallback (${msg.errorCode})`
+                          : "Deterministic"}
                       </Badge>
                     )}
                   </div>

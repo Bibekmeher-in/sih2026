@@ -149,32 +149,35 @@ export const authOptions: NextAuthOptions = {
         token.role = user.role;
         token.phone = user.phone;
         token.status = user.status;
+        token.email = user.email;
+        token.name = user.name;
       }
 
-      // Auto-heal non-ObjectId tokens from legacy sessions to real MongoDB ObjectIds
-      if (
-        token.id &&
-        (!mongoose.Types.ObjectId.isValid(token.id as string) ||
-          (typeof token.id === "string" && token.id.startsWith("demo_user_")))
-      ) {
+      // Auto-heal fallback or invalid IDs to real MongoDB ObjectIds
+      const isFallbackId =
+        token.id && Object.values(DEMO_FALLBACK_IDS).includes(token.id as string);
+      const isInvalidId =
+        !token.id ||
+        !mongoose.Types.ObjectId.isValid(token.id as string) ||
+        (typeof token.id === "string" && token.id.startsWith("demo_user_"));
+
+      if (isFallbackId || isInvalidId) {
         try {
           await connectToDatabase();
           const dbUser = await User.findOne({
             $or: [
-              { email: (token.email as string)?.toLowerCase() },
-              { role: token.role },
+              ...(token.email ? [{ email: (token.email as string).toLowerCase() }] : []),
+              ...(token.role ? [{ role: token.role }] : []),
             ],
           });
           if (dbUser) {
             token.id = dbUser._id.toString();
             token.role = dbUser.role;
-          } else if (token.role && DEMO_FALLBACK_IDS[token.role as string]) {
-            token.id = DEMO_FALLBACK_IDS[token.role as string];
+            token.email = dbUser.email;
+            token.name = dbUser.name;
           }
         } catch {
-          if (token.role && DEMO_FALLBACK_IDS[token.role as string]) {
-            token.id = DEMO_FALLBACK_IDS[token.role as string];
-          }
+          // silently continue
         }
       }
 
@@ -186,6 +189,8 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role;
         session.user.phone = token.phone;
         session.user.status = token.status;
+        if (token.email) session.user.email = token.email as string;
+        if (token.name) session.user.name = token.name as string;
       }
       return session;
     },

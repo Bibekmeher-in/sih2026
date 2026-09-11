@@ -2,21 +2,47 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 import { UnitType } from "@/types";
 
 export type OrderStatusType =
+  | "PENDING_PAYMENT"
+  | "PAYMENT_FAILED"
   | "PENDING"
   | "CONFIRMED"
   | "PROCESSING"
   | "READY_FOR_PICKUP"
   | "ASSIGNED_FOR_DELIVERY"
+  | "PICKED_UP"
   | "IN_TRANSIT"
+  | "OUT_FOR_DELIVERY"
   | "DELIVERED"
   | "CANCELLED";
 
 export type PaymentStatusType =
   | "PENDING"
+  | "CREATED"
+  | "AUTHORIZED"
+  | "CAPTURED"
+  | "FAILED"
+  | "REFUND_REQUESTED"
+  | "REFUNDED"
+  | "PARTIALLY_REFUNDED"
   | "PAID"
   | "ESCROW_HELD"
-  | "RELEASED_TO_SELLER"
-  | "REFUNDED";
+  | "RELEASED_TO_SELLER";
+
+export type PaymentMethodType =
+  | "CARD"
+  | "UPI"
+  | "NETBANKING"
+  | "WALLET"
+  | "CASH_ON_DELIVERY"
+  | "DIRECT_BANK_TRANSFER"
+  | "NET_BANKING"
+  | "OTHER";
+
+export interface IOrderStatusHistoryItem {
+  status: OrderStatusType;
+  timestamp: Date;
+  note?: string;
+}
 
 export interface IOrderItem {
   product: mongoose.Types.ObjectId;
@@ -25,6 +51,7 @@ export interface IOrderItem {
   unit: UnitType;
   unitPrice: number;
   totalItemPrice: number;
+  qualityGrade?: string;
 }
 
 export interface IOrderAddress {
@@ -53,8 +80,27 @@ export interface IOrderDocument extends Document {
   deliveryAddress: IOrderAddress;
   orderStatus: OrderStatusType;
   paymentStatus: PaymentStatusType;
-  paymentMethod: "UPI" | "DIRECT_BANK_TRANSFER" | "CASH_ON_DELIVERY" | "NET_BANKING";
+  paymentMethod: PaymentMethodType;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  razorpaySignature?: string;
+  currency?: string;
+  paidAt?: Date;
+  failureReason?: string;
+  inventoryReservationExpiresAt?: Date;
+  inventoryConsumed?: boolean;
+  refundId?: string;
+  refundAmount?: number;
+  refundStatus?: string;
+  refundRequestedAt?: Date;
+  refundCompletedAt?: Date;
   deliveryId?: mongoose.Types.ObjectId;
+  statusHistory: IOrderStatusHistoryItem[];
+  deliveryOtp?: string;
+  otpVerified?: boolean;
+  estimatedDeliveryAt?: Date;
+  deliveredAt?: Date;
+  cancelledAt?: Date;
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -92,6 +138,28 @@ const OrderItemSchema = new Schema<IOrderItem>(
       required: true,
       min: [0, "Total item price cannot be negative"],
     },
+    qualityGrade: {
+      type: String,
+      default: "Grade A",
+    },
+  },
+  { _id: false }
+);
+
+const OrderStatusHistorySchema = new Schema<IOrderStatusHistoryItem>(
+  {
+    status: {
+      type: String,
+      required: true,
+    },
+    timestamp: {
+      type: Date,
+      default: Date.now,
+    },
+    note: {
+      type: String,
+      default: "",
+    },
   },
   { _id: false }
 );
@@ -105,8 +173,8 @@ const OrderAddressSchema = new Schema<IOrderAddress>(
     state: { type: String, required: true },
     pincode: { type: String, required: true },
     coordinates: {
-      latitude: { type: Number, default: 19.076 }, // Default Mumbai lat
-      longitude: { type: Number, default: 72.8777 },
+      latitude: { type: Number, default: 20.2961 }, // Default Bhubaneswar / Odisha lat
+      longitude: { type: Number, default: 85.8245 },
     },
   },
   { _id: false }
@@ -172,12 +240,16 @@ const OrderSchema = new Schema<IOrderDocument>(
     orderStatus: {
       type: String,
       enum: [
+        "PENDING_PAYMENT",
+        "PAYMENT_FAILED",
         "PENDING",
         "CONFIRMED",
         "PROCESSING",
         "READY_FOR_PICKUP",
         "ASSIGNED_FOR_DELIVERY",
+        "PICKED_UP",
         "IN_TRANSIT",
+        "OUT_FOR_DELIVERY",
         "DELIVERED",
         "CANCELLED",
       ],
@@ -186,18 +258,111 @@ const OrderSchema = new Schema<IOrderDocument>(
     },
     paymentStatus: {
       type: String,
-      enum: ["PENDING", "PAID", "ESCROW_HELD", "RELEASED_TO_SELLER", "REFUNDED"],
+      enum: [
+        "PENDING",
+        "CREATED",
+        "AUTHORIZED",
+        "CAPTURED",
+        "FAILED",
+        "REFUND_REQUESTED",
+        "REFUNDED",
+        "PARTIALLY_REFUNDED",
+        "PAID",
+        "ESCROW_HELD",
+        "RELEASED_TO_SELLER",
+      ],
       default: "PENDING",
       index: true,
     },
     paymentMethod: {
       type: String,
-      enum: ["UPI", "DIRECT_BANK_TRANSFER", "CASH_ON_DELIVERY", "NET_BANKING"],
+      enum: [
+        "CARD",
+        "UPI",
+        "NETBANKING",
+        "WALLET",
+        "CASH_ON_DELIVERY",
+        "DIRECT_BANK_TRANSFER",
+        "NET_BANKING",
+        "OTHER",
+      ],
       default: "UPI",
+    },
+    razorpayOrderId: {
+      type: String,
+      trim: true,
+      index: true,
+    },
+    razorpayPaymentId: {
+      type: String,
+      trim: true,
+      index: true,
+    },
+    razorpaySignature: {
+      type: String,
+      trim: true,
+    },
+    currency: {
+      type: String,
+      default: "INR",
+    },
+    paidAt: {
+      type: Date,
+    },
+    failureReason: {
+      type: String,
+      default: "",
+    },
+    inventoryReservationExpiresAt: {
+      type: Date,
+      index: true,
+    },
+    inventoryConsumed: {
+      type: Boolean,
+      default: false,
+    },
+    refundId: {
+      type: String,
+      trim: true,
+    },
+    refundAmount: {
+      type: Number,
+      default: 0,
+    },
+    refundStatus: {
+      type: String,
+      default: "",
+    },
+    refundRequestedAt: {
+      type: Date,
+    },
+    refundCompletedAt: {
+      type: Date,
     },
     deliveryId: {
       type: Schema.Types.ObjectId,
       ref: "Delivery",
+    },
+    statusHistory: {
+      type: [OrderStatusHistorySchema],
+      default: [],
+    },
+    deliveryOtp: {
+      type: String,
+      default: "",
+    },
+    otpVerified: {
+      type: Boolean,
+      default: false,
+    },
+    estimatedDeliveryAt: {
+      type: Date,
+    },
+    deliveredAt: {
+      type: Date,
+    },
+    cancelledAt: {
+      type: Date,
     },
     notes: {
       type: String,
@@ -219,6 +384,10 @@ OrderSchema.pre("save", function () {
   this.subtotal = Math.round(computedSubtotal * 100) / 100;
   this.total = Math.round((this.subtotal + (this.deliveryFee || 0)) * 100) / 100;
 });
+
+if (process.env.NODE_ENV !== "production") {
+  delete (mongoose.models as Record<string, unknown>).Order;
+}
 
 export const Order: Model<IOrderDocument> =
   mongoose.models.Order || mongoose.model<IOrderDocument>("Order", OrderSchema);

@@ -1,11 +1,11 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { USER_ROLES } from "@/types";
 import { getFarmerAiHubData } from "@/lib/ai-forecast-pricing";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user || (user.role !== USER_ROLES.FARMER && user.role !== USER_ROLES.FPO && user.role !== USER_ROLES.ADMIN)) {
@@ -15,7 +15,10 @@ export async function GET() {
       );
     }
 
-    const data = await getFarmerAiHubData(user.id);
+    const { searchParams } = new URL(request.url);
+    const forceRefresh = searchParams.get("refresh") === "true";
+
+    const data = await getFarmerAiHubData(user.id, forceRefresh);
 
     return NextResponse.json({
       success: true,
