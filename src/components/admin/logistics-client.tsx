@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import {
   Truck,
@@ -13,12 +14,17 @@ import {
   Plus,
   RefreshCw,
   AlertCircle,
+  Sparkles,
+  MapPin,
+  ExternalLink,
+  Users,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatCurrency } from "@/lib/utils";
 import { RouteComparisonResult } from "@/lib/route-optimizer";
+import { AssignPartnerModal } from "@/components/admin/assign-partner-modal";
 
 // SSR-disabled dynamic Leaflet map import
 const LeafletMap = dynamic(() => import("@/components/logistics/leaflet-map"), {
@@ -88,6 +94,9 @@ export default function AdminLogisticsClient({
   const [comparison, setComparison] = useState(initialComparison);
   const [vehicles, setVehicles] = useState(initialVehicles);
   const [deliveries, setDeliveries] = useState(initialDeliveries);
+
+  // Delivery partner assignment modal
+  const [assignModalDelivery, setAssignModalDelivery] = useState<{ id: string; orderNumber: string } | null>(null);
 
   // Map controls
   const [showTraditional, setShowTraditional] = useState(true);
@@ -587,16 +596,30 @@ export default function AdminLogisticsClient({
       {activeTab === "DELIVERIES" && (
         <div className="space-y-4">
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Delivery Dispatch Management</h3>
                 <p className="text-xs text-slate-500">
-                  Assign active vehicles, track dispatches, and synchronize order lifecycle
+                  Assign verified delivery partners with Gemini AI matching, track dispatches live, and synchronize order lifecycle
                 </p>
               </div>
-              <Badge className="bg-emerald-100 text-emerald-800 font-bold text-xs">
-                {deliveries.length} Total Dispatches
-              </Badge>
+              <div className="flex items-center gap-2">
+                <Link href="/admin/deliveries/map">
+                  <Button variant="outline" size="sm" className="rounded-xl text-xs gap-1.5 border-slate-300">
+                    <MapPin className="h-3.5 w-3.5 text-emerald-600" />
+                    <span>Regional Fleet Map</span>
+                  </Button>
+                </Link>
+                <Link href="/admin/delivery-partners">
+                  <Button variant="outline" size="sm" className="rounded-xl text-xs gap-1.5 border-slate-300">
+                    <Users className="h-3.5 w-3.5 text-blue-600" />
+                    <span>Manage Partners</span>
+                  </Button>
+                </Link>
+                <Badge className="bg-emerald-100 text-emerald-800 font-bold text-xs">
+                  {deliveries.length} Total Dispatches
+                </Badge>
+              </div>
             </div>
 
             <div className="overflow-x-auto">
@@ -661,20 +684,48 @@ export default function AdminLogisticsClient({
                         </Badge>
                       </td>
                       <td className="p-3 text-right">
-                        {d.status !== "DELIVERED" && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleAdvanceDelivery(d._id, d.status)}
-                            className="text-xs h-7 rounded-lg border-slate-200 text-slate-700 font-bold hover:bg-slate-100"
-                          >
-                            {d.status === "PENDING_ASSIGNMENT"
-                              ? "Assign"
-                              : d.status === "ASSIGNED"
-                              ? "Start Transit"
-                              : "Mark Delivered"}
-                          </Button>
-                        )}
+                        <div className="flex items-center justify-end gap-1.5">
+                          {d.status !== "DELIVERED" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                setAssignModalDelivery({
+                                  id: d._id,
+                                  orderNumber: d.order?.orderNumber || d.deliveryTrackingNumber,
+                                })
+                              }
+                              className="text-[11px] h-7 px-2 rounded-lg border-emerald-300 bg-emerald-50 text-emerald-800 font-bold hover:bg-emerald-100 flex items-center gap-1"
+                            >
+                              <Sparkles className="h-3 w-3 text-emerald-600" />
+                              <span>AI Match</span>
+                            </Button>
+                          )}
+                          <Link href={`/admin/deliveries/${d._id}/track`}>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-[11px] h-7 px-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              <span>Track</span>
+                            </Button>
+                          </Link>
+                          {d.status !== "DELIVERED" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleAdvanceDelivery(d._id, d.status)}
+                              className="text-xs h-7 rounded-lg border-slate-200 text-slate-700 font-bold hover:bg-slate-100"
+                            >
+                              {d.status === "PENDING_ASSIGNMENT"
+                                ? "Assign"
+                                : d.status === "ASSIGNED"
+                                ? "Start Transit"
+                                : "Deliver"}
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -896,6 +947,20 @@ export default function AdminLogisticsClient({
             </div>
           )}
         </div>
+      )}
+
+      {/* AI Partner Assignment Modal */}
+      {assignModalDelivery && (
+        <AssignPartnerModal
+          isOpen={!!assignModalDelivery}
+          onClose={() => setAssignModalDelivery(null)}
+          deliveryId={assignModalDelivery.id}
+          orderNumber={assignModalDelivery.orderNumber}
+          onSuccess={() => {
+            setAssignModalDelivery(null);
+            window.location.reload();
+          }}
+        />
       )}
     </div>
   );

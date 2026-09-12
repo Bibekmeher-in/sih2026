@@ -61,6 +61,11 @@ export function Footer() {
                   {t("nav.adminPortal", "Admin Portal")}
                 </a>
               </li>
+              <li>
+                <Link href="/login?callbackUrl=/delivery/dashboard" className="hover:text-emerald-700 transition-colors text-emerald-800 font-medium">
+                  Delivery Boy Hub
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -7,13 +7,14 @@ import mongoose from "mongoose";
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
+  uri?: string;
 }
 
 declare global {
   var mongooseCache: MongooseCache | undefined;
 }
 
-const cached: MongooseCache = global.mongooseCache || { conn: null, promise: null };
+const cached: MongooseCache = global.mongooseCache || { conn: null, promise: null, uri: undefined };
 
 if (!global.mongooseCache) {
   global.mongooseCache = cached;
@@ -36,15 +37,28 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
     );
   }
 
+  // If URI has changed, cleanly disconnect and reinitialize
+  if (cached.uri && cached.uri !== uri) {
+    try {
+      await mongoose.disconnect();
+    } catch {
+      // ignore disconnect error
+    }
+    cached.conn = null;
+    cached.promise = null;
+  }
+
   if (cached.conn && mongoose.connection.readyState === 1) {
     return cached.conn;
   }
+
+  cached.uri = uri;
 
   if (!cached.promise) {
     const opts: mongoose.ConnectOptions = {
       bufferCommands: false,
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 8000,
     };
 
     cached.promise = mongoose.connect(uri, opts).then((mongooseInstance) => {

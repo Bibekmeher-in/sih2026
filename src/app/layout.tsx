@@ -41,6 +41,7 @@ import { AuthSessionProvider } from "@/components/providers/session-provider";
 import { CartProvider } from "@/context/cart-context";
 import { ToastProvider } from "@/components/providers/toast-provider";
 import { LanguageProvider } from "@/context/language-context";
+import { FarmerVoiceAssistant } from "@/components/shared/farmer-voice-assistant";
 
 export default function RootLayout({
   children,
@@ -61,7 +62,10 @@ export default function RootLayout({
         <LanguageProvider>
           <AuthSessionProvider>
             <CartProvider>
-              <ToastProvider>{children}</ToastProvider>
+              <ToastProvider>
+                {children}
+                <FarmerVoiceAssistant />
+              </ToastProvider>
             </CartProvider>
           </AuthSessionProvider>
         </LanguageProvider>

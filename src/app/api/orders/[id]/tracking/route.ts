@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order } from "@/models/Order";
 import { Delivery } from "@/models/Delivery";
+import { DeliveryPartnerProfile } from "@/models/DeliveryPartnerProfile";
 import mongoose from "mongoose";
 
 export const dynamic = "force-dynamic";
@@ -67,7 +68,30 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
     // Lookup linked Delivery document
     const delivery = await Delivery.findOne({ order: order._id })
       .populate("vehicle")
+      .populate("assignedPartner", "name phone avatar")
       .lean();
+
+    // Resolve delivery partner profile if assigned
+    let partnerInfo: {
+      name: string;
+      phone: string;
+      vehicleType: string;
+      vehicleNumber: string;
+    } | null = null;
+
+    if (delivery?.assignedPartner) {
+      const partnerUser = delivery.assignedPartner as any;
+      const partnerUserId = partnerUser._id || partnerUser;
+      const profile = await DeliveryPartnerProfile.findOne({ user: partnerUserId }).lean();
+      if (profile) {
+        partnerInfo = {
+          name: profile.fullName || partnerUser.name || "Delivery Partner",
+          phone: profile.phone || partnerUser.phone || "",
+          vehicleType: profile.vehicleType || "BIKE",
+          vehicleNumber: profile.vehicleNumber || "",
+        };
+      }
+    }
 
     // Determine current location & last updated text
     let currentLocation: { latitude: number; longitude: number; updatedAt?: Date } | null = null;
@@ -152,9 +176,12 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       carrierInfo: delivery
         ? {
             trackingNumber: delivery.deliveryTrackingNumber,
-            driverName: delivery.driverName || "Assigned Fleet Driver",
-            driverPhone: delivery.driverPhone || "9822993344",
+            driverName: partnerInfo?.name || delivery.driverName || "Assigned Driver",
+            driverPhone: partnerInfo?.phone || delivery.driverPhone || "",
+            vehicleType: partnerInfo?.vehicleType || "FLEET",
+            vehicleNumber: partnerInfo?.vehicleNumber || (delivery.vehicle as any)?.registrationNumber || "",
             temperatureCelsius: delivery.temperatureCelsius,
+            assignmentStatus: delivery.assignmentStatus,
           }
         : null,
     });

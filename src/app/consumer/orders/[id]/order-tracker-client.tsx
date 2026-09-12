@@ -123,6 +123,7 @@ export function OrderTrackerClient({ initialOrder }: OrderTrackerProps) {
   const [liveLocationText, setLiveLocationText] = useState<string>("Checking live location...");
   const [liveCoords, setLiveCoords] = useState<{ latitude: number; longitude: number } | null>(null);
   const [mapRoutePolyline, setMapRoutePolyline] = useState<[number, number][]>([]);
+  const [carrierInfo, setCarrierInfo] = useState<any>(null);
 
   // Review state
   const [isReviewing, setIsReviewing] = useState(false);
@@ -162,6 +163,9 @@ export function OrderTrackerClient({ initialOrder }: OrderTrackerProps) {
               cancelledAt: data.cancelledAt || prev.cancelledAt,
             }));
 
+            if (data.carrierInfo) {
+              setCarrierInfo(data.carrierInfo);
+            }
             if (data.currentLocation) {
               setLiveCoords({
                 latitude: data.currentLocation.latitude,
@@ -444,6 +448,42 @@ export function OrderTrackerClient({ initialOrder }: OrderTrackerProps) {
         </div>
       )}
 
+      {/* Assigned Delivery Partner Card */}
+      {carrierInfo?.driverName && !isCancelled && (
+        <div className="rounded-3xl border border-blue-200 bg-gradient-to-r from-blue-50/80 via-white to-indigo-50/50 p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="h-11 w-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <Truck className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">
+                  Assigned Delivery Partner
+                </span>
+                {carrierInfo.vehicleType && (
+                  <Badge variant="outline" className="text-[9px] font-bold bg-white text-blue-800 border-blue-300">
+                    {carrierInfo.vehicleType}
+                  </Badge>
+                )}
+              </div>
+              <h4 className="font-black text-slate-900 text-sm sm:text-base">{carrierInfo.driverName}</h4>
+              <p className="text-xs text-slate-600 font-mono">
+                Vehicle: {carrierInfo.vehicleNumber || "Verified Fleet"} • Tracking: {carrierInfo.trackingNumber}
+              </p>
+            </div>
+          </div>
+
+          {carrierInfo.driverPhone && (
+            <a href={`tel:${carrierInfo.driverPhone}`} className="self-start sm:self-auto">
+              <Button size="sm" className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold gap-1.5 shadow-2xs">
+                <Phone className="h-3.5 w-3.5" />
+                <span>Call Partner</span>
+              </Button>
+            </a>
+          )}
+        </div>
+      )}
+
       {/* Current Status Highlight Banner */}
       <div className="rounded-3xl border border-emerald-200 bg-emerald-50/70 p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -628,9 +668,9 @@ export function OrderTrackerClient({ initialOrder }: OrderTrackerProps) {
               activeVehicle={
                 liveCoords
                   ? {
-                      vehicleNumber: order.trackingInfo?.vehicleNumber || "OD-02-CD-5678",
-                      modelName: "KISANOVA Cold-Chain Fleet",
-                      driverName: order.trackingInfo?.driverName || "Fleet Driver",
+                      vehicleNumber: carrierInfo?.vehicleNumber || order.trackingInfo?.vehicleNumber || "OD-02-CD-5678",
+                      modelName: carrierInfo?.vehicleType ? `${carrierInfo.vehicleType} Express` : "KISANOVA Cold-Chain Fleet",
+                      driverName: carrierInfo?.driverName || order.trackingInfo?.driverName || "Fleet Driver",
                       location: liveCoords,
                       temperatureCelsius: order.trackingInfo?.coldChainTempCelsius ?? 16.5,
                     }

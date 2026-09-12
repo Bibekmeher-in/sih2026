@@ -23,6 +23,7 @@ import { MarketProduct } from "@/config/demo-products";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
+import { VoiceInputButton } from "@/components/shared/voice-input-button";
 
 const INITIAL_FILTERS: FilterState = {
   search: "",
@@ -135,7 +136,7 @@ function MarketplaceContent() {
             </div>
           </Link>
 
-          {/* Search Bar */}
+          {/* Search Bar with Voice Input */}
           <form onSubmit={handleSearchSubmit} className="flex-1 max-w-lg relative">
             <input
               type="text"
@@ -145,9 +146,19 @@ function MarketplaceContent() {
               )}
               value={filters.search}
               onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-              className="w-full h-10 pl-9 pr-4 text-xs sm:text-sm rounded-lg border border-slate-300 bg-slate-50/80 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition-all"
+              className="w-full h-10 pl-9 pr-11 text-xs sm:text-sm rounded-lg border border-slate-300 bg-slate-50/80 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition-all"
             />
             <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+            <div className="absolute right-1.5 top-1.5">
+              <VoiceInputButton
+                onTranscript={(transcript) => {
+                  setFilters((prev) => ({ ...prev, search: transcript }));
+                  setPage(1);
+                }}
+                size="sm"
+                title={t("voice.voiceSearch", "Speak crop name to search")}
+              />
+            </div>
           </form>
 
           {/* Actions & Cart Launcher */}

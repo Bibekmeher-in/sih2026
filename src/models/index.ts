@@ -20,5 +20,7 @@ export * from "./CommunityPost";
 export * from "./CommunityComment";
 export * from "./ProduceAggregation";
 export * from "./MarketPrice";
+export * from "./DeliveryPartnerProfile";
+export * from "./AuditLog";
 export * from "./WebhookEvent";
 export * from "../types";

@@ -362,7 +362,8 @@ async function runPhase8Tests() {
     .join("; ");
 
   // Fetch consumer order details
-  const sampleOrder = await db.collection("orders").findOne();
+  const consumerUser = await db.collection("users").findOne({ email: "consumer@example.com" });
+  const sampleOrder = await db.collection("orders").findOne({ buyer: consumerUser._id });
   const orderId = sampleOrder ? sampleOrder._id.toString() : "ord_cons_01";
 
   const trackRes = await fetch(`${BASE_URL}/api/consumer/orders/${orderId}`, {

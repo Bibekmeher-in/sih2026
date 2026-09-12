@@ -257,75 +257,84 @@ export async function getFarmerAiHubData(
     cached.productCount === products.length &&
     cached.salesVolume === totalVolumeKg;
 
-  let insights: FarmerInsightsResult;
-  if (isCacheValid && cached) {
-    insights = cached.insights;
-  } else {
-    insights = await generateFarmerInsights(farmerContext);
-    if (insights.isAiGenerated) {
-      insightsMemoryCache.set(cacheKey, {
-        timestamp: Date.now(),
-        insights,
-        productCount: products.length,
-        salesVolume: totalVolumeKg,
-      });
-    }
-  }
+  // Execute top-level insights and individual product intelligence in parallel for high performance
+  const [insights, productResults] = await Promise.all([
+    (async (): Promise<FarmerInsightsResult> => {
+      if (isCacheValid && cached) {
+        return cached.insights;
+      }
+      const ins = await generateFarmerInsights(farmerContext);
+      if (ins.isAiGenerated) {
+        insightsMemoryCache.set(cacheKey, {
+          timestamp: Date.now(),
+          insights: ins,
+          productCount: products.length,
+          salesVolume: totalVolumeKg,
+        });
+      }
+      return ins;
+    })(),
+    Promise.all(
+      products.slice(0, 3).map(async (prod) => {
+        let rec: IPriceRecommendationDocument | null = null;
+        let fc: IDemandForecastDocument | null = null;
 
-  // 2. Retrieve or generate price recommendations and demand forecasts for top products
+        try {
+          if (!forceRefresh) {
+            const existingRec = await PriceRecommendation.findOne({
+              product: prod._id,
+            }).sort({ generatedAt: -1 });
+
+            if (existingRec && existingRec.currentFarmerPrice === prod.price) {
+              const ageMs = Date.now() - new Date(existingRec.generatedAt).getTime();
+              const isAi = Boolean(existingRec.aiModel && !existingRec.aiModel.includes("fallback"));
+              if (isAi && ageMs < REC_FRESHNESS_TTL_MS) {
+                rec = existingRec;
+              }
+            }
+          }
+
+          if (!rec) {
+            rec = await calculateAndStorePriceRecommendation(prod._id.toString());
+          }
+        } catch (err) {
+          console.warn("Could not generate price recommendation for product:", prod._id, err);
+        }
+
+        try {
+          if (!forceRefresh) {
+            const existingFc = await DemandForecast.findOne({
+              product: prod._id,
+              forecastPeriod: "Next 14 Days",
+            }).sort({ generatedAt: -1 });
+
+            if (existingFc) {
+              const ageMs = Date.now() - new Date(existingFc.generatedAt).getTime();
+              const isAi = Boolean(existingFc.aiModelVersion && !existingFc.aiModelVersion.includes("fallback"));
+              if (isAi && ageMs < REC_FRESHNESS_TTL_MS) {
+                fc = existingFc;
+              }
+            }
+          }
+
+          if (!fc) {
+            fc = await calculateAndStoreDemandForecast(prod._id.toString());
+          }
+        } catch (err) {
+          console.warn("Could not generate demand forecast for product:", prod._id, err);
+        }
+
+        return { rec, fc };
+      })
+    ),
+  ]);
+
   const recommendations: IPriceRecommendationDocument[] = [];
   const forecasts: IDemandForecastDocument[] = [];
 
-  for (const prod of products.slice(0, 3)) {
-    try {
-      // Check for fresh existing recommendation in MongoDB
-      let rec: IPriceRecommendationDocument | null = null;
-      if (!forceRefresh) {
-        const existingRec = await PriceRecommendation.findOne({
-          product: prod._id,
-        }).sort({ generatedAt: -1 });
-
-        if (existingRec && existingRec.currentFarmerPrice === prod.price) {
-          const ageMs = Date.now() - new Date(existingRec.generatedAt).getTime();
-          const isAi = existingRec.aiModel && !existingRec.aiModel.includes("fallback");
-          if ((isAi && ageMs < REC_FRESHNESS_TTL_MS) || (!isAi && ageMs < FALLBACK_COOLDOWN_TTL_MS)) {
-            rec = existingRec;
-          }
-        }
-      }
-
-      if (!rec) {
-        // Sequential pacing to avoid hitting Google Gemini concurrent burst limits
-        await new Promise((r) => setTimeout(r, 400));
-        rec = await calculateAndStorePriceRecommendation(prod._id.toString());
-      }
-      if (rec) recommendations.push(rec);
-
-      // Check for fresh existing demand forecast in MongoDB
-      let fc: IDemandForecastDocument | null = null;
-      if (!forceRefresh) {
-        const existingFc = await DemandForecast.findOne({
-          product: prod._id,
-          forecastPeriod: "Next 14 Days",
-        }).sort({ generatedAt: -1 });
-
-        if (existingFc) {
-          const ageMs = Date.now() - new Date(existingFc.generatedAt).getTime();
-          const isAi = existingFc.aiModelVersion && !existingFc.aiModelVersion.includes("fallback");
-          if ((isAi && ageMs < REC_FRESHNESS_TTL_MS) || (!isAi && ageMs < FALLBACK_COOLDOWN_TTL_MS)) {
-            fc = existingFc;
-          }
-        }
-      }
-
-      if (!fc) {
-        await new Promise((r) => setTimeout(r, 400));
-        fc = await calculateAndStoreDemandForecast(prod._id.toString());
-      }
-      if (fc) forecasts.push(fc);
-    } catch (err) {
-      console.warn("Could not generate individual product AI intelligence:", err);
-    }
+  for (const item of productResults) {
+    if (item.rec) recommendations.push(item.rec);
+    if (item.fc) forecasts.push(item.fc);
   }
 
   return {

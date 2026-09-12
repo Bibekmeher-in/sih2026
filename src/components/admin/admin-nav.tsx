@@ -67,6 +67,16 @@ export function AdminNav() {
       icon: Truck,
     },
     {
+      label: "Fleet Map",
+      href: "/admin/deliveries/map",
+      icon: MapPin,
+    },
+    {
+      label: "Delivery Partners",
+      href: "/admin/delivery-partners",
+      icon: Users,
+    },
+    {
       label: t("portalNav.vehicles", "Vehicles"),
       href: "/admin/vehicles",
       icon: Car,

@@ -8,9 +8,38 @@ export const USER_ROLES = {
   CONSUMER: "CONSUMER",
   BULK_BUYER: "BULK_BUYER",
   ADMIN: "ADMIN",
+  DELIVERY_PARTNER: "DELIVERY_PARTNER",
 } as const;
 
 export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
+
+export const DELIVERY_PARTNER_VERIFICATION_STATUSES = {
+  PENDING_VERIFICATION: "PENDING_VERIFICATION",
+  VERIFIED: "VERIFIED",
+  SUSPENDED: "SUSPENDED",
+  REJECTED: "REJECTED",
+  INACTIVE: "INACTIVE",
+} as const;
+
+export type DeliveryPartnerVerificationStatus =
+  (typeof DELIVERY_PARTNER_VERIFICATION_STATUSES)[keyof typeof DELIVERY_PARTNER_VERIFICATION_STATUSES];
+
+export type DeliveryVehicleType =
+  | "BIKE"
+  | "SCOOTER"
+  | "THREE_WHEELER"
+  | "MINI_TRUCK"
+  | "TRUCK"
+  | "OTHER";
+
+export type DeliveryAssignmentStatus =
+  | "UNASSIGNED"
+  | "ASSIGNED"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "CANCELLED";
+
+export type AssignmentMethod = "AI_AUTO" | "ADMIN_MANUAL" | "FALLBACK_AUTO";
 
 export const USER_STATUSES = {
   ACTIVE: "ACTIVE",

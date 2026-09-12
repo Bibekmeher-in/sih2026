@@ -4,8 +4,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/db";
 import { User } from "@/models/User";
+import { DeliveryPartnerProfile } from "@/models/DeliveryPartnerProfile";
 import { loginSchema } from "@/schemas";
-import { UserRole, UserStatus, USER_STATUSES } from "@/types";
+import { UserRole, UserStatus, USER_STATUSES, USER_ROLES } from "@/types";
 import { DEMO_ACCOUNTS } from "@/config/demo-users";
 
 const DEMO_FALLBACK_IDS: Record<string, string> = {
@@ -14,6 +15,7 @@ const DEMO_FALLBACK_IDS: Record<string, string> = {
   BULK_BUYER: "6aa0423b0538678929da1f9c",
   CONSUMER: "6aa0423b0538678929da1f9d",
   ADMIN: "6aa0423b0538678929da1f9e",
+  DELIVERY_PARTNER: "6aa0423b0538678929da1f9f",
 };
 
 declare module "next-auth" {
@@ -106,6 +108,46 @@ export const authOptions: NextAuthOptions = {
 
             if (!isValid) {
               throw new Error("Incorrect password. Please try again.");
+            }
+
+            if (user.role === USER_ROLES.DELIVERY_PARTNER) {
+              try {
+                let profile = await DeliveryPartnerProfile.findOne({ user: user._id });
+                if (!profile) {
+                  const isTruck = user.email.toLowerCase().includes("truck");
+                  profile = await DeliveryPartnerProfile.create({
+                    user: user._id,
+                    fullName: user.name,
+                    phone: user.phone,
+                    email: user.email,
+                    verificationStatus: "VERIFIED",
+                    verifiedAt: new Date(),
+                    vehicleType: isTruck ? "MINI_TRUCK" : "SCOOTER",
+                    vehicleNumber: isTruck ? "OD-05-TR-9988" : "OD-02-AB-1234",
+                    vehicleCapacityKg: isTruck ? 1000 : 50,
+                    isOnline: true,
+                    isAvailableForAssignment: true,
+                    currentLocation: {
+                      latitude: isTruck ? 20.4625 : 20.2961,
+                      longitude: isTruck ? 85.883 : 85.8245,
+                      accuracy: 8,
+                      updatedAt: new Date(),
+                      locationGeo: {
+                        type: "Point",
+                        coordinates: isTruck ? [85.883, 20.4625] : [85.8245, 20.2961],
+                      },
+                    },
+                    serviceArea: {
+                      city: isTruck ? "Cuttack" : "Bhubaneswar",
+                      radiusKm: 40,
+                    },
+                  });
+                  user.deliveryPartnerProfile = profile._id;
+                  await user.save();
+                }
+              } catch (profErr) {
+                console.warn("Could not ensure delivery partner profile:", profErr);
+              }
             }
 
             return {

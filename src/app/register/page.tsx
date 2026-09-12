@@ -13,12 +13,15 @@ import {
   ArrowRight,
   CheckCircle2,
   ShieldCheck,
+  Bike,
+  Truck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/language-context";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
+import { VoiceInputButton } from "@/components/shared/voice-input-button";
 
-type AllowedRole = "FARMER" | "FPO" | "BULK_BUYER" | "CONSUMER";
+type AllowedRole = "FARMER" | "FPO" | "BULK_BUYER" | "CONSUMER" | "DELIVERY_PARTNER";
 
 interface RoleOption {
   id: AllowedRole;
@@ -52,6 +55,12 @@ const ROLES: RoleOption[] = [
     subtitle: "Farm-to-fork fresh produce delivered directly to your doorstep",
     icon: Store,
   },
+  {
+    id: "DELIVERY_PARTNER",
+    title: "Delivery Boy / Partner",
+    subtitle: "Earn with flexible dispatches, smart AI routing & instant payouts",
+    icon: Bike,
+  },
 ];
 
 export default function RegisterPage() {
@@ -65,6 +74,9 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [district, setDistrict] = useState("");
   const [state, setState] = useState("");
+  const [vehicleType, setVehicleType] = useState("BIKE");
+  const [vehicleNumber, setVehicleNumber] = useState("");
+  const [drivingLicense, setDrivingLicense] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
@@ -88,6 +100,9 @@ export default function RegisterPage() {
             role: selectedRole,
             district,
             state,
+            vehicleType: selectedRole === "DELIVERY_PARTNER" ? vehicleType : undefined,
+            vehicleNumber: selectedRole === "DELIVERY_PARTNER" ? vehicleNumber : undefined,
+            drivingLicense: selectedRole === "DELIVERY_PARTNER" ? drivingLicense : undefined,
           }),
         });
 
@@ -214,12 +229,15 @@ export default function RegisterPage() {
               {/* Name & Phone */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-xs font-semibold text-slate-700 mb-1"
-                  >
-                    {t("auth.fullName", "Full Name / Organization")}
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label
+                      htmlFor="name"
+                      className="block text-xs font-semibold text-slate-700"
+                    >
+                      {t("auth.fullName", "Full Name / Organization")}
+                    </label>
+                    <VoiceInputButton onTranscript={(txt) => setName(txt)} size="sm" />
+                  </div>
                   <input
                     id="name"
                     type="text"
@@ -293,16 +311,19 @@ export default function RegisterPage() {
               {/* Location (District & State) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label
-                    htmlFor="district"
-                    className="block text-xs font-semibold text-slate-700 mb-1"
-                  >
-                    District / City
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label
+                      htmlFor="district"
+                      className="block text-xs font-semibold text-slate-700"
+                    >
+                      {t("farmerForm.district", "District / City")}
+                    </label>
+                    <VoiceInputButton onTranscript={(txt) => setDistrict(txt)} size="sm" />
+                  </div>
                   <input
                     id="district"
                     type="text"
-                    placeholder="e.g. Nashik"
+                    placeholder="e.g. Bhubaneswar"
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
                     className="w-full h-10 px-3 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition-all"
@@ -310,22 +331,86 @@ export default function RegisterPage() {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="state"
-                    className="block text-xs font-semibold text-slate-700 mb-1"
-                  >
-                    State
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label
+                      htmlFor="state"
+                      className="block text-xs font-semibold text-slate-700"
+                    >
+                      {t("farmerForm.state", "State")}
+                    </label>
+                    <VoiceInputButton onTranscript={(txt) => setState(txt)} size="sm" />
+                  </div>
                   <input
                     id="state"
                     type="text"
-                    placeholder="e.g. Maharashtra"
+                    placeholder="e.g. Odisha"
                     value={state}
                     onChange={(e) => setState(e.target.value)}
                     className="w-full h-10 px-3 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition-all"
                   />
                 </div>
               </div>
+
+              {/* Delivery Partner Specific Details */}
+              {selectedRole === "DELIVERY_PARTNER" && (
+                <div className="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-3 transition-all">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-900">
+                    <Bike className="h-4 w-4 text-emerald-700" />
+                    <span>Delivery Vehicle &amp; Driver Specifications</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="vehicleType" className="block text-xs font-semibold text-slate-700 mb-1">
+                        Vehicle Type
+                      </label>
+                      <select
+                        id="vehicleType"
+                        value={vehicleType}
+                        onChange={(e) => setVehicleType(e.target.value)}
+                        className="w-full h-10 px-3 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-600 font-semibold"
+                      >
+                        <option value="BIKE">Motorcycle / Bike (Up to 50 kg)</option>
+                        <option value="SCOOTER">Electric Scooter (Up to 40 kg)</option>
+                        <option value="AUTO_RICKSHAW">Auto Cargo 3-Wheeler (Up to 300 kg)</option>
+                        <option value="PICKUP_TRUCK">Pickup Truck / Tata Ace (Up to 1,000 kg)</option>
+                        <option value="TRUCK">Mini Truck / Reefer (Up to 2,500 kg)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="vehicleNumber" className="block text-xs font-semibold text-slate-700 mb-1">
+                        Vehicle Number Plate
+                      </label>
+                      <input
+                        id="vehicleNumber"
+                        type="text"
+                        placeholder="e.g. OD-02-AK-9812"
+                        value={vehicleNumber}
+                        onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
+                        className="w-full h-10 px-3 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 font-mono uppercase"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label htmlFor="drivingLicense" className="block text-xs font-semibold text-slate-700">
+                        Driving License Number (Optional)
+                      </label>
+                      <VoiceInputButton onTranscript={(txt) => setDrivingLicense(txt.toUpperCase())} size="sm" />
+                    </div>
+                    <input
+                      id="drivingLicense"
+                      type="text"
+                      placeholder="e.g. OD-0220200012345"
+                      value={drivingLicense}
+                      onChange={(e) => setDrivingLicense(e.target.value.toUpperCase())}
+                      className="w-full h-10 px-3 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 font-mono uppercase"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Notice regarding Admin protection */}

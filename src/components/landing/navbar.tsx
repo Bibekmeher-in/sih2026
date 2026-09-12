@@ -56,6 +56,9 @@ export function Navbar() {
           <Link href="/#logistics" className="hover:text-emerald-700 transition-colors">
             {t("nav.logistics")}
           </Link>
+          <Link href="/login?callbackUrl=/delivery/dashboard" className="hover:text-emerald-700 transition-colors text-slate-700 font-medium">
+            Delivery Boy
+          </Link>
         </nav>
 
         {/* Desktop Portal Shortcuts, Cart & Status (Large screens) */}
@@ -171,6 +174,14 @@ export function Navbar() {
             >
               {t("nav.logistics")}
             </a>
+            <Link
+              href="/login?callbackUrl=/delivery/dashboard"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-2 rounded-lg font-semibold text-emerald-800 bg-emerald-50/70 hover:bg-emerald-100 flex items-center justify-between"
+            >
+              <span>Delivery Boy Portal</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
           <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
             <div className="grid grid-cols-2 gap-2">

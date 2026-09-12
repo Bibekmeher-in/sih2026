@@ -6,6 +6,7 @@ import { Product } from "@/models/Product";
 import { Inventory } from "@/models/Inventory";
 import { Notification, NotificationType } from "@/models/Notification";
 import { User } from "@/models/User";
+import { DeliveryPartnerProfile } from "@/models/DeliveryPartnerProfile";
 
 /**
  * Finite State Machine for Order Status Transitions
@@ -722,13 +723,48 @@ export async function transitionOrderStatus(
         );
       }
     }
+
+    // Delivery Partner permissions
+    if (role === "DELIVERY_PARTNER") {
+      const allowedPartnerStatuses = [
+        "PICKED_UP",
+        "IN_TRANSIT",
+        "OUT_FOR_DELIVERY",
+        "DELIVERED",
+        "CANCELLED",
+      ];
+      if (!allowedPartnerStatuses.includes(newStatus)) {
+        throw new OrderEngineError(
+          `Delivery partners cannot transition order to "${newStatus}".`,
+          403,
+          "UNAUTHORIZED_TRANSITION"
+        );
+      }
+      if (userId) {
+        const assignedDelivery = await Delivery.findOne({
+          order: order._id,
+          assignedPartner: userId,
+        });
+        if (!assignedDelivery) {
+          throw new OrderEngineError(
+            "You are not the assigned delivery partner for this order",
+            403,
+            "FORBIDDEN"
+          );
+        }
+      }
+    }
   }
 
   // OTP Verification for Delivery
   if (newStatus === "DELIVERED") {
-    if (actor?.providedOtp) {
-      if (order.deliveryOtp && actor.providedOtp.trim() !== order.deliveryOtp.trim()) {
-        throw new OrderEngineError("Invalid delivery confirmation OTP", 400, "INVALID_DELIVERY_OTP");
+    if (order.deliveryOtp) {
+      if (!actor?.providedOtp || actor.providedOtp.trim() !== order.deliveryOtp.trim()) {
+        throw new OrderEngineError(
+          "Valid customer delivery OTP is required to complete delivery",
+          400,
+          "INVALID_DELIVERY_OTP"
+        );
       }
       order.otpVerified = true;
     }
@@ -834,14 +870,33 @@ export async function transitionOrderStatus(
     await order.save();
 
     // Synchronize Delivery
-    await Delivery.findOneAndUpdate(
+    const updatedDelivery = await Delivery.findOneAndUpdate(
       { order: order._id },
       {
         status: "DELIVERED",
         actualDeliveryTime: new Date(),
         isOtpVerified: order.otpVerified,
-      }
+        "proofOfDelivery.otpEntered": actor?.providedOtp || "",
+        "proofOfDelivery.isOtpVerified": true,
+        "proofOfDelivery.verifiedAt": new Date(),
+      },
+      { returnDocument: "after" }
     );
+
+    // Release assigned Delivery Partner back to AVAILABLE
+    if (updatedDelivery?.assignedPartner) {
+      try {
+        await DeliveryPartnerProfile.findOneAndUpdate(
+          { user: updatedDelivery.assignedPartner },
+          {
+            $set: { isAvailableForAssignment: true },
+            $inc: { "statistics.completedDeliveries": 1 },
+          }
+        );
+      } catch (profErr) {
+        console.warn("Could not release delivery partner availability:", profErr);
+      }
+    }
 
     // Notify Buyer
     await sendOrderNotification({
@@ -937,6 +992,13 @@ export async function transitionOrderStatus(
       link: buyerLink,
       metadata: { orderId: order._id, status: newStatus },
     });
+
+    // Asynchronously trigger AI delivery assignment to match optimal nearby verified partner
+    import("@/lib/delivery-assignment-service")
+      .then(({ autoAssignDeliveryPartner }) => autoAssignDeliveryPartner(order._id.toString()))
+      .catch((err) => {
+        console.warn(`[AI-AutoAssign] Could not auto-assign delivery partner for order ${order._id}:`, err?.message || err);
+      });
   } else if (newStatus === "PICKED_UP") {
     await sendOrderNotification({
       recipientId: order.buyer,

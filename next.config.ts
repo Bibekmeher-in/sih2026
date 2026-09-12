@@ -29,12 +29,13 @@ const securityHeaders = [
     value: "strict-origin-when-cross-origin",
   },
   // Browser feature permissions policy
-  // - Camera and mic disabled
+  // - Camera disabled
+  // - Microphone enabled for same-origin (used for farmer voice input and speech recognition)
   // - Geolocation enabled for same-origin (used for buyer/farmer delivery addresses and logistics)
   // - Payment enabled for checkout gateways (Razorpay Payment Request API / iframe checkout)
   {
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(self), payment=*",
+    value: "camera=(), microphone=(self), geolocation=(self), payment=*",
   },
   // Content Security Policy
   // - script-src includes 'unsafe-inline' + 'unsafe-eval' required by Next.js dev hydration

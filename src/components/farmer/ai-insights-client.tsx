@@ -16,6 +16,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/context/language-context";
+import { VoiceInputButton } from "@/components/shared/voice-input-button";
+import { VoiceReadoutButton } from "@/components/shared/voice-readout-button";
 
 interface AiInsightsClientProps {
   initialData: {
@@ -70,6 +73,7 @@ interface AiInsightsClientProps {
 
 export default function FarmerAiInsightsClient({ initialData }: AiInsightsClientProps) {
   const { insights, recommendations, forecasts, farmerContext } = initialData;
+  const { t, language } = useLanguage();
 
   // Farmer Copilot Chat State
   const [messages, setMessages] = useState<
@@ -438,32 +442,35 @@ export default function FarmerAiInsightsClient({ initialData }: AiInsightsClient
                   }`}
               >
                 {msg.sender === "assistant" && (
-                  <div className="flex items-center gap-1.5 mb-1 text-[10px] text-emerald-700 font-bold">
-                    <Sparkles className="h-3 w-3" />
-                    <span>KISANOVA Copilot</span>
-                    {msg.isAi ? (
-                      <Badge className="bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-[9px] px-1.5 py-0.5">
-                        AI Generated
-                      </Badge>
-                    ) : (
-                      <Badge className="bg-slate-100 text-slate-600 border border-slate-200 font-medium text-[9px] px-1.5 py-0.5">
-                        {msg.errorCode === "GEMINI_KEY_MISSING"
-                          ? "Fallback (Gemini key not configured)"
-                          : msg.errorCode === "GEMINI_AUTH_ERROR"
-                          ? "Fallback (Gemini authentication failed)"
-                          : msg.errorCode === "GEMINI_QUOTA_ERROR"
-                          ? "Fallback (Gemini quota exceeded)"
-                          : msg.errorCode === "GEMINI_RATE_LIMIT"
-                          ? "Fallback (Gemini rate limit exceeded)"
-                          : msg.errorCode === "GEMINI_TIMEOUT"
-                          ? "Fallback (Gemini request timed out)"
-                          : msg.errorCode === "GEMINI_MODEL_ERROR"
-                          ? "Fallback (Gemini model unavailable)"
-                          : msg.errorCode
-                          ? `Fallback (${msg.errorCode})`
-                          : "Deterministic"}
-                      </Badge>
-                    )}
+                  <div className="flex items-center justify-between gap-1.5 mb-1 text-[10px] text-emerald-700 font-bold">
+                    <div className="flex items-center gap-1.5">
+                      <Sparkles className="h-3 w-3" />
+                      <span>KISANOVA Copilot</span>
+                      {msg.isAi ? (
+                        <Badge className="bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-[9px] px-1.5 py-0.5">
+                          AI Generated
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-slate-100 text-slate-600 border border-slate-200 font-medium text-[9px] px-1.5 py-0.5">
+                          {msg.errorCode === "GEMINI_KEY_MISSING"
+                            ? "Fallback (Gemini key not configured)"
+                            : msg.errorCode === "GEMINI_AUTH_ERROR"
+                            ? "Fallback (Gemini authentication failed)"
+                            : msg.errorCode === "GEMINI_QUOTA_ERROR"
+                            ? "Fallback (Gemini quota exceeded)"
+                            : msg.errorCode === "GEMINI_RATE_LIMIT"
+                            ? "Fallback (Gemini rate limit exceeded)"
+                            : msg.errorCode === "GEMINI_TIMEOUT"
+                            ? "Fallback (Gemini request timed out)"
+                            : msg.errorCode === "GEMINI_MODEL_ERROR"
+                            ? "Fallback (Gemini model unavailable)"
+                            : msg.errorCode
+                            ? `Fallback (${msg.errorCode})`
+                            : "Deterministic"}
+                        </Badge>
+                      )}
+                    </div>
+                    <VoiceReadoutButton text={msg.text} size="sm" />
                   </div>
                 )}
                 <p className="whitespace-pre-line">{msg.text}</p>
@@ -507,22 +514,30 @@ export default function FarmerAiInsightsClient({ initialData }: AiInsightsClient
             e.preventDefault();
             handleAskQuestion();
           }}
-          className="flex gap-2"
+          className="flex items-center gap-2"
         >
-          <Input
-            placeholder="Ask anything: e.g. 'What should I sell more of?' or 'Why is tomato demand increasing?'"
-            value={inputQuery}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputQuery(e.target.value)}
-            disabled={isLoading}
-            className="flex-1 text-xs"
-          />
+          <div className="relative flex-1">
+            <Input
+              placeholder={t("voice.askAssistant", "Ask anything about crops, Mandi prices, or sales...")}
+              value={inputQuery}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputQuery(e.target.value)}
+              disabled={isLoading}
+              className="w-full text-xs pr-10"
+            />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+              <VoiceInputButton
+                onTranscript={(txt) => setInputQuery((prev) => prev ? `${prev} ${txt}` : txt)}
+                size="sm"
+              />
+            </div>
+          </div>
           <Button
             type="submit"
             disabled={isLoading || !inputQuery.trim()}
             className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs gap-1.5 px-4"
           >
             <Send className="h-3.5 w-3.5" />
-            <span>Ask</span>
+            <span>{t("common.send", "Ask")}</span>
           </Button>
         </form>
       </div>

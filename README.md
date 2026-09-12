@@ -387,7 +387,7 @@ Located at [`src/lib/razorpay.ts`](file:///d:/sih2026/src/lib/razorpay.ts) and [
   * `connect-src`: `'self' https://api.razorpay.com https://generativelanguage.googleapis.com`
   * `frame-src`: `'self' https://api.razorpay.com https://checkout.razorpay.com`
   * `img-src`: `'self' data: blob: https://*.tile.openstreetmap.org https://cdn.razorpay.com`
-  * `Permissions-Policy`: `payment=*, geolocation=(self), camera=(), microphone=()`
+  * `Permissions-Policy`: `payment=*, geolocation=(self), camera=(), microphone=(self)`
 
 ### 3. Multi-Factor Grounded Price Discovery Engine
 Located at [`src/lib/price-analysis-engine.ts`](file:///d:/sih2026/src/lib/price-analysis-engine.ts) and [`src/lib/pricing-rules-config.ts`](file:///d:/sih2026/src/lib/pricing-rules-config.ts):

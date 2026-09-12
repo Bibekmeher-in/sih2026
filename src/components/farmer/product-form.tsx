@@ -16,6 +16,8 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { farmerProductFormSchema, FarmerProductFormInput } from "@/schemas";
+import { useLanguage } from "@/context/language-context";
+import { VoiceInputButton } from "@/components/shared/voice-input-button";
 
 interface ProductFormProps {
   initialData?: Partial<FarmerProductFormInput> & { _id?: string };
@@ -33,6 +35,7 @@ const CATEGORIES = [
 
 export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
   const router = useRouter();
+  const { t } = useLanguage();
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,6 +43,7 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm<FarmerProductFormInput>({
     resolver: zodResolver(farmerProductFormSchema),
@@ -117,12 +121,15 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div className="sm:col-span-2">
-            <label className="block text-slate-700 font-semibold mb-1">
-              Crop Name (English) <span className="text-red-500">*</span>
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-slate-700 font-semibold">
+                {t("farmerForm.cropName", "Crop Name (English)")} <span className="text-red-500">*</span>
+              </label>
+              <VoiceInputButton onTranscript={(txt) => setValue("name", txt)} size="sm" />
+            </div>
             <input
               type="text"
-              placeholder="e.g. Nashik Red Onion, Table Tomato, Pusa Basmati"
+              placeholder={t("farmerForm.cropNamePlaceholder", "e.g. Nashik Red Onion, Table Tomato, Pusa Basmati")}
               {...register("name")}
               className="w-full h-9 px-3 rounded-lg border border-slate-300 text-slate-900 focus:ring-2 focus:ring-emerald-700 text-xs"
             />
@@ -132,24 +139,30 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              Regional / Hindi Name
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-slate-700 font-semibold">
+                {t("farmerForm.localName", "Regional / Local Name")}
+              </label>
+              <VoiceInputButton onTranscript={(txt) => setValue("hindiName", txt)} size="sm" />
+            </div>
             <input
               type="text"
-              placeholder="e.g. नाशिक लाल कांदा, देशी टमाटर"
+              placeholder={t("farmerForm.localNamePlaceholder", "e.g. ଟମାଟୋ / टमाटर")}
               {...register("hindiName")}
               className="w-full h-9 px-3 rounded-lg border border-slate-300 text-slate-900 text-xs"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              Cultivar / Seed Variety
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-slate-700 font-semibold">
+                {t("farmerForm.variety", "Cultivar / Seed Variety")}
+              </label>
+              <VoiceInputButton onTranscript={(txt) => setValue("variety", txt)} size="sm" />
+            </div>
             <input
               type="text"
-              placeholder="e.g. Gavran Summer, Abhinav 1057, Pusa 1121"
+              placeholder={t("farmerForm.varietyPlaceholder", "e.g. Gavran Summer, Abhinav 1057, Pusa 1121")}
               {...register("variety")}
               className="w-full h-9 px-3 rounded-lg border border-slate-300 text-slate-900 text-xs"
             />
@@ -157,7 +170,7 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
 
           <div>
             <label className="block text-slate-700 font-semibold mb-1">
-              Category <span className="text-red-500">*</span>
+              {t("farmerForm.category", "Category")} <span className="text-red-500">*</span>
             </label>
             <select
               {...register("category")}
@@ -176,7 +189,7 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
 
           <div>
             <label className="block text-slate-700 font-semibold mb-1">
-              Quality Grade <span className="text-red-500">*</span>
+              {t("farmerForm.qualityGrade", "Quality Grade")} <span className="text-red-500">*</span>
             </label>
             <select
               {...register("qualityGrade")}
@@ -189,12 +202,15 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-slate-700 font-semibold mb-1">
-              Lot Description &amp; Characteristics <span className="text-red-500">*</span>
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-slate-700 font-semibold">
+                {t("farmerForm.description", "Lot Description & Characteristics")} <span className="text-red-500">*</span>
+              </label>
+              <VoiceInputButton onTranscript={(txt) => setValue("description", txt)} size="sm" />
+            </div>
             <textarea
               rows={3}
-              placeholder="Describe soil conditioning, harvest freshness, post-harvest curing, grading process..."
+              placeholder={t("farmerForm.descriptionPlaceholder", "Describe soil conditioning, harvest freshness, post-harvest curing, grading process...")}
               {...register("description")}
               className="w-full p-3 rounded-lg border border-slate-300 text-slate-900 text-xs"
             />
@@ -211,13 +227,13 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
         <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
           <IndianRupee className="h-4 w-4 text-emerald-700" />
-          <h2 className="text-base font-bold text-slate-900">Pricing &amp; Mandi Spread</h2>
+          <h2 className="text-base font-bold text-slate-900">{t("farmerForm.pricingSection", "Pricing & Mandi Spread")}</h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
           <div>
             <label className="block text-slate-700 font-semibold mb-1">
-              Direct Selling Price (₹) <span className="text-red-500">*</span>
+              {t("farmerForm.price", "Direct Selling Price (₹)")} <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -232,7 +248,7 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
 
           <div>
             <label className="block text-slate-700 font-semibold mb-1">
-              Local APMC Mandi Benchmark (₹)
+              {t("farmerForm.mandiBenchmark", "Local APMC Mandi Benchmark (₹)")}
             </label>
             <input
               type="number"
@@ -244,7 +260,7 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
 
           <div>
             <label className="block text-slate-700 font-semibold mb-1">
-              Unit of Measurement <span className="text-red-500">*</span>
+              {t("farmerForm.unit", "Unit of Measurement")} <span className="text-red-500">*</span>
             </label>
             <select
               {...register("unit")}
@@ -263,11 +279,11 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-emerald-700 shrink-0" />
             <span className="text-emerald-900 font-medium">
-              Direct Farmer Premium over APMC Modal:
+              {t("farmerForm.directPremium", "Direct Farmer Premium over APMC Modal:")}
             </span>
           </div>
           <span className="font-bold text-emerald-800 font-mono text-sm">
-            {calculatedPremium > 0 ? `+${calculatedPremium}% Net Gain` : "Market Parity"}
+            {calculatedPremium > 0 ? `+${calculatedPremium}% ${t("farmerForm.netGain", "Net Gain")}` : t("farmerForm.marketParity", "Market Parity")}
           </span>
         </div>
       </div>
@@ -276,13 +292,13 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
         <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
           <Layers className="h-4 w-4 text-emerald-700" />
-          <h2 className="text-base font-bold text-slate-900">Inventory &amp; Harvest Date</h2>
+          <h2 className="text-base font-bold text-slate-900">{t("farmerForm.inventorySection", "Inventory & Harvest Date")}</h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
           <div>
             <label className="block text-slate-700 font-semibold mb-1">
-              Total Available Quantity <span className="text-red-500">*</span>
+              {t("farmerForm.quantity", "Total Available Quantity")} <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -296,7 +312,7 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
 
           <div>
             <label className="block text-slate-700 font-semibold mb-1">
-              Minimum Order Quantity (MOQ) <span className="text-red-500">*</span>
+              {t("farmerForm.moq", "Minimum Order Quantity (MOQ)")} <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -312,7 +328,7 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
 
           <div>
             <label className="block text-slate-700 font-semibold mb-1">
-              Harvest / Picking Date <span className="text-red-500">*</span>
+              {t("farmerForm.harvestDate", "Harvest / Picking Date")} <span className="text-red-500">*</span>
             </label>
             <input
               type="date"
@@ -332,16 +348,20 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
         <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
           <MapPin className="h-4 w-4 text-emerald-700" />
-          <h2 className="text-base font-bold text-slate-900">Dispatch Location</h2>
+          <h2 className="text-base font-bold text-slate-900">{t("farmerForm.locationSection", "Dispatch Location")}</h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              District <span className="text-red-500">*</span>
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-slate-700 font-semibold">
+                {t("farmerForm.district", "District")} <span className="text-red-500">*</span>
+              </label>
+              <VoiceInputButton onTranscript={(txt) => setValue("district", txt, { shouldValidate: true })} size="sm" />
+            </div>
             <input
               type="text"
+              placeholder={t("farmerForm.districtPlaceholder", "e.g. Cuttack / Sambalpur")}
               {...register("district")}
               className="w-full h-9 px-3 rounded-lg border border-slate-300 text-slate-900 text-xs"
             />
@@ -351,11 +371,15 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              State <span className="text-red-500">*</span>
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-slate-700 font-semibold">
+                {t("farmerForm.state", "State")} <span className="text-red-500">*</span>
+              </label>
+              <VoiceInputButton onTranscript={(txt) => setValue("state", txt, { shouldValidate: true })} size="sm" />
+            </div>
             <input
               type="text"
+              placeholder="e.g. Odisha"
               {...register("state")}
               className="w-full h-9 px-3 rounded-lg border border-slate-300 text-slate-900 text-xs"
             />
@@ -371,13 +395,13 @@ export function ProductForm({ initialData, isEdit = false }: ProductFormProps) {
         <Button asChild variant="outline" size="sm">
           <Link href="/farmer/products" className="flex items-center gap-1.5 text-xs">
             <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Cancel</span>
+            <span>{t("common.cancel", "Cancel")}</span>
           </Link>
         </Button>
 
         <Button type="submit" size="sm" disabled={isSubmitting} className="min-w-[160px]">
           <Save className="h-3.5 w-3.5 mr-1.5" />
-          <span>{isSubmitting ? "Saving Produce..." : isEdit ? "Update Listing" : "Publish to Marketplace"}</span>
+          <span>{isSubmitting ? t("farmerForm.saving", "Saving Produce...") : isEdit ? t("farmerForm.updateListing", "Update Listing") : t("farmerForm.submitListing", "Publish to Marketplace")}</span>
         </Button>
       </div>
     </form>

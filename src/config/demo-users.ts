@@ -88,4 +88,32 @@ export const DEMO_ACCOUNTS: DemoAccountInfo[] = [
     },
     description: "Platform administrator overseeing marketplace logistics, AI models, and fair prices.",
   },
+  {
+    name: "Bikash Mohanty",
+    email: "delivery@example.com",
+    password: DEMO_PASSWORD,
+    role: USER_ROLES.DELIVERY_PARTNER,
+    phone: "9827012345",
+    location: {
+      district: "Khordha",
+      state: "Odisha",
+      pincode: "751024",
+      address: "Patia Square, Bhubaneswar",
+    },
+    description: "Verified delivery partner with Honda Activa (50kg capacity) operating in Bhubaneswar.",
+  },
+  {
+    name: "Manoj Rout",
+    email: "truck@example.com",
+    password: DEMO_PASSWORD,
+    role: USER_ROLES.DELIVERY_PARTNER,
+    phone: "9828023456",
+    location: {
+      district: "Cuttack",
+      state: "Odisha",
+      pincode: "753001",
+      address: "Badambadi Bus Stand Colony, Cuttack",
+    },
+    description: "Verified logistics transporter with Tata Ace Mini Truck (1000kg capacity) handling bulk farm gate dispatch.",
+  },
 ];

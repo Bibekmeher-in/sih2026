@@ -5,6 +5,7 @@ export const PUBLIC_REGISTRATION_ROLES = [
   "FPO",
   "CONSUMER",
   "BULK_BUYER",
+  "DELIVERY_PARTNER",
 ] as const;
 
 export const loginSchema = z.object({
@@ -40,7 +41,7 @@ export const registerSchema = z.object({
     .min(10, "Phone number must be at least 10 digits")
     .regex(/^[6-9]\d{9}$/, "Please enter a valid 10-digit Indian mobile number"),
   role: z.enum(PUBLIC_REGISTRATION_ROLES, {
-    message: "Please select a valid role (Farmer, FPO, Consumer, or Bulk Buyer)",
+    message: "Please select a valid role (Farmer, FPO, Consumer, Bulk Buyer, or Delivery Partner)",
   }),
   district: z.string().trim().optional().default(""),
   state: z.string().trim().optional().default(""),
@@ -178,3 +179,76 @@ export const bulkRequirementFormSchema = z.object({
 });
 
 export type BulkRequirementFormInput = z.infer<typeof bulkRequirementFormSchema>;
+
+export const deliveryPartnerOnboardingSchema = z.object({
+  fullName: z.string().trim().min(2, "Full name must be at least 2 characters"),
+  phone: z.string().trim().regex(/^[6-9]\d{9}$/, "Please enter a valid 10-digit mobile number"),
+  vehicleType: z.enum(["BIKE", "SCOOTER", "THREE_WHEELER", "MINI_TRUCK", "TRUCK", "OTHER"]),
+  vehicleNumber: z.string().trim().min(5, "Valid vehicle registration number is required"),
+  vehicleCapacityKg: z.number().min(5, "Capacity must be at least 5 kg"),
+  governmentIdType: z.enum(["AADHAAR", "PAN", "VOTER_ID"]).default("AADHAAR"),
+  governmentIdNumber: z.string().trim().min(4, "ID number is required"),
+  drivingLicenseNumber: z.string().trim().min(5, "Driving license number is required"),
+  drivingLicenseExpiry: z.string().optional(),
+  vehicleRegistrationNumber: z.string().trim().min(5, "RC number is required"),
+  insuranceExpiry: z.string().optional(),
+  city: z.string().trim().min(2, "Operating city/district is required"),
+  radiusKm: z.number().min(5).max(200).default(30),
+});
+
+export type DeliveryPartnerOnboardingInput = z.infer<typeof deliveryPartnerOnboardingSchema>;
+
+export const deliveryLocationUpdateSchema = z.object({
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  accuracy: z.number().min(0).optional().default(10),
+});
+
+export type DeliveryLocationUpdateInput = z.infer<typeof deliveryLocationUpdateSchema>;
+
+export const deliveryAssignmentActionSchema = z.object({
+  action: z.enum(["ACCEPT", "REJECT"]),
+  reason: z.string().trim().optional(),
+});
+
+export type DeliveryAssignmentActionInput = z.infer<typeof deliveryAssignmentActionSchema>;
+
+export const deliveryStatusTransitionSchema = z.object({
+  status: z.enum([
+    "ACCEPTED",
+    "ARRIVED_AT_PICKUP",
+    "PICKED_UP",
+    "IN_TRANSIT",
+    "OUT_FOR_DELIVERY",
+    "ARRIVED_AT_DESTINATION",
+    "DELIVERED",
+    "FAILED",
+  ]),
+  otpCode: z.string().trim().optional(),
+  note: z.string().trim().optional(),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
+});
+
+export type DeliveryStatusTransitionInput = z.infer<typeof deliveryStatusTransitionSchema>;
+
+export const aiAssignmentDecisionSchema = z.object({
+  recommendedPartnerId: z.string().min(1),
+  confidence: z.number().min(0).max(1),
+  reason: z.string().min(1),
+  rankedCandidates: z.array(
+    z.object({
+      partnerId: z.string(),
+      score: z.number().min(0).max(100),
+      reason: z.string(),
+      breakdown: z.object({
+        proximityScore: z.number().optional(),
+        capacityScore: z.number().optional(),
+        workloadScore: z.number().optional(),
+        freshnessScore: z.number().optional(),
+      }).optional(),
+    })
+  ),
+});
+
+export type AiAssignmentDecision = z.infer<typeof aiAssignmentDecisionSchema>;

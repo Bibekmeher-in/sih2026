@@ -13,6 +13,7 @@ const PROTECTED_ROUTES: RoleRouteMapping[] = [
   { prefix: "/fpo", allowedRoles: [USER_ROLES.FPO, USER_ROLES.FARMER, USER_ROLES.ADMIN] },
   { prefix: "/consumer", allowedRoles: [USER_ROLES.CONSUMER, USER_ROLES.ADMIN] },
   { prefix: "/buyer", allowedRoles: [USER_ROLES.BULK_BUYER, USER_ROLES.ADMIN] },
+  { prefix: "/delivery", allowedRoles: [USER_ROLES.DELIVERY_PARTNER, USER_ROLES.ADMIN] },
   { prefix: "/admin", allowedRoles: [USER_ROLES.ADMIN] },
 ];
 
@@ -58,6 +59,7 @@ export const config = {
     "/fpo/:path*",
     "/consumer/:path*",
     "/buyer/:path*",
+    "/delivery/:path*",
     "/admin/:path*",
   ],
 };

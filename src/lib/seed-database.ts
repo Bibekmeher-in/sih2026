@@ -23,6 +23,7 @@ import {
   ProduceAggregation,
   BulkRequirement,
   MarketPrice,
+  DeliveryPartnerProfile,
 } from "@/models";
 import { seedMarketBenchmarksIfEmpty } from "@/lib/market-price-service";
 import { DEMO_ACCOUNTS } from "@/config/demo-users";
@@ -48,6 +49,7 @@ export interface SeedSummary {
   communityPosts?: number;
   produceAggregations?: number;
   bulkRequirements?: number;
+  deliveryPartnerProfiles?: number;
 }
 
 export async function seedCompleteDatabase(): Promise<SeedSummary> {
@@ -99,6 +101,7 @@ export async function seedCompleteDatabase(): Promise<SeedSummary> {
 
   // 2. Users & Base Profiles
   const userMap = new Map<string, string>();
+  const userEmailMap = new Map<string, string>();
   for (const account of DEMO_ACCOUNTS) {
     const passwordHash = await bcrypt.hash(account.password, 12);
     const u = await User.findOneAndUpdate(
@@ -115,12 +118,15 @@ export async function seedCompleteDatabase(): Promise<SeedSummary> {
       { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
     );
     userMap.set(account.role, u._id.toString());
+    userEmailMap.set(account.email.toLowerCase(), u._id.toString());
   }
 
   const farmerUserId = userMap.get(USER_ROLES.FARMER)!;
   const fpoUserId = userMap.get(USER_ROLES.FPO)!;
   const buyerUserId = userMap.get(USER_ROLES.BULK_BUYER)!;
   const consumerUserId = userMap.get(USER_ROLES.CONSUMER)!;
+  const bikePartnerUserId = userEmailMap.get("delivery@example.com");
+  const truckPartnerUserId = userEmailMap.get("truck@example.com");
 
   // 3. FarmerProfile — Ramesh Kumar
   const farmerProfile = await FarmerProfile.findOneAndUpdate(
@@ -232,6 +238,101 @@ export async function seedCompleteDatabase(): Promise<SeedSummary> {
   // Update user profile references
   await User.findByIdAndUpdate(farmerUserId, { farmerProfile: farmerProfile._id });
   await User.findByIdAndUpdate(fpoUserId, { fpoProfile: fpo._id });
+
+  // 5b. Delivery Partner Profiles
+  if (bikePartnerUserId) {
+    const bikeProfile = await DeliveryPartnerProfile.findOneAndUpdate(
+      { user: bikePartnerUserId },
+      {
+        user: bikePartnerUserId,
+        fullName: "Bikash Mohanty",
+        phone: "+91 98765 43210",
+        email: "delivery@example.com",
+        vehicleType: "BIKE",
+        vehicleNumber: "OD-02-AK-9812",
+        vehicleCapacityKg: 50,
+        verificationStatus: "VERIFIED",
+        isOnline: true,
+        isAvailableForAssignment: true,
+        currentLocation: {
+          type: "Point",
+          coordinates: [85.8245, 20.2961],
+          latitude: 20.2961,
+          longitude: 85.8245,
+          updatedAt: new Date(),
+        },
+        serviceArea: {
+          city: "Bhubaneswar",
+          state: "Odisha",
+          radiusKm: 25,
+        },
+        statistics: {
+          completedDeliveries: 52,
+          rating: 4.9,
+          onTimeDeliveries: 50,
+          cancelledDeliveries: 0,
+        },
+        bankDetails: {
+          bankName: "State Bank of India",
+          accountNumber: "389201928374",
+          ifscCode: "SBIN0001234",
+          accountHolderName: "Bikash Mohanty",
+        },
+        documents: {
+          drivingLicenseNumber: "OD-0220200049182",
+        },
+      },
+      { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
+    );
+    await User.findByIdAndUpdate(bikePartnerUserId, { deliveryPartnerProfile: bikeProfile._id });
+  }
+
+  if (truckPartnerUserId) {
+    const truckProfile = await DeliveryPartnerProfile.findOneAndUpdate(
+      { user: truckPartnerUserId },
+      {
+        user: truckPartnerUserId,
+        fullName: "Manoj Rout",
+        phone: "+91 98765 43211",
+        email: "truck@example.com",
+        vehicleType: "TRUCK",
+        vehicleNumber: "OD-02-TR-4589",
+        vehicleCapacityKg: 1200,
+        verificationStatus: "VERIFIED",
+        isOnline: true,
+        isAvailableForAssignment: true,
+        currentLocation: {
+          type: "Point",
+          coordinates: [85.8340, 20.3120],
+          latitude: 20.3120,
+          longitude: 85.8340,
+          updatedAt: new Date(),
+        },
+        serviceArea: {
+          city: "Bhubaneswar",
+          state: "Odisha",
+          radiusKm: 50,
+        },
+        statistics: {
+          completedDeliveries: 118,
+          rating: 4.8,
+          onTimeDeliveries: 114,
+          cancelledDeliveries: 1,
+        },
+        bankDetails: {
+          bankName: "HDFC Bank",
+          accountNumber: "50100492817263",
+          ifscCode: "HDFC0000240",
+          accountHolderName: "Manoj Rout",
+        },
+        documents: {
+          drivingLicenseNumber: "OD-0220180018274",
+        },
+      },
+      { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
+    );
+    await User.findByIdAndUpdate(truckPartnerUserId, { deliveryPartnerProfile: truckProfile._id });
+  }
 
   // 6. Vehicles
   const vehiclesData = [
@@ -1463,6 +1564,7 @@ export async function seedCompleteDatabase(): Promise<SeedSummary> {
     communityPosts: await CommunityPost.countDocuments(),
     produceAggregations: await ProduceAggregation.countDocuments(),
     bulkRequirements: await BulkRequirement.countDocuments(),
+    deliveryPartnerProfiles: await DeliveryPartnerProfile.countDocuments(),
   };
 
   return counts;

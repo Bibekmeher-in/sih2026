@@ -76,18 +76,21 @@ export async function POST(req: NextRequest) {
       location: `${b.deliveryLocation.district}, ${b.deliveryLocation.state}`,
     }));
 
-    // Fetch user inventory if farmer
-    const products = await Product.find({
-      seller: new mongoose.Types.ObjectId(user.id),
-      status: "AVAILABLE",
-    })
-      .limit(5)
-      .lean();
-    const farmerInventory = products.map((p) => ({
-      name: p.name,
-      quantity: p.availableQuantity,
-      price: p.price,
-    }));
+    // Fetch user inventory if valid farmer account
+    let farmerInventory: Array<{ name: string; quantity: number; price: number }> = [];
+    if (user.id && mongoose.Types.ObjectId.isValid(user.id)) {
+      const products = await Product.find({
+        seller: new mongoose.Types.ObjectId(user.id),
+        status: "AVAILABLE",
+      })
+        .limit(5)
+        .lean();
+      farmerInventory = products.map((p) => ({
+        name: p.name,
+        quantity: p.availableQuantity,
+        price: p.price,
+      }));
+    }
 
     const context: CommunityAssistantContext = {
       farmerName: user.name || "Farmer",

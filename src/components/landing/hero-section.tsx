@@ -10,6 +10,7 @@ import {
   Building2,
   Tractor,
   Layers,
+  Bike,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -103,7 +104,7 @@ export function HeroSection() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
             {/* Farmer */}
             <Link
               href="/login?callbackUrl=/farmer"
@@ -193,13 +194,33 @@ export function HeroSection() {
                 <Layers className="h-5 w-5" />
               </div>
               <h3 className="font-semibold text-slate-900 text-sm group-hover:text-emerald-700">
-                {t("nav.adminPortal", "Admin Ops")}
+                {t("nav.adminPortal", "Admin")}
               </h3>
               <p className="text-xs text-slate-500 mt-1">
-                {t("landing.adminDesc", "Fleet dispatch, route optimization, Mandi telemetry.")}
+                {t("landing.adminDesc", "Platform governance, dispute escrow, market telemetry.")}
               </p>
               <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-emerald-700 font-medium">
                 <span>{t("landing.enterPortal", "Enter Portal")}</span>
+                <ArrowRight className="h-3 w-3" />
+              </div>
+            </Link>
+
+            {/* Delivery Boy / Partner */}
+            <Link
+              href="/login?callbackUrl=/delivery/dashboard"
+              className="p-4 rounded-xl bg-white border border-emerald-300 hover:border-emerald-600 hover:shadow-sm transition-all group block"
+            >
+              <div className="h-9 w-9 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3 group-hover:bg-emerald-700 group-hover:text-white transition-colors">
+                <Bike className="h-5 w-5" />
+              </div>
+              <h3 className="font-semibold text-slate-900 text-sm group-hover:text-emerald-700">
+                Delivery Boy
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Produce dispatches, AI route navigation, doorstep OTP &amp; payouts.
+              </p>
+              <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-emerald-700 font-medium">
+                <span>Enter Portal</span>
                 <ArrowRight className="h-3 w-3" />
               </div>
             </Link>

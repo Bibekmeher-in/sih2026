@@ -18,6 +18,7 @@ export interface IUserDocument extends Document {
   farmerProfile?: mongoose.Types.ObjectId;
   fpoProfile?: mongoose.Types.ObjectId;
   buyerProfile?: mongoose.Types.ObjectId;
+  deliveryPartnerProfile?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
   toSafeObject(): Omit<IUserDocument, "passwordHash">;
@@ -90,6 +91,10 @@ const UserSchema = new Schema<IUserDocument>(
     buyerProfile: {
       type: Schema.Types.ObjectId,
       ref: "BuyerProfile",
+    },
+    deliveryPartnerProfile: {
+      type: Schema.Types.ObjectId,
+      ref: "DeliveryPartnerProfile",
     },
   },
   {

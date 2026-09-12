@@ -16,6 +16,8 @@ import {
   Building2,
   Store,
   Layers,
+  Bike,
+  Truck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DEMO_PASSWORD } from "@/config/demo-users";
@@ -88,6 +90,9 @@ function LoginForm() {
               break;
             case "ADMIN":
               targetUrl = "/admin";
+              break;
+            case "DELIVERY_PARTNER":
+              targetUrl = "/delivery/dashboard";
               break;
             default:
               targetUrl = "/";
@@ -294,13 +299,25 @@ function LoginForm() {
             <button
               type="button"
               onClick={() => handleSelectDemo("admin@example.com")}
-              className="p-1.5 rounded border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 text-left transition-all col-span-2 sm:col-span-1"
+              className="p-1.5 rounded border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 text-left transition-all"
             >
               <div className="font-semibold text-slate-800 flex items-center gap-1">
                 <Layers className="h-3 w-3 text-emerald-700" />
                 <span>{t("nav.adminPortal", "Admin")}</span>
               </div>
               <div className="text-[10px] text-slate-500 truncate">admin@example.com</div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleSelectDemo("delivery@example.com")}
+              className="p-1.5 rounded border border-emerald-300 bg-emerald-50/60 hover:border-emerald-500 hover:bg-emerald-100/70 text-left transition-all col-span-2 sm:col-span-1"
+            >
+              <div className="font-semibold text-emerald-900 flex items-center gap-1">
+                <Bike className="h-3.5 w-3.5 text-emerald-700" />
+                <span>Delivery Partner</span>
+              </div>
+              <div className="text-[10px] text-emerald-700 truncate">delivery@example.com</div>
             </button>
           </div>
         </div>

@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SignOutButton } from "@/components/shared/sign-out-button";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
+import { useLanguage } from "@/context/language-context";
 import { FpoOverviewTab } from "./fpo-overview-tab";
 import { FpoCommunityFeed } from "./fpo-community-feed";
 import { FpoGroupsTab } from "./fpo-groups-tab";
@@ -114,6 +116,7 @@ export function FpoHubClient({
           </div>
 
           <div className="flex items-center gap-3">
+            <LanguageSwitcher compact />
             <button
               onClick={() => setShowAiModal(true)}
               className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-semibold transition-colors cursor-pointer"
